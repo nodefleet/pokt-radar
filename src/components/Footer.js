@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
-  position: absolute;
-  bottom: 0;
+  /* position: absolute; */
+  /* bottom: 0; */
   padding: 48px 84px;
   padding-bottom: 58px;
   background-color: #633813;

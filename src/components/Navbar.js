@@ -9,6 +9,8 @@ const Container = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 0 40px 0 10px;
+  position: sticky;
+  z-index: 3;
 
   a {
     margin-right: 30px;
