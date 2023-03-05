@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+"use client";
+
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,16 +11,6 @@ import {
 } from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler);
-
-const Container = styled.div`
-  display: flex;
-  background-color: #fff;
-
-  .chart-container {
-    max-width: 658px;
-    flex-grow: 1;
-  }
-`;
 
 export default function Stats() {
   const labels = [
@@ -49,14 +39,27 @@ export default function Stats() {
         },
         tension: 0.5,
         fill: true,
+        pointStyle: false,
       },
     ],
   };
   const options = {
     responsive: true,
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+        },
+      },
+    },
   };
   return (
-    <Container>
+    <div className="flex">
       <div>
         <div>
           {/* ICON */}
@@ -87,9 +90,9 @@ export default function Stats() {
           </div>
         </div>
       </div>
-      <div className="chart-container">
+      <div className="max-w-[648px]">
         <Line id="canvas" data={data} options={options} />
       </div>
-    </Container>
+    </div>
   );
 }
