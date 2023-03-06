@@ -39,7 +39,7 @@ export default function Stats() {
           12000, 12500, 14000, 13000, 13500, 15000, 17000, 16000, 16500, 16300,
         ],
         borderColor: "#D07600",
-        backgroundColor: (context) => {
+        backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 300);
           gradient.addColorStop(0, "#E9CA9A");
@@ -47,8 +47,6 @@ export default function Stats() {
           return gradient;
         },
         tension: 0.5,
-        fill: true,
-        pointStyle: false,
       },
     ],
   };
