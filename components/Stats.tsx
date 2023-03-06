@@ -47,6 +47,8 @@ export default function Stats() {
           return gradient;
         },
         tension: 0.5,
+        fill: true,
+        pointRadius: 0,
       },
     ],
   };
