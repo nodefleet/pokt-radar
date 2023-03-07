@@ -6,7 +6,7 @@ export default function SearchBar() {
           <input
             type="text"
             placeholder="Search by Address, Txn Hash, Block Height..."
-            className="input input-bordered bg-white min-w-[600px]"
+            className="input input-bordered bg-white min-w-[300px] sm:min-w-[500px] md:min-w-[600px]"
           />
           <button className="btn btn-square bg-dark-brown">
             <svg

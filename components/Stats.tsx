@@ -64,8 +64,8 @@ export default function Stats() {
     },
   };
   return (
-    <div className="grid grid-cols-2 p-5 bg-white rounded-xl shadow-lg col-span-2">
-      <div className="grid grid-cols-2 gap-y-2 gap-x-10 mr-5">
+    <div className="grid md:grid-cols-2 p-5 bg-white rounded-xl shadow-lg md:col-span-2">
+      <div className="grid max-[480px]:grid-cols-1 grid-cols-2 gap-y-2 gap-x-10 mr-5">
         <div className="flex items-center">
           <Image src={BeraIcon} alt="Berachain icon" />
           <div className="ml-7 text-gray-3">
@@ -80,7 +80,7 @@ export default function Stats() {
             <p className="text-xl">71000</p>
           </div>
         </div>
-        <hr className="border-gray-bera w-11/12 justify-self-center" />
+        <hr className="border-gray-bera w-11/12 justify-self-center max-[480px]:hidden" />
         <hr className="border-gray-bera w-11/12 justify-self-center" />
         <div className="flex items-center">
           <Image src={MarketIcon} alt="Market cap icon" />
@@ -97,7 +97,7 @@ export default function Stats() {
           </div>
         </div>
       </div>
-      <div>
+      <div className="mt-8 md:mt-0">
         <p className="ml-10 text-gray-3">Past Transactions (15 days)</p>
         <div className="w-full max-w-[648px] max-h-[209px]">
           <Line id="canvas" data={data} options={options} />

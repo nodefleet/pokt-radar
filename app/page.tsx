@@ -101,7 +101,7 @@ export default async function Home() {
         The Honeycomb Explorer
       </h1>
       <SearchBar />
-      <div className="grid grid-cols-2 gap-7 mt-14 mb-9 w-11/12 self-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-14 mb-9 w-11/12 self-center">
         <Stats />
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl overflow-x-auto">
           <h6 className="ml-3 mb-2 text-xl text-gray-3">Latest Blocks</h6>
