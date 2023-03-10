@@ -1,6 +1,6 @@
 export default function SearchBar() {
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex justify-center">
       <div className="form-control">
         <div className="input-group">
           <input
