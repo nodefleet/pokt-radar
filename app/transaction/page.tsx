@@ -12,13 +12,13 @@ export default async function Transactions() {
   const transactions = await getTransactions();
 
   return (
-    <div className="mx-24">
-      <div className="flex justify-between my-10 items-center">
-        <h1 className="text-gray-3 text-2xl">Transactions</h1>
+    <div className="mx-4 md:mx-24">
+      <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
+        <h1 className="mb-3 lg:mb-0 text-gray-3 text-2xl">Transactions</h1>
         <SearchBar />
       </div>
 
-      <div className="bg-white mt-6 mb-10 p-5 rounded-xl shadow-xl">
+      <div className="bg-white mt-6 mb-10 p-5 rounded-xl shadow-xl overflow-x-auto">
         <DataTable headers={tableHeaders}>
           {transactions.map((txn, index: number) => (
             <tr key={index} className="border-y border-gray-bera">
