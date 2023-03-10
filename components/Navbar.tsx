@@ -16,7 +16,7 @@ export default function Navbar() {
         <Link className="mr-7 text-dark-brown" href="/transaction">
           Transactions
         </Link>
-        <Link className="mr-10 text-dark-brown" href="/blocks">
+        <Link className="mr-10 text-dark-brown" href="/block">
           Blocks
         </Link>
       </div>
