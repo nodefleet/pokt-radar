@@ -13,7 +13,7 @@ export default function Navbar() {
         <Link className="mr-7 text-dark-brown" href="/">
           Home
         </Link>
-        <Link className="mr-7 text-dark-brown" href="/transactions">
+        <Link className="mr-7 text-dark-brown" href="/transaction">
           Transactions
         </Link>
         <Link className="mr-10 text-dark-brown" href="/blocks">
