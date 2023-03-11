@@ -205,3 +205,56 @@ export const getBlocks = cache(async () => {
     },
   ];
 });
+
+export const getLatestBlocks = cache(async () => {
+  return [
+    {
+      createdAt: "2023-03-10T13:12:00.141Z",
+      validator: "Nodefleet",
+      reward: 66,
+      height: 30,
+      txn: 6,
+      gas_used: 72,
+      gas_limit: 12,
+      base_fee: 23,
+      burnt_fee: 26,
+      id: "1",
+    },
+    {
+      createdAt: "2023-03-09T18:33:17.083Z",
+      validator: "Nodefleet",
+      reward: 95,
+      height: 56,
+      txn: 62,
+      gas_used: 15,
+      gas_limit: 97,
+      base_fee: 81,
+      burnt_fee: 43,
+      id: "2",
+    },
+    {
+      createdAt: "2023-03-09T21:08:10.970Z",
+      validator: "Nodefleet",
+      reward: 80,
+      height: 72,
+      txn: 99,
+      gas_used: 22,
+      gas_limit: 62,
+      base_fee: 21,
+      burnt_fee: 2,
+      id: "3",
+    },
+    {
+      createdAt: "2023-03-09T16:56:18.285Z",
+      validator: "Nodefleet",
+      reward: 90,
+      height: 26,
+      txn: 81,
+      gas_used: 61,
+      gas_limit: 44,
+      base_fee: 74,
+      burnt_fee: 3,
+      id: "4",
+    },
+  ];
+});
