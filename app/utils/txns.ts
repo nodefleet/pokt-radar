@@ -361,3 +361,16 @@ export const getLatestTransactions = cache(async () => {
     },
   ];
 });
+
+export const getTransaction = cache(async (hash: string) => {
+  return {
+    createdAt: "2023-03-09T15:38:15.368Z",
+    hash: "aaba1a44d3132bb90eccf65d9a5914e21eaa2ad0",
+    amount: 19984.08,
+    from: "0xe5dd81fda6cea91d49a5654aebce1cca3aba2dfe",
+    to: "0xf4fdca8eb85fdaa6d1de008eebca1cdb41cec4df",
+    block: 66,
+    fee: 1023,
+    id: "30",
+  };
+});

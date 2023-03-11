@@ -23,7 +23,7 @@ export default async function Transactions() {
           {transactions.map((txn, index: number) => (
             <tr key={index} className="border-y border-gray-bera">
               <td className="border-0 text-link">
-                <Link href={`/transactions/${txn.hash}`}>
+                <Link href={`/transaction/${txn.hash}`}>
                   {shortHash(txn.hash)}
                 </Link>
               </td>
