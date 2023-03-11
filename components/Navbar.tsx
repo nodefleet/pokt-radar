@@ -1,11 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 import Berchain from "../public/berachain.svg";
 
 export default function Navbar() {
+  const pathname = usePathname();
+
   return (
-    <header className="navbar">
+    <header
+      className={`navbar ${
+        (pathname === "/" && "bg-transparent") || "bg-white"
+      }`}
+    >
       <div className="flex-1">
         <Image src={Berchain} alt="Berachain logo" />
       </div>
