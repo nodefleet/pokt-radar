@@ -27,7 +27,9 @@ export default async function Transactions() {
                   {shortHash(txn.hash)}
                 </Link>
               </td>
-              <td className="border-0">{txn.block}</td>
+              <td className="border-0 text-link">
+                <Link href={`/block/${txn.block}`}>{txn.block}</Link>
+              </td>
               <td className="border-0">{moment(txn.createdAt).fromNow()}</td>
               <td className="border-0 text-link">
                 <Link href={`/address/${txn.from}`}>{shortHash(txn.from)}</Link>
