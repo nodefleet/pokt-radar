@@ -258,3 +258,19 @@ export const getLatestBlocks = cache(async () => {
     },
   ];
 });
+
+export const getBlock = cache(async (block: string) => {
+  return {
+    createdAt: "2023-03-10T13:12:00.141Z",
+    validator: "Nodefleet",
+    reward: 66,
+    height: parseInt(block),
+    txn: 6,
+    gas_used: 72,
+    gas_limit: 12,
+    base_fee: 23,
+    burnt_fee: 26,
+    id: "1",
+    hash: "aaba1a44d3132bb90eccf65d9a5914e21eaa2ad0",
+  };
+});
