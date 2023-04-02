@@ -29,7 +29,7 @@ function BaseTable({
 }
 
 export async function LatestBlocksTable() {
-  const headers = ["block", "time", "validator", "reward"];
+  const headers = ["block", "time", "total transactions", "gas used"];
   const latestBlocks = await getLatestBlocks();
   return (
     <BaseTable headers={headers}>
@@ -39,11 +39,13 @@ export async function LatestBlocksTable() {
           className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-transparent-cream hover:border-l-cream"
         >
           <td className="border-0 text-link">
-            <Link href={`/block/${block.height}`}>{block.height}</Link>
+            <Link href={`/block/${block.block_height}`}>
+              {`${block.block_height}`}
+            </Link>
           </td>
-          <td className="border-0">{moment(block.createdAt).fromNow()}</td>
-          <td className="border-0">{block.validator}</td>
-          <td className="border-0">{block.reward}</td>
+          <td className="border-0">{moment(block.time).fromNow()}</td>
+          <td className="border-0">{block.total_transactions}</td>
+          <td className="border-0">{block.gas_used?.toFixed()}</td>
         </tr>
       ))}
     </BaseTable>

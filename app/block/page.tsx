@@ -12,11 +12,10 @@ export default async function Transactions() {
     "Txn",
     "Gas used",
     "Gas limit",
-    "Base fee",
-    "Burnt fee",
+    "Size",
   ];
 
-  const blocks = await getBlocks();
+  const blocks = await getBlocks({ take: 25 });
 
   return (
     <div className="mx-4 md:mx-24">
@@ -30,14 +29,15 @@ export default async function Transactions() {
           {blocks.map((block, index: number) => (
             <tr key={index} className="border-y border-gray-bera">
               <td className="border-0 text-link">
-                <Link href={`/block/${block.height}`}>{block.height}</Link>
+                <Link
+                  href={`/block/${block.block_height}`}
+                >{`${block.block_height}`}</Link>
               </td>
-              <td className="border-0">{moment(block.createdAt).fromNow()}</td>
-              <td className="border-0">{block.txn}</td>
-              <td className="border-0">{block.gas_used}</td>
-              <td className="border-0">{block.gas_limit}</td>
-              <td className="border-0">{block.base_fee}</td>
-              <td className="border-0">{block.burnt_fee}</td>
+              <td className="border-0">{moment(block.time).fromNow()}</td>
+              <td className="border-0">{block.total_transactions}</td>
+              <td className="border-0">{block.gas_used?.toFixed()}</td>
+              <td className="border-0">{block.gas_limit?.toFixed()}</td>
+              <td className="border-0">{block.size?.toFixed()}</td>
             </tr>
           ))}
         </DataTable>
