@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model blocks {
+  block_height                BigInt         @id @unique
+  hash                        String?        @unique(map: "blocks_block_hash_key")
+  size                        Decimal?       @db.Decimal
+  gas_used                    Decimal?       @db.Decimal
+  gas_limit                   Decimal?       @db.Decimal
+  parent_hash                 String?
+  total_transactions          Int?           @default(0)
+  total_contract_transactions Int?           @default(0)
+  proposed_on_slot            Int?
+  proposed_on_epoch           Int?
+  time                        DateTime?      @db.Timestamptz(6)
+  state_root                  String?
+  nonce                       String?
+  transactions                transactions[]
+}
+
+model transactions {
+  hash              String   @id
+  status            Boolean? @default(true)
+  gas               Decimal  @db.Decimal
+  gas_price         Decimal  @db.Decimal
+  from              String
+  to                String
+  value             Decimal  @db.Decimal
+  block_height      BigInt
+  input             String
+  type              String?
+  v                 String?
+  s                 String?
+  r                 String?
+  transaction_index String?
+  block_hash        String?
+  nonce             String?
+  chain_id          Decimal? @db.Decimal
+  blocks            blocks   @relation(fields: [block_height], references: [block_height], onUpdate: Restrict)
+}
+
+model users {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String
+}
