@@ -2,6 +2,12 @@ import "server-only";
 import { cache } from "react";
 import { prisma } from "./db";
 
+export const getLastBlockHeight = cache(async () => {
+  return await prisma.blocks.findFirst({
+    select: { block_height: true },
+    orderBy: { block_height: "desc" },
+  });
+});
 export const getBlocks = cache(async ({ take }: { take: number }) => {
   return await prisma.blocks.findMany({
     take,

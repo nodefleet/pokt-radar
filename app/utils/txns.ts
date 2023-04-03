@@ -2,6 +2,10 @@ import "server-only";
 import { cache } from "react";
 import { prisma } from "./db";
 
+export const getTotalTransactions = cache(async () => {
+  return await prisma.transactions.count();
+});
+
 export const getTransactions = cache(
   async ({ take, block }: { take: number; block: number | undefined }) => {
     return await prisma.transactions.findMany({
