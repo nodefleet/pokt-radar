@@ -5,7 +5,7 @@ import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import { getBlocks } from "../utils/blocks";
 
-export default async function Transactions() {
+export default async function Blocks() {
   const tableHeaders = [
     "Block",
     "Time",

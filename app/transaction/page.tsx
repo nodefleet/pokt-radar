@@ -6,11 +6,23 @@ import Pagination from "@/components/Pagination";
 import { getTransactions } from "../utils/txns";
 import { shortHash } from "../utils";
 
-export default async function Transactions() {
+export default async function Transactions({
+  searchParams,
+}: {
+  searchParams: { block: string | undefined };
+}) {
+  let filterByBlock = undefined;
+  if (searchParams.block) {
+    const block = parseInt(searchParams.block);
+    filterByBlock = isNaN(block) ? undefined : block;
+  }
+
+  const transactions = await getTransactions({
+    take: 25,
+    block: filterByBlock,
+  });
+
   const tableHeaders = ["Tx Hash", "Block", "Time", "From", "To"];
-
-  const transactions = await getTransactions();
-
   return (
     <div className="mx-4 md:mx-24">
       <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
@@ -28,9 +40,11 @@ export default async function Transactions() {
                 </Link>
               </td>
               <td className="border-0 text-link">
-                <Link href={`/block/${txn.block}`}>{txn.block}</Link>
+                <Link href={`/block/${txn.block_height}`}>
+                  {txn.block_height.toString()}
+                </Link>
               </td>
-              <td className="border-0">{moment(txn.createdAt).fromNow()}</td>
+              <td className="border-0">{moment(txn.blocks.time).fromNow()}</td>
               <td className="border-0 text-link">
                 <Link href={`/address/${txn.from}`}>{shortHash(txn.from)}</Link>
               </td>

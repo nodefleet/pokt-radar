@@ -53,7 +53,7 @@ export async function LatestBlocksTable() {
 }
 
 export async function LatestTransactionsTable() {
-  const headers = ["tx hash", "time", "amount"];
+  const headers = ["tx hash", "block", "time", "gas"];
   const latestTransactions = await getLatestTransactions();
   return (
     <BaseTable headers={headers}>
@@ -65,8 +65,9 @@ export async function LatestTransactionsTable() {
           <td className="border-0 text-link">
             <Link href={`/transaction/${txn.hash}`}>{shortHash(txn.hash)}</Link>
           </td>
-          <td className="border-0">{moment(txn.createdAt).fromNow()}</td>
-          <td className="border-0">{txn.amount}</td>
+          <td className="border-0">{txn.block_height.toString()}</td>
+          <td className="border-0">{moment(txn.blocks.time).fromNow()}</td>
+          <td className="border-0">{txn.gas.toFixed()}</td>
         </tr>
       ))}
     </BaseTable>
