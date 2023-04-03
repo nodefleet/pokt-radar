@@ -8,12 +8,20 @@ export const getLastBlockHeight = cache(async () => {
     orderBy: { block_height: "desc" },
   });
 });
-export const getBlocks = cache(async ({ take }: { take: number }) => {
-  return await prisma.blocks.findMany({
-    take,
-    orderBy: { block_height: "desc" },
-  });
-});
+export const getBlocks = cache(
+  async ({ take, skip }: { take: number; skip: number }) => {
+    const blocks = await prisma.blocks.findMany({
+      take,
+      skip,
+      orderBy: { block_height: "desc" },
+    });
+    const count = await prisma.blocks.count();
+    return {
+      blocks,
+      count,
+    };
+  }
+);
 
 export const getLatestBlocks = cache(async () => {
   return await prisma.blocks.findMany({

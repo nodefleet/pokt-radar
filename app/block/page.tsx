@@ -5,7 +5,24 @@ import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import { getBlocks } from "../utils/blocks";
 
-export default async function Blocks() {
+export default async function Blocks({
+  searchParams,
+}: {
+  searchParams: { page: string | undefined };
+}) {
+  const page =
+    (searchParams.page &&
+      !isNaN(parseInt(searchParams.page)) &&
+      parseInt(searchParams.page)) ||
+    1;
+
+  const PAGE_SIZE = 25;
+  const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
+  const { blocks, count: totalBlocks } = await getBlocks({
+    take: PAGE_SIZE,
+    skip: SKIP,
+  });
+
   const tableHeaders = [
     "Block",
     "Time",
@@ -15,10 +32,8 @@ export default async function Blocks() {
     "Size",
   ];
 
-  const blocks = await getBlocks({ take: 25 });
-
   return (
-    <div className="mx-4 md:mx-24">
+    <div className="grow mx-4 md:mx-24">
       <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
         <h1 className="mb-3 lg:mb-0 text-gray-3 text-2xl">Blocks</h1>
         <SearchBar />
@@ -42,7 +57,12 @@ export default async function Blocks() {
           ))}
         </DataTable>
         <div className="flex mt-4 justify-end">
-          <Pagination />
+          <Pagination
+            path="/block"
+            currentPage={page}
+            size={PAGE_SIZE}
+            total={totalBlocks}
+          />
         </div>
       </div>
     </div>

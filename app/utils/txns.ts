@@ -7,13 +7,29 @@ export const getTotalTransactions = cache(async () => {
 });
 
 export const getTransactions = cache(
-  async ({ take, block }: { take: number; block: number | undefined }) => {
-    return await prisma.transactions.findMany({
+  async ({
+    take,
+    skip,
+    block,
+  }: {
+    take: number;
+    skip: number;
+    block: number | undefined;
+  }) => {
+    const transactions = await prisma.transactions.findMany({
       where: { block_height: block },
       take,
+      skip,
       orderBy: { block_height: "desc" },
       include: { blocks: { select: { time: true } } },
     });
+    const count = await prisma.transactions.count({
+      where: { block_height: block },
+    });
+    return {
+      transactions,
+      count,
+    };
   }
 );
 
