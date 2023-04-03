@@ -16,7 +16,9 @@ export default function Navbar() {
       }`}
     >
       <div className="flex-1">
-        <Image src={Berchain} alt="Berachain logo" />
+        <Link href="/">
+          <Image src={Berchain} alt="Berachain logo" />
+        </Link>
       </div>
       <div className="flex-none">
         <Link className="mr-7 text-dark-brown" href="/">

@@ -15,7 +15,7 @@ export default async function Home() {
         className="h-[418px] w-full absolute top-0 -z-10"
         style={{
           background:
-            "linear-gradient(180deg, #E9CA9A 0%, #B79973 48.23%, #81634A 99.98%, #987249 99.99%);",
+            "linear-gradient(180deg, #E9CA9A 0%, #B79973 48.23%, #81634A 99.98%, #987249 99.99%)",
         }}
       ></div>
       <Image
