@@ -2,7 +2,7 @@ import moment from "moment";
 import Link from "next/link";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import SearchBar from "@/components/SearchBar";
-import { getTransaction } from "@/app/utils/txns";
+import { getTransaction } from "@/utils/txns";
 
 export default async function Transaction({
   params,

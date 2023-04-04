@@ -1,9 +1,9 @@
 import moment from "moment";
 import Link from "next/link";
 
-import { getLatestBlocks } from "@/app/utils/blocks";
-import { getLatestTransactions } from "@/app/utils/txns";
-import { shortHash } from "@/app/utils";
+import { getLatestBlocks } from "@/utils/blocks";
+import { getLatestTransactions } from "@/utils/txns";
+import { shortHash } from "@/utils";
 
 function BaseTable({
   children,

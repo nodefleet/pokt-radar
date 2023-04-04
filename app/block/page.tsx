@@ -3,7 +3,7 @@ import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
-import { getBlocks } from "../utils/blocks";
+import { getBlocks } from "@/utils/blocks";
 
 export default async function Blocks({
   searchParams,

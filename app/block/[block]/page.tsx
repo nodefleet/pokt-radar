@@ -2,7 +2,7 @@ import moment from "moment";
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import SearchBar from "@/components/SearchBar";
-import { getBlock } from "@/app/utils/blocks";
+import { getBlock } from "@/utils/blocks";
 import { randomInt } from "crypto";
 
 export default async function Block({ params }: { params: { block: string } }) {

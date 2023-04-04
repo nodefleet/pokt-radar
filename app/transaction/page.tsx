@@ -3,8 +3,8 @@ import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
-import { getTransactions } from "../utils/txns";
-import { shortHash } from "../utils";
+import { getTransactions } from "@/utils/txns";
+import { shortHash } from "@/utils";
 
 export default async function Transactions({
   searchParams,

@@ -4,8 +4,8 @@ import MarketIcon from "../public/market.svg";
 import BlockIcon from "../public/blocks.svg";
 import TxnsIcon from "../public/txns.svg";
 
-import { getLastBlockHeight } from "@/app/utils/blocks";
-import { getTotalTransactions } from "@/app/utils/txns";
+import { getLastBlockHeight } from "@/utils/blocks";
+import { getTotalTransactions } from "@/utils/txns";
 import TransactionsChart from "./TransactionsChart";
 
 export default async function Stats() {
