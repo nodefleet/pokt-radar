@@ -17,11 +17,9 @@ export interface ITransaction {
 
 function SearchBar({
   txns,
-  filteredTxns,
   setFilteredTxns,
 }: {
   txns: ITransaction[];
-  filteredTxns: ITransaction[];
   setFilteredTxns: CallableFunction;
 }) {
   const [filterBy, setFilter] = useState<string | null>(null);
@@ -33,10 +31,10 @@ function SearchBar({
           (txn) => txn.from.includes(filterBy) || txn.to.includes(filterBy)
         )
       );
-    } else if (filteredTxns.length < txns.length) {
+    } else {
       setFilteredTxns(txns);
     }
-  }, [filterBy]);
+  }, [filterBy, setFilteredTxns, txns]);
   return (
     <div className="flex items-center w-2/5 mb-5 px-3 py-2 self-end border border-gray-6 rounded-xl text-gray-6">
       <input
@@ -61,11 +59,7 @@ export default function AddressTransactions({
 
   return (
     <div className="flex flex-col">
-      <SearchBar
-        txns={transactions}
-        filteredTxns={filteredTxns}
-        setFilteredTxns={setFilteredTxns}
-      />
+      <SearchBar txns={transactions} setFilteredTxns={setFilteredTxns} />
       <DataTable headers={tableHeaders} small={true}>
         {displayRows.map((txn, index: number) => (
           <tr key={index} className="border-y border-gray-bera">

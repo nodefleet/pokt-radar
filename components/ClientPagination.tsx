@@ -24,7 +24,6 @@ export default function ClientPagination({
   const [displayPagesList, setDisplayPagesList] = useState<number[]>([]);
 
   const DIPLAY_PAGES = 5;
-
   useEffect(() => {
     if (currentPage < DIPLAY_PAGES) {
       setDisplayPagesList(pages.slice(0, DIPLAY_PAGES));
@@ -37,7 +36,7 @@ export default function ClientPagination({
     }
 
     setRows(data.slice((currentPage - 1) * perPage, currentPage * perPage));
-  }, [data, currentPage]);
+  }, [data, currentPage, perPage, pages, lastPage, setRows]);
 
   return (
     <div className="flex items-center text-dark-brown space-x-2.5">
@@ -58,6 +57,7 @@ export default function ClientPagination({
       <div className="btn-group bg-gray-10">
         {displayPagesList.map((pageNumber) => (
           <button
+            key={pageNumber}
             onClick={() => setCurrentPage(pageNumber)}
             className={`btn btn-sm border-0 ${
               pageNumber === currentPage ? "font-bold" : "font-normal"
