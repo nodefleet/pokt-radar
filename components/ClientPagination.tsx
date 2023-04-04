@@ -17,13 +17,18 @@ export default function ClientPagination({
   perPage: number;
 }) {
   const totalPages = Math.ceil(data.length / perPage);
-  const pages: number[] = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const [pages, setPages] = useState<number[]>([]);
   const lastPage: number = pages[pages.length - 1];
 
   const [currentPage, setCurrentPage] = useState(1);
   const [displayPagesList, setDisplayPagesList] = useState<number[]>([]);
 
   const DIPLAY_PAGES = 5;
+
+  useEffect(() => {
+    setPages(Array.from({ length: totalPages }, (_, i) => i + 1));
+  }, [setPages, data, totalPages]);
+
   useEffect(() => {
     if (currentPage < DIPLAY_PAGES) {
       setDisplayPagesList(pages.slice(0, DIPLAY_PAGES));
@@ -34,9 +39,11 @@ export default function ClientPagination({
         pages.slice(currentPage - (DIPLAY_PAGES - 1), currentPage + 1)
       );
     }
+  }, [currentPage, pages, lastPage, setDisplayPagesList]);
 
+  useEffect(() => {
     setRows(data.slice((currentPage - 1) * perPage, currentPage * perPage));
-  }, [data, currentPage, perPage, pages, lastPage, setRows]);
+  }, [data, currentPage, perPage, setRows]);
 
   return (
     <div className="flex items-center text-dark-brown space-x-2.5">
