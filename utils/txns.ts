@@ -47,3 +47,11 @@ export const getTransaction = cache(async (hash: string) => {
     include: { blocks: { select: { time: true } } },
   });
 });
+
+export const getTransactionsByAddress = cache(async (address: string) => {
+  return await prisma.transactions.findMany({
+    where: { OR: [{ from: address }, { to: address }] },
+    include: { blocks: { select: { time: true } } },
+    orderBy: { block_height: "desc" },
+  });
+});

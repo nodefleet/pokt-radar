@@ -1,12 +1,14 @@
 export default function DataTable({
   children,
   headers,
+  small,
 }: {
   headers: string[];
   children: JSX.Element[];
+  small?: boolean;
 }) {
   return (
-    <table className="table w-full text-gray-4">
+    <table className={`table ${small && "table-small"} w-full text-gray-4`}>
       <thead className="bg-gray-10 rounded-t-xl text-gray-3">
         <tr>
           {headers.map((header, index) => (

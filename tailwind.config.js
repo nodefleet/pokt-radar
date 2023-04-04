@@ -13,6 +13,7 @@ module.exports = {
         "transparent-cream": "rgba(233, 202, 154, 0.1)",
         "gray-3": "#585858",
         "gray-4": "#737373",
+        "gray-6": "#C4C4C4",
         "gray-10": "#F5F5F5",
         "gray-bera": "#DBDBDB",
         link: "#61A9E4",
