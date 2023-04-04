@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 export const metadata = {
   title: "Berachain Explorer",
   description: "Blockchain explorer for berachain.",
+  icons: { icon: "/favicon.ico" },
 };
 
 export default function RootLayout({
