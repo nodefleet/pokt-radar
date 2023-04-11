@@ -36,7 +36,7 @@ export default async function Transactions({
     <div className="grow mx-4 md:mx-24">
       <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
         <h1 className="mb-3 lg:mb-0 text-gray-3 text-2xl">Transactions</h1>
-        <SearchBar />
+        <SearchBar width="w-full lg:w-4/6 xl:w-7/12" />
       </div>
 
       <div className="bg-white mt-6 mb-10 p-5 rounded-xl shadow-xl overflow-x-auto">
