@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { headers } from "next/headers";
 import SearchBar from "@/components/SearchBar";
 import Stats from "@/components/Stats";
 import BgHeader from "../public/bg-home.png";
@@ -11,6 +12,9 @@ import {
 export const revalidate = 60;
 
 export default async function Home() {
+  // Looks like netlify does not support revalidate
+  // So we use headers to force the page into dynamic render
+  const headersList = headers();
   return (
     <main className="pt-24 flex flex-col">
       <div
