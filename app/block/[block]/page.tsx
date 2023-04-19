@@ -75,7 +75,7 @@ export default async function Block({ params }: { params: { block: string } }) {
                     query: { block: block?.block_height.toString() },
                   }}
                 >
-                  {randomInt(100)}
+                  {block.total_transactions}
                 </Link>{" "}
                 transactions
               </p>
