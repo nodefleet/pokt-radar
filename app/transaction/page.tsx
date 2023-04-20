@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { formatISO } from "date-fns";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
 import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
@@ -33,7 +34,16 @@ export default async function Transactions({
     block: filterByBlock,
   });
 
-  const tableHeaders = ["Tx Hash", "Block", "Time", "From", "To"];
+  const tableHeaders = [
+    "Tx Hash",
+    "Block",
+    "Time",
+    "From",
+    "",
+    "To",
+    "Value",
+    "Fee",
+  ];
   return (
     <div className="grow mx-4 md:mx-24">
       <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
@@ -60,12 +70,19 @@ export default async function Transactions({
                   <FromNow datetime={formatISO(txn.blocks.time)} />
                 )}
               </td>
-              <td className="border-0 text-link">
+              <td className="border-0 xl:pr-0  text-link">
                 <Link href={`/address/${txn.from}`}>{shortHash(txn.from)}</Link>
+              </td>
+              <td className="border-0 pl-0 ">
+                <div className="flex justify-center bg-green-2 p-1 rounded-md">
+                  <ArrowRightIcon className="w-3 h-3" />
+                </div>
               </td>
               <td className="border-0 text-link">
                 <Link href={`/address/${txn.to}`}>{shortHash(txn.to)}</Link>
               </td>
+              <td className="border-0">{txn.value.toFixed()}</td>
+              <td className="border-0">{txn.gas.toString()}</td>
             </tr>
           ))}
         </DataTable>
