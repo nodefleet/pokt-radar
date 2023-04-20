@@ -1,6 +1,7 @@
-import moment from "moment";
 import Link from "next/link";
+import { formatISO, format } from "date-fns";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
 import { getTransaction } from "@/utils/txns";
 
@@ -48,8 +49,13 @@ export default async function Transaction({
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>Time</p>
               <p className="col-span-2">
-                {moment(txn.blocks.time).fromNow()} (
-                {moment(txn.blocks.time).format("MMM DD YYYY, H:mm:ss Z")})
+                {txn.blocks.time && (
+                  <FromNow datetime={formatISO(txn.blocks.time)} />
+                )}{" "}
+                (
+                {txn.blocks.time &&
+                  format(txn.blocks.time, "MMM dd yyyy, H:mm:ss O")}
+                )
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">

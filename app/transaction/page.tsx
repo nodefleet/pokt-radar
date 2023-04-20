@@ -1,5 +1,7 @@
-import moment from "moment";
 import Link from "next/link";
+import { formatISO } from "date-fns";
+
+import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
@@ -53,7 +55,11 @@ export default async function Transactions({
                   {txn.block_height.toString()}
                 </Link>
               </td>
-              <td className="border-0">{moment(txn.blocks.time).fromNow()}</td>
+              <td className="border-0">
+                {txn.blocks.time && (
+                  <FromNow datetime={formatISO(txn.blocks.time)} />
+                )}
+              </td>
               <td className="border-0 text-link">
                 <Link href={`/address/${txn.from}`}>{shortHash(txn.from)}</Link>
               </td>

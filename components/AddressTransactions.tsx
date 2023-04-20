@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import moment from "moment";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import FromNow from "./FromNow";
 import DataTable from "./DataTable";
 import ClientPagination from "./ClientPagination";
 import { shortHash } from "@/utils";
@@ -73,7 +73,9 @@ export default function AddressTransactions({
                 {txn.block_height}
               </Link>
             </td>
-            <td className="border-0">{moment(txn.time).fromNow()}</td>
+            <td className="border-0">
+              {txn.time && <FromNow datetime={txn.time} />}
+            </td>
             <td className="border-0 text-link">
               <Link href={`/address/${txn.from}`}>{shortHash(txn.from)}</Link>
             </td>

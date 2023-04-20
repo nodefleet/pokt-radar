@@ -1,9 +1,9 @@
-import moment from "moment";
 import Link from "next/link";
+import { formatISO, format } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
 import { getBlock } from "@/utils/blocks";
-import { randomInt } from "crypto";
 
 export default async function Block({ params }: { params: { block: string } }) {
   const queryBlock = parseInt(params.block);
@@ -60,8 +60,8 @@ export default async function Block({ params }: { params: { block: string } }) {
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>Time</p>
               <p className="col-span-2">
-                {moment(block?.time).fromNow()} (
-                {moment(block?.time).format("MMM DD YYYY, H:mm:ss Z")})
+                {block.time && <FromNow datetime={formatISO(block.time)} />} (
+                {block.time && format(block.time, "MMM dd yyyy, H:mm:ss O")})
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">

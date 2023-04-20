@@ -1,8 +1,9 @@
-import moment from "moment";
+import { formatISO } from "date-fns";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
+import FromNow from "@/components/FromNow";
 import { getBlocks } from "@/utils/blocks";
 
 export default async function Blocks({
@@ -48,7 +49,9 @@ export default async function Blocks({
                   href={`/block/${block.block_height}`}
                 >{`${block.block_height}`}</Link>
               </td>
-              <td className="border-0">{moment(block.time).fromNow()}</td>
+              <td className="border-0">
+                {block.time && <FromNow datetime={formatISO(block.time)} />}
+              </td>
               <td className="border-0">{block.total_transactions}</td>
               <td className="border-0">{block.gas_used?.toFixed()}</td>
               <td className="border-0">{block.gas_limit?.toFixed()}</td>

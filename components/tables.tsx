@@ -1,6 +1,7 @@
-import moment from "moment";
+import { formatISO } from "date-fns";
 import Link from "next/link";
 
+import FromNow from "./FromNow";
 import { getLatestBlocks } from "@/utils/blocks";
 import { getLatestTransactions } from "@/utils/txns";
 import { shortHash } from "@/utils";
@@ -43,7 +44,9 @@ export async function LatestBlocksTable() {
               {`${block.block_height}`}
             </Link>
           </td>
-          <td className="border-0">{moment(block.time).fromNow()}</td>
+          <td className="border-0">
+            {block.time && <FromNow datetime={formatISO(block.time)} />}
+          </td>
           <td className="border-0">{block.total_transactions}</td>
           <td className="border-0">{block.gas_used?.toFixed()}</td>
         </tr>
@@ -66,7 +69,11 @@ export async function LatestTransactionsTable() {
             <Link href={`/transaction/${txn.hash}`}>{shortHash(txn.hash)}</Link>
           </td>
           <td className="border-0">{txn.block_height.toString()}</td>
-          <td className="border-0">{moment(txn.blocks.time).fromNow()}</td>
+          <td className="border-0">
+            {txn.blocks.time && (
+              <FromNow datetime={formatISO(txn.blocks.time)} />
+            )}
+          </td>
           <td className="border-0">{txn.gas.toFixed()}</td>
         </tr>
       ))}
