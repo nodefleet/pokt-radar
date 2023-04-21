@@ -67,7 +67,7 @@ export default async function Transaction({
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>To</p>
               <p className="col-span-2 text-link">
-                <Link href={`/transaction/${txn.to}`}>{txn.to}</Link>
+                <Link href={`/address/${txn.to}`}>{txn.to}</Link>
               </p>
             </div>
             <div className="grid grid-cols-3">
