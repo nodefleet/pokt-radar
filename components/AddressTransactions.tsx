@@ -1,7 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  MagnifyingGlassIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
 import FromNow from "./FromNow";
 import DataTable from "./DataTable";
 import ClientPagination from "./ClientPagination";
@@ -13,6 +16,7 @@ export interface ITransaction {
   to: string;
   time: string | undefined;
   block_height: string;
+  gas: string;
 }
 
 function SearchBar({
@@ -53,7 +57,7 @@ export default function AddressTransactions({
 }: {
   transactions: ITransaction[];
 }) {
-  const tableHeaders = ["Tx Hash", "Block", "Time", "From", "To"];
+  const tableHeaders = ["Tx Hash", "Block", "Time", "From", "", "To", "Fee"];
   const [filteredTxns, setFilteredTxns] = useState<ITransaction[]>([]);
   const [displayRows, setDisplayRows] = useState<ITransaction[]>([]);
 
@@ -76,12 +80,21 @@ export default function AddressTransactions({
             <td className="border-0">
               {txn.time && <FromNow datetime={txn.time} />}
             </td>
-            <td className="border-0 text-link">
+            <td className="border-0 pr-0 text-link">
               <Link href={`/address/${txn.from}`}>{shortHash(txn.from)}</Link>
+            </td>
+            <td className="border-0 pl-0">
+              <div className="flex">
+                <div className="flex justify-center bg-green-2 p-1 rounded-md">
+                  <ArrowRightIcon className="w-3 h-3" />
+                </div>
+                <p className=""></p>
+              </div>
             </td>
             <td className="border-0 text-link">
               <Link href={`/address/${txn.to}`}>{shortHash(txn.to)}</Link>
             </td>
+            <td className="border-0">{txn.gas}</td>
           </tr>
         ))}
       </DataTable>

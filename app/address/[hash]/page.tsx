@@ -19,6 +19,7 @@ export default async function Address({
     from: txn.from,
     time: txn.timestamp?.toISOString(),
     block_height: txn.block_height.toString(),
+    gas: txn.gas.toString(),
   }));
 
   return (

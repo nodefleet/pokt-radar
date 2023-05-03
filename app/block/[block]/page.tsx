@@ -3,14 +3,30 @@ import { formatISO, format } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
+import AddressTransactions from "@/components/AddressTransactions";
 import { getBlock } from "@/utils/blocks";
+import { getTransactionsByBlock } from "@/utils/txns";
 
 export default async function Block({ params }: { params: { block: string } }) {
   const queryBlock = parseInt(params.block);
 
-  let block;
+  let block, transactions;
   if (!isNaN(queryBlock)) {
-    block = await getBlock(queryBlock);
+    const blockData = getBlock(queryBlock);
+    const txnsData = getTransactionsByBlock(queryBlock);
+    [block, transactions] = await Promise.all([blockData, txnsData]);
+  }
+
+  let serializedTxns;
+  if (transactions) {
+    serializedTxns = transactions.map((txn) => ({
+      hash: txn.hash,
+      to: txn.to,
+      from: txn.from,
+      time: txn.timestamp?.toISOString(),
+      block_height: txn.block_height.toString(),
+      gas: txn.gas.toString(),
+    }));
   }
 
   return (
@@ -86,6 +102,10 @@ export default async function Block({ params }: { params: { block: string } }) {
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
+              <p>Contract Internal Transactions</p>
+              <p className="col-span-2">{block?.total_contract_transactions}</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>Gas used</p>
               <p className="col-span-2">{block?.gas_used?.toFixed()}</p>
             </div>
@@ -93,10 +113,24 @@ export default async function Block({ params }: { params: { block: string } }) {
               <p>Gas limit</p>
               <p className="col-span-2">{block?.gas_limit?.toFixed()}</p>
             </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <p>Previous Block Hash</p>
+              <p className="col-span-2">{block?.parent_hash}</p>
+            </div>
           </>
         ) : (
           <h5>No block found</h5>
         )}
+      </div>
+      <div className="mt-5 mb-10 ">
+        <div className="flex text-gray-3 font-semibold">
+          <a className="px-4 py-1 bg-white rounded-t-xl ">Transactions</a>
+        </div>
+        <div className="bg-white px-5 py-4 rounded-r-xl rounded-bl-xl shadow-lg overflow-x-auto">
+          {serializedTxns && (
+            <AddressTransactions transactions={serializedTxns} />
+          )}
+        </div>
       </div>
     </div>
   );

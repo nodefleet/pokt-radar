@@ -52,6 +52,13 @@ export const getTransactionsByAddress = cache(async (address: string) => {
   });
 });
 
+export const getTransactionsByBlock = cache(async (block: number) => {
+  return await prisma.transactions.findMany({
+    where: { block_height: block },
+    orderBy: { block_height: "desc" },
+  });
+});
+
 export const getTransactionStats = cache(async () => {
   return await prisma.$queryRaw<any[]>`
     SELECT date_trunc('day', d.date) AS date,
