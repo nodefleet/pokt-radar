@@ -49,12 +49,12 @@ export default async function Transaction({
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>Time</p>
               <p className="col-span-2">
-                {txn.blocks.time && (
-                  <FromNow datetime={formatISO(txn.blocks.time)} />
+                {txn.timestamp && (
+                  <FromNow datetime={formatISO(txn.timestamp)} />
                 )}{" "}
                 (
-                {txn.blocks.time &&
-                  format(txn.blocks.time, "MMM dd yyyy, H:mm:ss O")}
+                {txn.timestamp &&
+                  format(txn.timestamp, "MMM dd yyyy, H:mm:ss O")}
                 )
               </p>
             </div>

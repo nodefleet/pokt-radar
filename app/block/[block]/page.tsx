@@ -60,8 +60,13 @@ export default async function Block({ params }: { params: { block: string } }) {
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>Time</p>
               <p className="col-span-2">
-                {block.time && <FromNow datetime={formatISO(block.time)} />} (
-                {block.time && format(block.time, "MMM dd yyyy, H:mm:ss O")})
+                {block.timestamp && (
+                  <FromNow datetime={formatISO(block.timestamp)} />
+                )}{" "}
+                (
+                {block.timestamp &&
+                  format(block.timestamp, "MMM dd yyyy, H:mm:ss O")}
+                )
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">

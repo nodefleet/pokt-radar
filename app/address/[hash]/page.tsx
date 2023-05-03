@@ -17,7 +17,7 @@ export default async function Address({
     hash: txn.hash,
     to: txn.to,
     from: txn.from,
-    time: txn.blocks.time?.toISOString(),
+    time: txn.timestamp?.toISOString(),
     block_height: txn.block_height.toString(),
   }));
 

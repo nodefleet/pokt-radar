@@ -66,8 +66,8 @@ export default async function Transactions({
                 </Link>
               </td>
               <td className="border-0">
-                {txn.blocks.time && (
-                  <FromNow datetime={formatISO(txn.blocks.time)} />
+                {txn.timestamp && (
+                  <FromNow datetime={formatISO(txn.timestamp)} />
                 )}
               </td>
               <td className="border-0 xl:pr-0  text-link">

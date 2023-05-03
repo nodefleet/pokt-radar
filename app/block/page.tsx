@@ -50,7 +50,9 @@ export default async function Blocks({
                 >{`${block.block_height}`}</Link>
               </td>
               <td className="border-0">
-                {block.time && <FromNow datetime={formatISO(block.time)} />}
+                {block.timestamp && (
+                  <FromNow datetime={formatISO(block.timestamp)} />
+                )}
               </td>
               <td className="border-0">{block.total_transactions}</td>
               <td className="border-0">{block.gas_used?.toFixed()}</td>

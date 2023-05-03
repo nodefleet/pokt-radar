@@ -45,7 +45,9 @@ export async function LatestBlocksTable() {
             </Link>
           </td>
           <td className="border-0">
-            {block.time && <FromNow datetime={formatISO(block.time)} />}
+            {block.timestamp && (
+              <FromNow datetime={formatISO(block.timestamp)} />
+            )}
           </td>
           <td className="border-0">{block.total_transactions}</td>
           <td className="border-0">{block.gas_used?.toFixed()}</td>
@@ -70,9 +72,7 @@ export async function LatestTransactionsTable() {
           </td>
           <td className="border-0">{txn.block_height.toString()}</td>
           <td className="border-0">
-            {txn.blocks.time && (
-              <FromNow datetime={formatISO(txn.blocks.time)} />
-            )}
+            {txn.timestamp && <FromNow datetime={formatISO(txn.timestamp)} />}
           </td>
           <td className="border-0">{txn.gas.toFixed()}</td>
         </tr>

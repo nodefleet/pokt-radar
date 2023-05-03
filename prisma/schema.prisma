@@ -18,20 +18,20 @@ model blocks {
   total_contract_transactions Int?           @default(0)
   proposed_on_slot            Int?
   proposed_on_epoch           Int?
-  time                        DateTime?      @db.Timestamptz(6)
+  timestamp                   DateTime?      @db.Timestamptz(6)
   state_root                  String?
   nonce                       String?
   transactions                transactions[]
 }
 
 model transactions {
-  hash              String   @id
-  status            Boolean? @default(true)
-  gas               Decimal  @db.Decimal
-  gas_price         Decimal  @db.Decimal
+  hash              String    @id
+  status            Boolean?  @default(true)
+  gas               Decimal   @db.Decimal
+  gas_price         Decimal   @db.Decimal
   from              String
   to                String
-  value             Decimal  @db.Decimal
+  value             Decimal   @db.Decimal
   block_height      BigInt
   input             String
   type              String?
@@ -41,12 +41,18 @@ model transactions {
   transaction_index String?
   block_hash        String?
   nonce             String?
-  chain_id          Decimal? @db.Decimal
-  blocks            blocks   @relation(fields: [block_height], references: [block_height], onUpdate: Restrict)
+  chain_id          Decimal?  @db.Decimal
+  timestamp         DateTime? @db.Timestamptz(6)
+  blocks            blocks    @relation(fields: [block_height], references: [block_height], onUpdate: Restrict)
 }
 
-model users {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String
+
+model accounts {
+  address       String   @id
+  value         Decimal? @default(0) @db.Decimal
+  balance       Decimal? @default(0) @db.Decimal
+  is_contract   Boolean? @default(false)
+  contract_code String?
 }
+
+
