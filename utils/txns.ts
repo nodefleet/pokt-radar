@@ -51,3 +51,15 @@ export const getTransactionsByAddress = cache(async (address: string) => {
     orderBy: { block_height: "desc" },
   });
 });
+
+export const getTransactionStats = cache(async () => {
+  return await prisma.$queryRaw<any[]>`
+    SELECT date_trunc('day', d.date) AS date,
+    COUNT(t.timestamp) AS count
+    FROM (
+      SELECT generate_series(NOW() - INTERVAL '15 days', NOW(), INTERVAL '1 day')::date AS date
+    ) AS d
+    LEFT JOIN transactions t ON date_trunc('day', t.timestamp) = d.date
+    GROUP BY date
+    ORDER BY date ASC`;
+});

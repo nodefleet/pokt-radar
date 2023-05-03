@@ -11,27 +11,12 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler);
 
-export default function TransactionsChart() {
-  const labels = [
-    "23-01-29",
-    "23-02-01",
-    "23-02-04",
-    "23-02-07",
-    "23-02-10",
-    "23-02-11",
-    "23-02-12",
-    "23-02-13",
-    "23-02-14",
-    "23-02-15",
-  ];
-
-  const data = {
-    labels: labels,
+export default function TransactionsChart({ data }: { data: any[] }) {
+  const chartData = {
+    labels: data.map((value) => value.date),
     datasets: [
       {
-        data: [
-          12000, 12500, 14000, 13000, 13500, 15000, 17000, 16000, 16500, 16300,
-        ],
+        data: data.map((value) => value.count),
         borderColor: "#D07600",
         backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;
@@ -57,5 +42,5 @@ export default function TransactionsChart() {
       },
     },
   };
-  return <Line id="canvas" data={data} options={options} />;
+  return <Line id="canvas" data={chartData} options={options} />;
 }

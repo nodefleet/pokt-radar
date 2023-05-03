@@ -3,19 +3,27 @@ import BeraIcon from "../public/bera.svg";
 import MarketIcon from "../public/market.svg";
 import BlockIcon from "../public/blocks.svg";
 import TxnsIcon from "../public/txns.svg";
+import { formatISO } from "date-fns";
 
 import { getLastBlockHeight } from "@/utils/blocks";
-import { getTotalTransactions } from "@/utils/txns";
+import { getTotalTransactions, getTransactionStats } from "@/utils/txns";
 import TransactionsChart from "./TransactionsChart";
 
 export default async function Stats() {
-  const _lastBlockHeight = getLastBlockHeight();
-  const _totalTxns = getTotalTransactions();
+  const lastBlockHeightData = getLastBlockHeight();
+  const totalTxnsData = getTotalTransactions();
+  const transactionStatsData = getTransactionStats();
 
-  const [lastBlockHeight, totalTxns] = await Promise.all([
-    _lastBlockHeight,
-    _totalTxns,
+  const [lastBlockHeight, totalTxns, transactionStats] = await Promise.all([
+    lastBlockHeightData,
+    totalTxnsData,
+    transactionStatsData,
   ]);
+
+  const statsSerialized = transactionStats.map((stat) => ({
+    date: formatISO(stat.date, { representation: "date" }),
+    count: stat.count.toString(),
+  }));
   return (
     <div className="grid md:grid-cols-2 p-5 bg-white rounded-xl shadow-lg md:col-span-2">
       <div className="grid max-[480px]:grid-cols-1 grid-cols-2 gap-y-2 gap-x-10 mr-5">
@@ -55,7 +63,7 @@ export default async function Stats() {
       <div className="mt-8 md:mt-0">
         <p className="ml-10 text-gray-3">Past Transactions (15 days)</p>
         <div className="w-full max-w-[648px] max-h-[209px]">
-          <TransactionsChart />
+          <TransactionsChart data={statsSerialized} />
         </div>
       </div>
     </div>
