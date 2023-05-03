@@ -6,13 +6,20 @@ import {
 import SearchBar from "@/components/SearchBar";
 import AddressTransactions from "@/components/AddressTransactions";
 import { getTransactionsByAddress } from "@/utils/txns";
+import { getAccount } from "@/utils/accounts";
 
 export default async function Address({
   params: { hash: address },
 }: {
   params: { hash: string };
 }) {
-  const transactions = await getTransactionsByAddress(address);
+  const accountData = getAccount(address);
+  const transactionsData = await getTransactionsByAddress(address);
+
+  const [account, transactions] = await Promise.all([
+    accountData,
+    transactionsData,
+  ]);
   const serializedTxns = transactions.map((txn) => ({
     hash: txn.hash,
     to: txn.to,
@@ -25,7 +32,9 @@ export default async function Address({
   return (
     <div className="grow mx-4 md:mx-6 lg:mx-24 mb-14">
       <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
-        <h1 className="mb-3 lg:mb-0 text-gray-3 text-2xl">Account</h1>
+        <h1 className="mb-3 lg:mb-0 text-gray-3 text-2xl">
+          {account?.is_contract ? "Contract" : "Account"}
+        </h1>
         <SearchBar />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-5 gap-y-4 md:gap-4">
