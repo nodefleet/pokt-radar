@@ -17,8 +17,8 @@ export default function Navbar() {
   ];
 
   return (
-    <header className={`bg-white p-4 sticky top-0 z-50`}>
-      <div className="flex-rows justify-between items-center w-full h-full flex  gap-4">
+    <header className={`bg-white px-3 py-1 sticky top-0 z-50`}>
+      <div className="flex-rows justify-between items-center w-full h-full flex gap-2">
         <Link href="/">
           <Image
             src={"/img/logo.png"}
@@ -28,25 +28,37 @@ export default function Navbar() {
             alt="Berachain logo"
           />
         </Link>
-        <InputSearch
-          name="seacht"
-          placeholder="Search by Address, Txn Hash, Block Height"
-        />
-        {Menu.map(({ name, path }, index) => (
-          <Link
-            key={index}
-            className={`text-base font-semibold text-black_custom ${
-              pathname === path && "text-blue_primary"
-            }`}
-            href={path}
+        <div className="mobileMenu w-full flex justify-end group">
+          <button
+            type="button"
+            className="lg:hidden md:hidden flex items-center p-2 rounded-lg float-end bg-black"
           >
-            {name}
-          </Link>
-        ))}
-        <button className="px-10 py-3 bg-black rounded-full justify-center items-center gap-2 flex flex-row text-white">
-          <div className="text-stone-50 text-base font-bold ">Testnet</div>
-          <i className="fa-solid fa-angle-down translate-y-0.5"></i>
-        </button>
+            <i className="fa-solid fa-bars text-2xl text-white"></i>
+          </button>
+          <div className="flex lg:flex-rows md:flex-rows max-sm:flex-col max-sm:opacity-0 max-sm:max-h-0 overflow-hidden justify-between items-center w-full h-full lg:gap-4 md:gap-2 max-sm:gap-2 max-sm:w-64 max-sm:group-hover:max-h-80 max-sm:group-hover:h-96 max-sm:group-hover:opacity-100 transition-all max-sm:absolute max-sm:bg-white max-sm:p-4 max-sm:right-0 max-sm:top-0 max-sm:items-end max-sm:rounded-bl-xl max-sm:shadow-md">
+            <InputSearch
+              name="seacht"
+              className="max-sm:w-0 max-sm:focus:w-full max-sm:focus:translate-x-2 transition-all"
+              classIconName="max-sm:right-0 max-sm:absolute max-sm:left-4 max-sm:opacity-50 max-sm:w-0"
+              placeholder="Search by Address, Txn Hash, Block Height"
+            />
+            {Menu.map(({ name, path }, index) => (
+              <Link
+                key={index}
+                className={`text-base font-semibold text-black_custom ${
+                  pathname === path && "text-blue_primary"
+                }`}
+                href={path}
+              >
+                {name}
+              </Link>
+            ))}
+            <button className="px-10 py-3 bg-black rounded-full justify-center items-center gap-2 flex flex-row text-white">
+              <div className="text-stone-50 text-base font-bold ">Testnet</div>
+              <i className="fa-solid fa-angle-down translate-y-0.5"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
   );
