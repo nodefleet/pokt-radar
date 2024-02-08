@@ -14,8 +14,8 @@ function BaseTable({
   children: JSX.Element[];
 }) {
   return (
-    <table className="table w-full text-gray-4">
-      <thead className="text-gray-3">
+    <table className="table w-full text-black">
+      <thead className="text-black">
         <tr>
           {headers.map((header, index) => (
             <th key={index} className="capitalize text-base">
@@ -37,7 +37,7 @@ export async function LatestBlocksTable() {
       {latestBlocks.map((block, index) => (
         <tr
           key={index}
-          className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-transparent-cream hover:border-l-cream"
+          className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
         >
           <td className="border-0 text-link">
             <Link href={`/block/${block.block_height}`}>
@@ -65,7 +65,7 @@ export async function LatestTransactionsTable() {
       {latestTransactions.map((txn, index) => (
         <tr
           key={index}
-          className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-transparent-cream hover:border-l-cream"
+          className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
         >
           <td className="border-0 text-link">
             <Link href={`/transaction/${txn.hash}`}>{shortHash(txn.hash)}</Link>

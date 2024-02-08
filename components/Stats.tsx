@@ -25,7 +25,7 @@ export default async function Stats() {
     count: stat.count.toString(),
   }));
   return (
-    <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg md:col-span-2">
+    <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg col-span-2">
       <div className="flex flex-col gap-8">
         <div className="flex items-center">
           <Image src={BeraIcon} alt="Pocket icon" />
@@ -123,13 +123,6 @@ export default async function Stats() {
             </p>
             <p className="font-normal text-xl">293,424,135.24 POKT</p>
           </div>
-        </div>
-      </div>
-
-      <div className="mt-8 md:mt-0 hidden">
-        <p className="ml-10 text-gray-3">Past Transactions (15 days)</p>
-        <div className="w-full max-w-[648px] max-h-[209px] ">
-          <TransactionsChart data={statsSerialized} />
         </div>
       </div>
     </div>
