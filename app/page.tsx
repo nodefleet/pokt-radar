@@ -13,8 +13,8 @@ export const revalidate = 60;
 
 export default async function Home() {
   return (
-    <main className=" flex flex-col">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-6 mb-9 w-full p-6 max-sm:p-4 self-center">
+    <main className="flex flex-col py-11 px-10 max-sm:p-4 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
         {/* @ts-expect-error Async Server Component */}
         <Stats />
         <Stadist />

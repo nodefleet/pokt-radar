@@ -8,8 +8,8 @@ export default function DataTable({
   small?: boolean;
 }) {
   return (
-    <table className={`table ${small && "table-small"} w-full text-gray-4`}>
-      <thead className="bg-gray-10 rounded-t-xl text-gray-3">
+    <table className={`table ${small && "table-small"} w-full text-black`}>
+      <thead className="font-medium">
         <tr>
           {headers.map((header, index) => (
             <th key={index} className="capitalize text-base">

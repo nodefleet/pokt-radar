@@ -38,7 +38,7 @@ export default function Pagination({
     );
   }
   return (
-    <div className="flex items-center text-dark-brown space-x-2.5">
+    <div className="flex items-center text-black space-x-2.5">
       <div className="p-2 bg-gray-10 rounded cursor-pointer">
         <Link
           href={{
@@ -46,7 +46,7 @@ export default function Pagination({
             query: { page: 1, ...searchParams },
           }}
         >
-          <ChevronDoubleLeftIcon className="h-4 w-4" />
+          <ChevronDoubleLeftIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
         </Link>
       </div>
       <Link
@@ -59,7 +59,7 @@ export default function Pagination({
         }}
       >
         <div className="p-2 bg-gray-10 rounded cursor-pointer">
-          <ChevronLeftIcon className="h-4 w-4" />
+          <ChevronLeftIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
         </div>
       </Link>
       <div className="btn-group bg-gray-10">
@@ -75,8 +75,10 @@ export default function Pagination({
             }}
           >
             <button
-              className={`btn btn-sm border-0 ${
-                pageNumber === currentPage ? "font-bold" : "font-normal"
+              className={`btn btn-sm border-0 hover:text-blue_primary ${
+                pageNumber === currentPage
+                  ? "font-bold text-blue_primary"
+                  : "font-normal"
               }`}
             >
               {pageNumber}
@@ -94,7 +96,7 @@ export default function Pagination({
         }}
       >
         <div className="p-2 bg-gray-10 rounded cursor-pointer">
-          <ChevronRightIcon className="h-4 w-4" />
+          <ChevronRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
         </div>
       </Link>
       <Link
@@ -104,7 +106,7 @@ export default function Pagination({
         }}
       >
         <div className="p-2 bg-gray-10 rounded cursor-pointer">
-          <ChevronDoubleRightIcon className="h-4 w-4" />
+          <ChevronDoubleRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
         </div>
       </Link>
     </div>

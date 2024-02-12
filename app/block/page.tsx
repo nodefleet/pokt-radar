@@ -5,6 +5,7 @@ import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import FromNow from "@/components/FromNow";
 import { getBlocks } from "@/utils/blocks";
+import TransactionsChart from "@/components/TransactionsChart";
 
 export default async function Blocks({
   searchParams,
@@ -16,8 +17,12 @@ export default async function Blocks({
       !isNaN(parseInt(searchParams.page)) &&
       parseInt(searchParams.page)) ||
     1;
+  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
+    date: `week ${(i + 1).toString().padStart(2, "0")}`,
+    count: i === 5 ? 300 : 100 * i,
+  }));
 
-  const PAGE_SIZE = 25;
+  const PAGE_SIZE = 10;
   const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
   const { blocks, count: totalBlocks } = await getBlocks({
     take: PAGE_SIZE,
@@ -34,40 +39,58 @@ export default async function Blocks({
   ];
 
   return (
-    <div className="grow mx-4 md:mx-24">
-      <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
-        <h1 className="mb-3 lg:mb-0 text-gray-3 text-2xl">Blocks</h1>
-        <SearchBar width="w-full lg:w-4/6 xl:w-7/12" />
-      </div>
+    <div className="grow p-6 max-sm:p-0 max-sm:py-4">
+      <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 h-full">
+        <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-xl shadow-lg w-full">
+          <div className="p-4 flex justify-between">
+            <p className="text-black font-semibold text-xl">Relays per block</p>
+            <div className="relative w-28">
+              <label className="absolute right-2 top-3 translate-y-0.5 cursor-pointer">
+                <i className="fa-solid fa-angle-down"></i>
+              </label>
+              <select
+                className="border border-black py-3 text-base px-4 outline-none rounded-full appearance-none w-full cursor-pointer relative z-10 bg-transparent"
+                id="selectMo"
+              >
+                <option value={1}>Filter</option>
+                <option value={2}>Monthly</option>
+              </select>
+            </div>
+          </div>
+          <div className="w-full h-full max-h-96">
+            <TransactionsChart data={weeksArray} />
+          </div>
+        </div>
 
-      <div className=" bg-white mt-6 mb-10 p-5 rounded-xl shadow-xl overflow-x-auto">
-        <DataTable headers={tableHeaders}>
-          {blocks.map((block, index: number) => (
-            <tr key={index} className="border-y border-gray-bera">
-              <td className="border-0 text-link">
-                <Link
-                  href={`/block/${block.block_height}`}
-                >{`${block.block_height}`}</Link>
-              </td>
-              <td className="border-0">
-                {block.timestamp && (
-                  <FromNow datetime={formatISO(block.timestamp)} />
-                )}
-              </td>
-              <td className="border-0">{block.total_transactions}</td>
-              <td className="border-0">{block.gas_used?.toFixed()}</td>
-              <td className="border-0">{block.gas_limit?.toFixed()}</td>
-              <td className="border-0">{block.size?.toFixed()}</td>
-            </tr>
-          ))}
-        </DataTable>
-        <div className="flex mt-4 justify-end">
-          <Pagination
-            path="/block"
-            currentPage={page}
-            size={PAGE_SIZE}
-            total={totalBlocks}
-          />
+        <div className=" bg-white mt-6 mb-10 p-5 rounded-xl shadow-xl overflow-x-auto">
+          <DataTable headers={tableHeaders}>
+            {blocks.map((block, index: number) => (
+              <tr key={index} className="text-black text-sm font-normal">
+                <td className="border-0 text-black font-bold">
+                  <Link
+                    href={`/block/${block.block_height}`}
+                  >{`${block.block_height}`}</Link>
+                </td>
+                <td className="border-0">
+                  {block.timestamp && (
+                    <FromNow datetime={formatISO(block.timestamp)} />
+                  )}
+                </td>
+                <td className="border-0">{block.total_transactions}</td>
+                <td className="border-0">{block.gas_used?.toFixed()}</td>
+                <td className="border-0">{block.gas_limit?.toFixed()}</td>
+                <td className="border-0">{block.size?.toFixed()}</td>
+              </tr>
+            ))}
+          </DataTable>
+          <div className="flex mt-4 justify-end">
+            <Pagination
+              path="/block"
+              currentPage={page}
+              size={PAGE_SIZE}
+              total={totalBlocks}
+            />
+          </div>
         </div>
       </div>
     </div>
