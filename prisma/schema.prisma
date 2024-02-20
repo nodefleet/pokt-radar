@@ -8,51 +8,58 @@ datasource db {
 }
 
 model blocks {
-  block_height                BigInt         @id @unique
-  hash                        String?        @unique(map: "blocks_block_hash_key")
-  size                        Decimal?       @db.Decimal
-  gas_used                    Decimal?       @db.Decimal
-  gas_limit                   Decimal?       @db.Decimal
-  parent_hash                 String?
-  total_transactions          Int?           @default(0)
-  total_contract_transactions Int?           @default(0)
-  proposed_on_slot            Int?
-  proposed_on_epoch           Int?
-  timestamp                   DateTime?      @db.Timestamptz(6)
-  state_root                  String?
-  nonce                       String?
-  transactions                transactions[]
+  id               Int       @id @default(autoincrement())
+  hash             String?   @db.Char(64)
+  height           Int?
+  time             DateTime? @db.Timestamp(6)
+  proposer_address String?   @db.Char(40)
+  tx_count         Int?
+  tx_total         Int?
 }
 
 model transactions {
-  hash              String    @id
-  status            Boolean?  @default(true)
-  gas               Decimal   @db.Decimal
-  gas_price         Decimal   @db.Decimal
-  from              String
-  to                String
-  value             Decimal   @db.Decimal
-  block_height      BigInt
-  input             String
-  type              String?
-  v                 String?
-  s                 String?
-  r                 String?
-  transaction_index String?
-  block_hash        String?
-  nonce             String?
-  chain_id          Decimal?  @db.Decimal
-  timestamp         DateTime? @db.Timestamptz(6)
-  blocks            blocks    @relation(fields: [block_height], references: [block_height], onUpdate: Restrict)
+  id               Int      @id @default(autoincrement())
+  hash             String?  @db.Char(64)
+  from_address     String?  @db.Char(40)
+  to_address       String?  @db.Char(40)
+  app_pub_key      String?  @db.Char(64)
+  blockchains      String?
+  message_type     String?
+  height           Int?
+  index            Int?
+  stdtx            Json?
+  tx_result        Json?
+  tx               String?
+  entropy          BigInt?
+  fee              Int?
+  fee_denomination String?  @db.VarChar(5)
+  amount           Decimal? @db.Decimal
 }
-
 
 model accounts {
-  address       String   @id
-  value         Decimal? @default(0) @db.Decimal
-  balance       Decimal? @default(0) @db.Decimal
-  is_contract   Boolean? @default(false)
-  contract_code String?
+  id                   Int      @id @default(autoincrement())
+  address              String?  @db.Char(40)
+  height               Int?
+  account_type         String?
+  balance              Decimal? @db.Decimal
+  balance_denomination String?  @db.VarChar(5)
 }
 
+model apps {
+  id            Int      @id @default(autoincrement())
+  address       String?  @db.Char(40)
+  height        Int?
+  jailed        Boolean?
+  public_key    String?  @db.Char(64)
+  staked_tokens Decimal? @db.Decimal
+}
 
+model nodes {
+  id          Int      @id @default(autoincrement())
+  address     String?  @db.Char(40)
+  height      Int?
+  jailed      Boolean?
+  public_key  String?  @db.Char(64)
+  service_url String?
+  tokens      Decimal? @db.Decimal
+}

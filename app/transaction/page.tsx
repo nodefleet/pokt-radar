@@ -35,16 +35,7 @@ export default async function Transactions({
     block: filterByBlock,
   });
 
-  const tableHeaders = [
-    "Tx Hash",
-    "Block",
-    "Time",
-    "From",
-    "",
-    "To",
-    "Value",
-    "Fee",
-  ];
+  const tableHeaders = ["Tx Hash", "Block", "Time", "From", "", "To"];
 
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
     date: `week ${(i + 1).toString().padStart(2, "0")}`,
@@ -86,22 +77,18 @@ export default async function Transactions({
               <tr key={index} className="border-y border-gray-bera">
                 <td className="border-0 text-black font-medium">
                   <Link href={`/transaction/${txn.hash}`}>
-                    {shortHash(txn.hash)}
+                    {txn.hash && shortHash(txn.hash)}
                   </Link>
                 </td>
                 <td className="border-0 text-black">
-                  <Link href={`/block/${txn.block_height}`}>
-                    {txn.block_height.toString()}
+                  <Link href={`/block/${txn.height}`}>
+                    {txn.height && txn.height.toString()}
                   </Link>
                 </td>
-                <td className="border-0">
-                  {txn.timestamp && (
-                    <FromNow datetime={formatISO(txn.timestamp)} />
-                  )}
-                </td>
+                <td className="border-0">asdsad</td>
                 <td className="border-0 xl:pr-0  text-black">
-                  <Link href={`/address/${txn.from}`}>
-                    {shortHash(txn.from)}
+                  <Link href={`/address/${txn.from_address}`}>
+                    {txn.from_address && shortHash(txn.from_address)}
                   </Link>
                 </td>
                 <td className="border-0 pl-0 ">
@@ -110,10 +97,10 @@ export default async function Transactions({
                   </div>
                 </td>
                 <td className="border-0 text-black">
-                  <Link href={`/address/${txn.to}`}>{shortHash(txn.to)}</Link>
+                  <Link href={`/address/${txn.to_address}`}>
+                    {txn.to_address && shortHash(txn.to_address)}
+                  </Link>
                 </td>
-                <td className="border-0">{txn.value.toFixed()}</td>
-                <td className="border-0">{txn.gas.toString()}</td>
               </tr>
             ))}
           </DataTable>

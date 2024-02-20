@@ -5,25 +5,19 @@ import BlockIcon from "../public/blocks.svg";
 import TxnsIcon from "../public/txns.svg";
 import { formatISO } from "date-fns";
 
-import { getLastBlockHeight } from "@/utils/blocks";
-import { getTotalTransactions, getTransactionStats } from "@/utils/txns";
-import TransactionsChart from "./TransactionsChart";
+// import { getLastBlockHeight } from "@/utils/blocks";
+// import { getTotalTransactions } from "@/utils/txns";
+// import TransactionsChart from "./TransactionsChart";
 
 export default async function Stats() {
-  const lastBlockHeightData = getLastBlockHeight();
-  const totalTxnsData = getTotalTransactions();
-  const transactionStatsData = getTransactionStats();
+  // const lastBlockHeightData = getLastBlockHeight();
+  // const totalTxnsData = getTotalTransactions();
 
-  const [lastBlockHeight, totalTxns, transactionStats] = await Promise.all([
-    lastBlockHeightData,
-    totalTxnsData,
-    transactionStatsData,
-  ]);
+  // const [lastBlockHeight, totalTxns] = await Promise.all([
+  //   lastBlockHeightData,
+  //   totalTxnsData,
+  // ]);
 
-  const statsSerialized = transactionStats.map((stat) => ({
-    date: formatISO(stat.date, { representation: "date" }),
-    count: stat.count.toString(),
-  }));
   return (
     <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg col-span-2">
       <div className="flex flex-col gap-8">
@@ -43,7 +37,9 @@ export default async function Stats() {
           <div className="ml-7 flex flex-row max-sm:flex-col max-sm:ml-4">
             <p className="text-black text-xl font-normal">Block Height</p>
             <p className="font-black text-xl rounded-full ml-5 max-sm:ml-0">
-              {lastBlockHeight?.block_height.toString()}
+              {/* {lastBlockHeight && lastBlockHeight.height !== null
+                ? lastBlockHeight.height.toString()
+                : ""} */}
               <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
                 Last 10s
               </span>

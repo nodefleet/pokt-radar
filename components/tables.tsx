@@ -2,9 +2,8 @@ import { formatISO } from "date-fns";
 import Link from "next/link";
 
 import FromNow from "./FromNow";
-import { getLatestBlocks } from "@/utils/blocks";
-import { getLatestTransactions } from "@/utils/txns";
 import { shortHash } from "@/utils";
+import { getLatestBlocks } from "@/utils/blocks";
 
 function BaseTable({
   children,
@@ -30,53 +29,58 @@ function BaseTable({
 }
 
 export async function LatestBlocksTable() {
-  const headers = ["block", "time", "total transactions", "gas used"];
-  const latestBlocks = await getLatestBlocks();
+  const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
+  const lastBlockHeightData = getLatestBlocks();
+
+  const [latestBlocks] = await Promise.all([lastBlockHeightData]);
   return (
     <BaseTable headers={headers}>
-      {latestBlocks.map((block, index) => (
-        <tr
-          key={index}
-          className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
-        >
-          <td className="border-0 text-link">
-            <Link href={`/block/${block.block_height}`}>
-              {`${block.block_height}`}
-            </Link>
-          </td>
-          <td className="border-0">
-            {block.timestamp && (
-              <FromNow datetime={formatISO(block.timestamp)} />
-            )}
-          </td>
-          <td className="border-0">{block.total_transactions}</td>
-          <td className="border-0">{block.gas_used?.toFixed()}</td>
-        </tr>
-      ))}
+      {latestBlocks &&
+        latestBlocks.map((block, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-link">
+              <Link href={`/block/${block.height}`}>{`${block.height}`}</Link>
+            </td>
+            <td className="border-0">
+              {block.time && <FromNow datetime={formatISO(block.time)} />}
+            </td>
+            <td className="border-0">
+              {block.proposer_address ? block.proposer_address : "N/A"}
+            </td>
+            <td className="border-0">{block.tx_total}</td>
+            <td className="border-0">{block.tx_count?.toFixed()}</td>
+          </tr>
+        ))}
     </BaseTable>
   );
 }
 
-export async function LatestTransactionsTable() {
-  const headers = ["tx hash", "block", "time", "gas"];
-  const latestTransactions = await getLatestTransactions();
+export async function LatestTransactionsTable(latestTransactions: any[]) {
+  const headers = ["Transaction ID", "Method", "Block", "From", "To"];
   return (
     <BaseTable headers={headers}>
-      {latestTransactions.map((txn, index) => (
-        <tr
-          key={index}
-          className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
-        >
-          <td className="border-0 text-link">
-            <Link href={`/transaction/${txn.hash}`}>{shortHash(txn.hash)}</Link>
-          </td>
-          <td className="border-0">{txn.block_height.toString()}</td>
-          <td className="border-0">
-            {txn.timestamp && <FromNow datetime={formatISO(txn.timestamp)} />}
-          </td>
-          <td className="border-0">{txn.gas.toFixed()}</td>
-        </tr>
-      ))}
+      {latestTransactions &&
+        latestTransactions.map((txn, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-link">
+              <Link href={txn.hash ? `/transaction/${txn.hash}` : "/"}>
+                {txn.hash ? shortHash(txn.hash) : "N/A"}
+              </Link>
+            </td>
+            <td className="border-0">{txn.blockchains}</td>
+            <td className="border-0">
+              {txn.height !== null ? txn.height.toString() : "N/A"}
+            </td>
+            <td className="border-0">{txn.from_address}</td>
+            <td className="border-0">{txn.to_address}</td>
+          </tr>
+        ))}
     </BaseTable>
   );
 }

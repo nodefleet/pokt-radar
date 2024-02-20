@@ -1,6 +1,5 @@
 import { formatISO } from "date-fns";
 import Link from "next/link";
-import SearchBar from "@/components/SearchBar";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import FromNow from "@/components/FromNow";
@@ -29,14 +28,7 @@ export default async function Blocks({
     skip: SKIP,
   });
 
-  const tableHeaders = [
-    "Block",
-    "Time",
-    "Txn",
-    "Gas used",
-    "Gas limit",
-    "Size",
-  ];
+  const tableHeaders = ["Block", "Time", "Txn", "Gas used"];
 
   return (
     <div className="grow p-6 max-sm:p-0 max-sm:py-4">
@@ -68,18 +60,14 @@ export default async function Blocks({
               <tr key={index} className="text-black text-sm font-normal">
                 <td className="border-0 text-black font-bold">
                   <Link
-                    href={`/block/${block.block_height}`}
-                  >{`${block.block_height}`}</Link>
+                    href={`/block/${block.height}`}
+                  >{`${block.height}`}</Link>
                 </td>
                 <td className="border-0">
-                  {block.timestamp && (
-                    <FromNow datetime={formatISO(block.timestamp)} />
-                  )}
+                  {block.time && <FromNow datetime={formatISO(block.time)} />}
                 </td>
-                <td className="border-0">{block.total_transactions}</td>
-                <td className="border-0">{block.gas_used?.toFixed()}</td>
-                <td className="border-0">{block.gas_limit?.toFixed()}</td>
-                <td className="border-0">{block.size?.toFixed()}</td>
+                <td className="border-0">{block.tx_total}</td>
+                <td className="border-0">{block.tx_count}</td>
               </tr>
             ))}
           </DataTable>
