@@ -1,19 +1,6 @@
-"use client";
-import DoughnutsChart from "./Doughnut";
-import TransactionsChart from "./TransactionsChart";
+import { DoughnutsChartHome, TransationChartHome } from "./charts";
 
-export default function Stadist() {
-  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
-    date: `week ${(i + 1).toString().padStart(2, "0")}`,
-    count: i === 5 ? 300 : 100 * i,
-  }));
-  const dataDought = [
-    { date: "Ethereum", count: 900 },
-    { date: "BSC Mainnet", count: 500 },
-    { date: "Polygon Mainnet", count: 700 },
-    { date: "FUSE Mainnet", count: 600 },
-    { date: "Others", count: 300 },
-  ];
+export default async function Stadist() {
   return (
     <div className="col-span-2 flex flex-row max-sm:flex-col max-md:flex-col gap-4 w-full">
       <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 bg-white rounded-xl shadow-lg w-full">
@@ -34,7 +21,8 @@ export default function Stadist() {
             </div>
           </div>
           <div className="w-full h-full max-h-96">
-            <TransactionsChart data={weeksArray} />
+            {/* @ts-expect-error Async Server Component */}
+            <TransationChartHome />
           </div>
         </div>
       </div>
@@ -44,7 +32,8 @@ export default function Stadist() {
             Chains Distribution
           </p>
           <div className="w-full h-full max-h-96">
-            <DoughnutsChart data={dataDought} />
+            {/* @ts-expect-error Async Server Component */}
+            <DoughnutsChartHome />
           </div>
         </div>
       </div>

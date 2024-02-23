@@ -28,7 +28,15 @@ export default async function Blocks({
     skip: SKIP,
   });
 
-  const tableHeaders = ["Block", "Time", "Txn", "Gas used"];
+  const tableHeaders = [
+    "Block",
+    "Timestamp",
+    "Size (mb)",
+    "Relays",
+    "Nodes",
+    "Transactions",
+    "Producer",
+  ];
 
   return (
     <div className="grow p-6 max-sm:p-0 max-sm:py-4">
@@ -67,7 +75,10 @@ export default async function Blocks({
                   {block.time && <FromNow datetime={formatISO(block.time)} />}
                 </td>
                 <td className="border-0">{block.tx_total}</td>
+                <td className="border-0">{block.tx_total}</td>
                 <td className="border-0">{block.tx_count}</td>
+                <td className="border-0">197</td>
+                <td className="border-0">www.nodefleet.org</td>
               </tr>
             ))}
           </DataTable>

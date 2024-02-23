@@ -41,7 +41,7 @@ export async function LatestBlocksTable() {
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-link">
+            <td className="border-0 text-black font-bold">
               <Link href={`/block/${block.height}`}>{`${block.height}`}</Link>
             </td>
             <td className="border-0">
@@ -68,7 +68,7 @@ export async function LatestTransactionsTable(latestTransactions: any[]) {
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-link">
+            <td className="border-0 text-black">
               <Link href={txn.hash ? `/transaction/${txn.hash}` : "/"}>
                 {txn.hash ? shortHash(txn.hash) : "N/A"}
               </Link>

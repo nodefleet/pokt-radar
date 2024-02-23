@@ -5,18 +5,16 @@ import {
   LatestTransactionsTable,
 } from "@/components/tables";
 import Stadist from "@/components/Stadist";
-// import { getLatestTransactions } from "@/utils/txns";
-import { getLatestBlocks } from "@/utils/blocks";
 
 export const revalidate = 60;
 
 export default async function Home() {
-  // const latestTransactionsData = getLatestTransactions();
   return (
     <main className="flex flex-col py-11 px-10 max-sm:p-4 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
         {/* @ts-expect-error Async Server Component */}
         <Stats />
+        {/* @ts-expect-error Async Server Component */}
         <Stadist />
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
           <div className="overflow-x-auto w-full">
@@ -38,8 +36,7 @@ export default async function Home() {
               Latest Transactions
             </h6>
             <hr />
-            {/* @ts-expect-error Async Server Component */}
-            {/* <LatestTransactionsTable /> */}
+            {/*  <LatestTransactionsTable /> */}
           </div>
           <Link
             href="/transaction"
