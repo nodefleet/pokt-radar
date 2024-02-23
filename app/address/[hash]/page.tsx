@@ -22,12 +22,12 @@ export default async function Address({
     transactionsData,
   ]);
   const serializedTxns = transactions.map((txn) => ({
-    hash: txn.hash,
-    to: txn.to,
-    from: txn.from,
-    time: txn.timestamp?.toISOString(),
-    block_height: txn.block_height.toString(),
-    gas: txn.gas.toString(),
+    hash: txn.hash || "",
+    to: txn.to_address || "",
+    from: txn.from_address || "",
+    time: "",
+    block_height: txn.height?.toString() || "",
+    gas: "",
   }));
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
     date: `week ${(i + 1).toString().padStart(2, "0")}`,

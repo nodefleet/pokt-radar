@@ -41,14 +41,14 @@ export default async function Transaction({
             <div className="grid grid-cols-3">
               <p>Block</p>
               <p className="col-span-2 text-link">
-                <Link href={`/block/${txn.block_height}`}>
-                  {txn.block_height.toString()}
+                <Link href={`/block/${txn.height}`}>
+                  {txn.height !== null && txn.height.toString()}
                 </Link>
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>Time</p>
-              <p className="col-span-2">
+              {/* <p className="col-span-2">
                 {txn.timestamp && (
                   <FromNow datetime={formatISO(txn.timestamp)} />
                 )}{" "}
@@ -56,31 +56,35 @@ export default async function Transaction({
                 {txn.timestamp &&
                   format(txn.timestamp, "MMM dd yyyy, H:mm:ss O")}
                 )
-              </p>
+              </p> */}
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>From</p>
               <p className="col-span-2 text-link">
-                <Link href={`/address/${txn.from}`}>{txn.from}</Link>
+                <Link href={`/address/${txn.from_address}`}>
+                  {txn.from_address}
+                </Link>
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p>To</p>
               <p className="col-span-2 text-link">
-                <Link href={`/address/${txn.to}`}>{txn.to}</Link>
+                <Link href={`/address/${txn.to_address}`}>
+                  {txn.to_address}
+                </Link>
               </p>
             </div>
             <div className="grid grid-cols-3">
               <p>Gas</p>
-              <p className="col-span-2">{txn.gas.toFixed()}</p>
+              <p className="col-span-2">{txn.blockchains}</p>
             </div>
             <div className="grid grid-cols-3">
               <p>Gas Price</p>
-              <p className="col-span-2">{txn.gas_price.toFixed()}</p>
+              <p className="col-span-2">{txn.fee_denomination}</p>
             </div>
             <div className="grid grid-cols-3">
               <p>Input</p>
-              <p className="col-span-2 break-words">{txn.input}</p>
+              <p className="col-span-2 break-words">{txn.fee_denomination}</p>
             </div>
           </>
         ) : (

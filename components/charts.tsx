@@ -13,6 +13,33 @@ export async function DoughnutsChartHome() {
   return <DoughnutsChart data={dataDought} />;
 }
 
+export async function DoughnutsChartMakert() {
+  const dataDought = [
+    { date: "CEX", count: 900 },
+    { date: "DEX ", count: 500 },
+    { date: "OTC", count: 700 },
+  ];
+  return (
+    <DoughnutsChart
+      data={dataDought}
+      backgroundColor={[
+        "rgba(105, 141, 255, 1)",
+        "rgba(157, 180, 254, 1)",
+        "rgba(187, 203, 253, 1)",
+      ]}
+      borderColor={[
+        "rgba(105, 141, 255, 0.8)",
+        "rgba(157, 180, 254, 0.8)",
+        "rgba(187, 203, 253, 0.8)",
+      ]}
+      position="right"
+      align="start"
+      roundedOption={true}
+      labelfom="rectRounded"
+    />
+  );
+}
+
 export async function TransationChartHome() {
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
     date: `week ${(i + 1).toString().padStart(2, "0")}`,

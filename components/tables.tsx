@@ -4,6 +4,7 @@ import Link from "next/link";
 import FromNow from "./FromNow";
 import { shortHash } from "@/utils";
 import { getLatestBlocks } from "@/utils/blocks";
+import React from "react";
 
 function BaseTable({
   children,
@@ -79,6 +80,52 @@ export async function LatestTransactionsTable(latestTransactions: any[]) {
             </td>
             <td className="border-0">{txn.from_address}</td>
             <td className="border-0">{txn.to_address}</td>
+          </tr>
+        ))}
+    </BaseTable>
+  );
+}
+
+interface MakerTransation {
+  data: { pair: string; volume: number }[];
+}
+
+export async function LatestMakerTable({ data }: MakerTransation) {
+  const headers = ["#", "Pair", "Volume"];
+  return (
+    <BaseTable headers={headers}>
+      {data &&
+        data.map((row, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-black">{index + 1}</td>
+            <td className="border-0 font-bold">{row.pair}</td>
+            <td className="border-0">{row.volume}</td>
+          </tr>
+        ))}
+    </BaseTable>
+  );
+}
+
+interface MakerExchange {
+  data: { pair: string; volume: number }[];
+}
+
+export async function LatestExchangeTable({ data }: MakerExchange) {
+  const headers = ["Exchange", "Pair", "Price", "Daily Volume", "Supply"];
+  return (
+    <BaseTable headers={headers}>
+      {data &&
+        data.map((row, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-black">{index + 1}</td>
+            <td className="border-0 font-bold">{row.pair}</td>
+            <td className="border-0">{row.volume}</td>
           </tr>
         ))}
     </BaseTable>

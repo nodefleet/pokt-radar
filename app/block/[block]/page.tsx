@@ -21,12 +21,12 @@ export default async function Block({ params }: { params: { block: string } }) {
   let serializedTxns;
   if (transactions) {
     serializedTxns = transactions.map((txn) => ({
-      hash: txn.hash,
-      to: txn.to,
-      from: txn.from,
-      time: txn.timestamp?.toISOString(),
-      block_height: txn.block_height.toString(),
-      gas: txn.gas.toString(),
+      hash: txn.hash || "",
+      to: txn.to_address || "",
+      from: txn.from_address || "",
+      time: "",
+      block_height: txn.height?.toString() || "",
+      gas: "",
     }));
   }
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
@@ -43,28 +43,20 @@ export default async function Block({ params }: { params: { block: string } }) {
               {block && `Block ID`}
             </h1>
             <p className="font-medium text-3xl">
-              {block && `${block?.block_height}`}
+              {block && `${block?.height}`}
             </p>
             <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
               Last 10s
             </span>
             <div className="flex p-1 rounded-full shadow-xl space-x-6 bg-neutral-300">
               <Link
-                href={
-                  block?.block_height
-                    ? `/block/${block?.block_height - BigInt(1)}`
-                    : ""
-                }
+                href={block?.height ? `/block/${block?.height}` : ""}
                 className=""
               >
                 <ChevronLeftIcon className="w-5 h-5 stroke-white stroke-2" />
               </Link>
               <Link
-                href={
-                  block?.block_height
-                    ? `/block/${block?.block_height + BigInt(1)}`
-                    : ""
-                }
+                href={block?.height ? `/block/${block?.height}` : ""}
                 className=""
               >
                 <ChevronRightIcon className="w-5 h-5 stroke-white stroke-2" />
@@ -79,7 +71,7 @@ export default async function Block({ params }: { params: { block: string } }) {
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Block</p>
                   <div className="flex col-span-2 space-x-8 truncate">
-                    <p className="self-center ">{`${block?.block_height}`}</p>
+                    <p className="self-center ">{`${block?.height}`}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -89,12 +81,9 @@ export default async function Block({ params }: { params: { block: string } }) {
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Time</p>
                   <p className="col-span-2">
-                    {block.timestamp && (
-                      <FromNow datetime={formatISO(block.timestamp)} />
-                    )}{" "}
+                    {block.time && <FromNow datetime={formatISO(block.time)} />}{" "}
                     (
-                    {block.timestamp &&
-                      format(block.timestamp, "MMM dd yyyy, H:mm:ss O")}
+                    {block.time && format(block.time, "MMM dd yyyy, H:mm:ss O")}
                     )
                   </p>
                 </div>
@@ -106,31 +95,34 @@ export default async function Block({ params }: { params: { block: string } }) {
                       className="text-link"
                       href={{
                         pathname: "/transaction",
-                        query: { block: block?.block_height.toString() },
+                        query: {
+                          block:
+                            block?.height !== null
+                              ? block.height.toString()
+                              : "",
+                        },
                       }}
                     >
-                      {block.total_transactions}
+                      {block.tx_total}
                     </Link>{" "}
                     transactions
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Contract Internal Transactions</p>
-                  <p className="col-span-2">
-                    {block?.total_contract_transactions}
-                  </p>
+                  <p className="col-span-2">{block?.tx_count}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Gas used</p>
-                  <p className="col-span-2">{block?.gas_used?.toFixed()}</p>
+                  <p className="col-span-2">{block?.proposer_address}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Gas limit</p>
-                  <p className="col-span-2">{block?.gas_limit?.toFixed()}</p>
+                  <p className="col-span-2">{block?.proposer_address}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Previous Block Hash</p>
-                  <p className="col-span-2">{block?.parent_hash}</p>
+                  <p className="col-span-2">{block?.hash}</p>
                 </div>
               </>
             ) : (
