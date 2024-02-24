@@ -78,7 +78,7 @@ export default async function Blocks({
                 <td className="border-0">{block.tx_total}</td>
                 <td className="border-0">{block.tx_count}</td>
                 <td className="border-0">197</td>
-                <td className="border-0">www.nodefleet.org</td>
+                <td className="border-0 font-bold">www.nodefleet.org</td>
               </tr>
             ))}
           </DataTable>
