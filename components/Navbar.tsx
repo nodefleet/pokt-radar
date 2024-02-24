@@ -12,7 +12,7 @@ export default function Navbar() {
     { name: "Transactions", path: "/transaction" },
     { name: "Blocks", path: "/block" },
     { name: "Market", path: "/market" },
-    { name: "Relays", path: "/relays" },
+    { name: "Relays", path: "/relay" },
     { name: "Governance", path: "/governance" },
   ];
 
@@ -21,7 +21,7 @@ export default function Navbar() {
       <div className="flex-rows justify-between items-center w-full h-full flex gap-2">
         <Link href="/">
           <Image
-            src={"/img/logo.png"}
+            src={"/img/logo.svg"}
             width="100"
             height="100"
             className="w-56 h-full"

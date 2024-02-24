@@ -3,7 +3,7 @@
 interface InputSearchProps {
   name: string;
   className?: string;
-  placeholder: string;
+  placeholder?: string;
   classIconName?: string;
 }
 

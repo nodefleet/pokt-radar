@@ -11,9 +11,9 @@ export default async function Market() {
   ];
 
   return (
-    <div className="grow p-6 max-sm:p-0 max-sm:py-4 flex flex-col gap-8">
+    <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
       <div className="flex flex-row max-sm:flex-col max-sm:gap-2 gap-4">
-        <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg w-9/12">
+        <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg lg:w-9/12">
           <div className="mt-8 md:mt-0 max-sm:mt-0">
             <div className="flex justify-start flex-row items-start">
               <p className="mb-4 text-black font-semibold text-xl">
