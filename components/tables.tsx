@@ -131,3 +131,48 @@ export async function LatestExchangeTable({ data }: MakerExchange) {
     </BaseTable>
   );
 }
+
+interface GovernanceProsp {
+  data: { block: string; status: string; height: number }[];
+}
+
+export async function GovernanceTable({ data }: GovernanceProsp) {
+  const headers = ["Features", "Status", "Height"];
+  return (
+    <BaseTable headers={headers}>
+      {data &&
+        data.map((row, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-black">{row.block}</td>
+            <td className="border-0 text-emerald-600">{row.status}</td>
+            <td className="border-0">{row.height}</td>
+          </tr>
+        ))}
+    </BaseTable>
+  );
+}
+
+interface GovernanceTable2 {
+  data: { parameters: string; amount: number }[];
+}
+
+export async function GovernanceTable2({ data }: GovernanceTable2) {
+  const headers = ["Parameters", "Amount"];
+  return (
+    <BaseTable headers={headers}>
+      {data &&
+        data.map((row, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-black">{row.parameters}</td>
+            <td className="border-0">{row.amount}</td>
+          </tr>
+        ))}
+    </BaseTable>
+  );
+}

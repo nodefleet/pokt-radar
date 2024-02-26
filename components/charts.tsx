@@ -47,3 +47,11 @@ export async function TransationChartHome() {
   }));
   return <TransactionsChart data={weeksArray} />;
 }
+
+export async function GovernancePage() {
+  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
+    date: `week ${(i + 1).toString().padStart(2, "0")}`,
+    count: i === 5 ? 300 : 100 * i,
+  }));
+  return <TransactionsChart data={weeksArray} />;
+}
