@@ -29,15 +29,23 @@ function BaseTable({
   );
 }
 
-export async function LatestBlocksTable() {
-  const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
-  const lastBlockHeightData = getLatestBlocks();
+interface BlockData {
+  height: number;
+  time?: string;
+  size?: string | null;
+  tx_total: number;
+  tx_count?: number;
+}
 
-  const [latestBlocks] = await Promise.all([lastBlockHeightData]);
+export async function LatestBlocksTable({ data }: { data: BlockData[] }) {
+  const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
+  // const lastBlockHeightData = getLatestBlocks();
+
+  // const [latestBlocks] = await Promise.all([lastBlockHeightData]);
   return (
     <BaseTable headers={headers}>
-      {latestBlocks &&
-        latestBlocks.map((block, index) => (
+      {data &&
+        data.map((block, index) => (
           <tr
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
@@ -46,11 +54,11 @@ export async function LatestBlocksTable() {
               <Link href={`/block/${block.height}`}>{`${block.height}`}</Link>
             </td>
             <td className="border-0">
-              {block.time && <FromNow datetime={formatISO(block.time)} />}
+              {block.time && (
+                <FromNow datetime={formatISO(new Date(block.time))} />
+              )}
             </td>
-            <td className="border-0">
-              {block.proposer_address ? block.proposer_address : "N/A"}
-            </td>
+            <td className="border-0">{block.size ? block.size : "N/A"}</td>
             <td className="border-0">{block.tx_total}</td>
             <td className="border-0">{block.tx_count?.toFixed()}</td>
           </tr>
@@ -59,27 +67,43 @@ export async function LatestBlocksTable() {
   );
 }
 
-export async function LatestTransactionsTable(latestTransactions: any[]) {
+interface TransactionData {
+  hash?: string | null;
+  blockchains: string;
+  height: number | null;
+  from_address: string;
+  to_address: string;
+}
+
+export async function LatestTransactionsTable({
+  data,
+}: {
+  data: TransactionData[];
+}) {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
   return (
     <BaseTable headers={headers}>
-      {latestTransactions &&
-        latestTransactions.map((txn, index) => (
+      {data &&
+        data.map((txn, index) => (
           <tr
             key={index}
-            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+            className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-black">
+            <td className="border-0 text-black truncate">
               <Link href={txn.hash ? `/transaction/${txn.hash}` : "/"}>
                 {txn.hash ? shortHash(txn.hash) : "N/A"}
               </Link>
             </td>
-            <td className="border-0">{txn.blockchains}</td>
             <td className="border-0">
+              <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
+                {txn.blockchains}
+              </p>
+            </td>
+            <td className="border-0 truncate">
               {txn.height !== null ? txn.height.toString() : "N/A"}
             </td>
-            <td className="border-0">{txn.from_address}</td>
-            <td className="border-0">{txn.to_address}</td>
+            <td className="border-0 truncate max-w-36">{txn.from_address}</td>
+            <td className="border-0 truncate max-w-36">{txn.to_address}</td>
           </tr>
         ))}
     </BaseTable>
