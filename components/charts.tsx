@@ -1,4 +1,4 @@
-import { getTransactionStats } from "@/utils/txns";
+// import { getTransactionStats } from "@/utils/txns";
 import DoughnutsChart from "./Doughnut";
 import TransactionsChart from "./TransactionsChart";
 

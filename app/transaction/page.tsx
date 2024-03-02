@@ -6,7 +6,7 @@ import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
-import { getTransactions } from "@/utils/txns";
+// import { getTransactions } from "@/utils/txns";
 import { shortHash } from "@/utils";
 import TransactionsChart from "@/components/TransactionsChart";
 

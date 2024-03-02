@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import FromNow from "./FromNow";
 import { shortHash } from "@/utils";
-import { getLatestBlocks } from "@/utils/blocks";
+// import { getLatestBlocks } from "@/utils/blocks";
 import React from "react";
 
 function BaseTable({

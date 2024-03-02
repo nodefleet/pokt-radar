@@ -2,14 +2,11 @@ import Link from "next/link";
 import { formatISO, format } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
-import SearchBar from "@/components/SearchBar";
 import AddressTransactions from "@/components/AddressTransactions";
-import { getBlock } from "@/utils/blocks";
-import { getTransactionsByBlock } from "@/utils/txns";
 import TransactionsChart from "@/components/TransactionsChart";
 import { Transaction } from "@/app/transaction/page";
 
-export default async function Block({ params }: { params: { block: string } }) {
+export default function Block({ params }: { params: { block: string } }) {
   const queryBlock = parseInt(params.block);
   const exampleBlock = {
     height: 1234,

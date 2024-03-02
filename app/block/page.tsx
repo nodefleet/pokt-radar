@@ -3,7 +3,7 @@ import Link from "next/link";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import FromNow from "@/components/FromNow";
-import { getBlocks } from "@/utils/blocks";
+// import { getBlocks } from "@/utils/blocks";
 import TransactionsChart from "@/components/TransactionsChart";
 
 export default async function Blocks({

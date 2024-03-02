@@ -3,7 +3,7 @@ import { formatISO, format } from "date-fns";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
-import { getTransaction } from "@/utils/txns";
+// import { getTransaction } from "@/utils/txns";
 
 interface Transaction {
   hash: string;
