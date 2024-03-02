@@ -148,10 +148,23 @@ export default async function Transactions({
     "Memo",
   ];
 
-  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
-    date: `week ${(i + 1).toString().padStart(2, "0")}`,
-    count: i === 5 ? 300 : 100 * i,
-  }));
+  const currentDate = new Date();
+  const weeksArray = Array.from({ length: 10 }, (_, i) => {
+    const date = new Date(
+      currentDate.getTime() + (i + 1) * 60 * 60 * 1000
+    ).toLocaleString("En-en", { timeStyle: "medium" });
+    let count;
+    if (i === 2) {
+      count = 300;
+    } else {
+      count = i % 2 === 0 ? 100 * i : 300 - 100 * i;
+      count = count < 0 ? 0 : count; // Asegurar que count no sea negativo
+    }
+    return {
+      date: date,
+      count: count,
+    };
+  });
 
   return (
     <div className="grow mx-4 md:mx-24 my-6">

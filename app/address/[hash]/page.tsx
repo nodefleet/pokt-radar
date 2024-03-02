@@ -107,9 +107,11 @@ export default async function Address({
       memo: "Swap notes",
     },
   ];
-  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
-    date: `week ${(i + 1).toString().padStart(2, "0")}`,
-    count: i === 5 ? 300 : 100 * i,
+  const currentDate = new Date();
+  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const weeksArray = Array.from({ length: 5 }, (_, i) => ({
+    date: `${(i + 1).toString().padStart(2, "0")}/${currentMonth}`,
+    count: i === 2 ? 300 : 100 * i,
   }));
 
   return (
@@ -221,8 +223,11 @@ export default async function Address({
               </div>
             </div>
           </div>
-          <div className="w-full h-full max-h-96">
-            <TransactionsChart data={weeksArray} />
+          <div
+            className="w-full h-full max-sm:max-h-36"
+            style={{ maxHeight: "37rem" }}
+          >
+            <TransactionsChart data={weeksArray} tension={0.1} />
           </div>
         </div>
       </div>
