@@ -46,7 +46,7 @@ export default function ClientPagination({
   }, [data, currentPage, perPage, setRows]);
 
   return (
-    <div className="flex items-center text-dark-brown space-x-2.5">
+    <div className="flex items-center text-black space-x-2.5">
       <div
         className="p-2 bg-gray-10 rounded cursor-pointer"
         onClick={() => setCurrentPage(1)}
@@ -67,7 +67,9 @@ export default function ClientPagination({
             key={pageNumber}
             onClick={() => setCurrentPage(pageNumber)}
             className={`btn btn-sm border-0 ${
-              pageNumber === currentPage ? "font-bold" : "font-normal"
+              pageNumber === currentPage
+                ? "font-bold text-blue_primary"
+                : "font-normal"
             }`}
           >
             {pageNumber}

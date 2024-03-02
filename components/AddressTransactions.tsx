@@ -9,6 +9,7 @@ import FromNow from "./FromNow";
 import DataTable from "./DataTable";
 import ClientPagination from "./ClientPagination";
 import { shortHash } from "@/utils";
+import { Transaction } from "@/app/transaction/page";
 
 export interface ITransaction {
   hash: string;
@@ -55,52 +56,58 @@ function SearchBar({
 export default function AddressTransactions({
   transactions,
 }: {
-  transactions: ITransaction[];
+  transactions: Transaction[];
 }) {
-  const tableHeaders = ["Tx Hash", "Block", "Time", "From", "", "To", "Fee"];
-  const [filteredTxns, setFilteredTxns] = useState<ITransaction[]>([]);
-  const [displayRows, setDisplayRows] = useState<ITransaction[]>([]);
+  const tableHeaders = [
+    "Transaction ID",
+    "Method",
+    "Block",
+    "From",
+    "To",
+    "Value",
+    "Memo",
+  ];
+
+  const [displayRows, setDisplayRows] = useState<Transaction[]>(transactions);
 
   return (
     <div className="flex flex-col">
-      <SearchBar txns={transactions} setFilteredTxns={setFilteredTxns} />
-      <DataTable headers={tableHeaders} small={true}>
+      <DataTable headers={tableHeaders}>
         {displayRows.map((txn, index: number) => (
           <tr key={index} className="border-y border-gray-bera">
-            <td className="border-0 text-link">
+            <td className="border-0 text-black font-bold hover:text-blue_primary">
               <Link href={`/transaction/${txn.hash}`}>
-                {shortHash(txn.hash)}
-              </Link>
-            </td>
-            <td className="border-0 text-link">
-              <Link href={`/block/${txn.block_height}`}>
-                {txn.block_height}
+                {txn.hash && shortHash(txn.hash)}
               </Link>
             </td>
             <td className="border-0">
-              {txn.time && <FromNow datetime={txn.time} />}
+              <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
+                {txn.method}
+              </p>
             </td>
-            <td className="border-0 pr-0 text-link">
-              <Link href={`/address/${txn.from}`}>{shortHash(txn.from)}</Link>
+            <td className="border-0 font-bold text-black hover:text-blue_primary">
+              <Link href={`/block/${txn.block}`}>
+                {txn.block && txn.block.toString()}
+              </Link>
             </td>
-            <td className="border-0 pl-0">
-              <div className="flex">
-                <div className="flex justify-center bg-green-2 p-1 rounded-md">
-                  <ArrowRightIcon className="w-3 h-3" />
-                </div>
-                <p className=""></p>
-              </div>
+            <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
+              <Link href={`/address/${txn.from}`}>
+                {txn.from && shortHash(txn.from)}
+              </Link>
             </td>
-            <td className="border-0 text-link">
-              <Link href={`/address/${txn.to}`}>{shortHash(txn.to)}</Link>
+            <td className="border-0 font-bold text-black hover:text-blue_primary">
+              <Link href={`/address/${txn.to}`}>
+                {txn.to && shortHash(txn.to)}
+              </Link>
             </td>
-            <td className="border-0">{txn.gas}</td>
+            <td className="border-0 text-black">{txn.value}</td>
+            <td className="border-0 text-black">{txn.memo}</td>
           </tr>
         ))}
       </DataTable>
       <div className="flex mt-4 justify-end">
         <ClientPagination
-          data={filteredTxns}
+          data={displayRows}
           setRows={setDisplayRows}
           perPage={10}
         />

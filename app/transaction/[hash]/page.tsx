@@ -5,86 +5,98 @@ import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
 import { getTransaction } from "@/utils/txns";
 
+interface Transaction {
+  hash: string;
+  height: number | null;
+  timestamp: Date | null;
+  from_address: string;
+  to_address: string;
+  value: string;
+  raw: string;
+  servicerURL: string;
+  memo: string;
+}
+
+const exampleTransaction: Transaction = {
+  hash: "0x123456789abcdef",
+  height: 1234,
+  timestamp: new Date("2024-02-29T12:30:00Z"),
+  from_address: "0x9876543210ABCDEF",
+  to_address: "0xFEDCBA0987654321",
+  value: "0.005 ETH",
+  raw: "0xabc123def456",
+  servicerURL: "https://example.com/servicer",
+  memo: "Payment for services rendered",
+};
+
 export default async function Transaction({
   params,
 }: {
   params: { hash: string };
 }) {
-  const txn = await getTransaction(params.hash);
+  // const txn = await getTransaction(params.hash);
+  const txn: Transaction | null = exampleTransaction;
   return (
-    <div className="mx-4 md:mx-24 mb-14">
-      <div className="flex flex-col items-start my-5 lg:flex-row lg:items-center lg:justify-between lg:my-10">
-        <h1 className="mb-3 lg:mb-0 text-gray-3 text-2xl">Transaction</h1>
-        <SearchBar />
-      </div>
-      <div className="px-8 py-5 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white">
+    <div className="mx-4 md:mx-24 my-8">
+      <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white">
         {txn ? (
           <>
-            <h5>Overview</h5>
+            <h5 className="font-semibold text-xl">Overview</h5>
             <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p>Transaction hash</p>
+              <p className="font-medium">Transaction ID</p>
               <p className="col-span-2">{txn.hash}</p>
             </div>
             <div className="grid grid-cols-3">
-              <p>Result</p>
-              <p
-                className="col-span-2 w-fit flex items-center py-1 px-2 rounded-md text-sm font-medium"
-                style={{
-                  color: "#7DCA95",
-                  backgroundColor: "rgba(180, 238, 199, 0.23);",
-                }}
-              >
-                <CheckCircleIcon className="w-5 h-5 mr-2" />
-                Success
-              </p>
-            </div>
-            <div className="grid grid-cols-3">
-              <p>Block</p>
-              <p className="col-span-2 text-link">
+              <p className="font-medium">Block</p>
+              <p className="col-span-2 font-bold hover:text-blue_primary">
                 <Link href={`/block/${txn.height}`}>
                   {txn.height !== null && txn.height.toString()}
                 </Link>
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p>Time</p>
-              {/* <p className="col-span-2">
+              <p className="font-medium">Block Time</p>
+              <p className="col-span-2">
                 {txn.timestamp && (
                   <FromNow datetime={formatISO(txn.timestamp)} />
-                )}{" "}
-                (
-                {txn.timestamp &&
-                  format(txn.timestamp, "MMM dd yyyy, H:mm:ss O")}
-                )
-              </p> */}
+                )}
+              </p>
+            </div>
+            <div className="grid grid-cols-3">
+              <p className="font-medium">Fee</p>
+              <p className="col-span-2">0.0029 POKT</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p>From</p>
-              <p className="col-span-2 text-link">
+              <p className="font-medium">From</p>
+              <p className="col-span-2 font-bold hover:text-blue_primary">
                 <Link href={`/address/${txn.from_address}`}>
                   {txn.from_address}
                 </Link>
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p>To</p>
-              <p className="col-span-2 text-link">
+              <p className="font-medium">To</p>
+              <p className="col-span-2 font-bold hover:text-blue_primary">
                 <Link href={`/address/${txn.to_address}`}>
                   {txn.to_address}
                 </Link>
               </p>
             </div>
             <div className="grid grid-cols-3">
-              <p>Gas</p>
-              <p className="col-span-2">{txn.blockchains}</p>
+              <p className="font-medium">Value</p>
+              <p className="col-span-2">{txn.value}</p>
             </div>
             <div className="grid grid-cols-3">
-              <p>Gas Price</p>
-              <p className="col-span-2">{txn.fee_denomination}</p>
+              <p className="font-medium">Raw Transaction</p>
+              <p className="col-span-2">{txn.raw}</p>
             </div>
             <div className="grid grid-cols-3">
-              <p>Input</p>
-              <p className="col-span-2 break-words">{txn.fee_denomination}</p>
+              <p className="font-medium">Service URL</p>
+              <p className="col-span-2 break-words">{txn.servicerURL}</p>
+            </div>
+            <div className="grid grid-cols-3">
+              <p className="font-medium">Memo</p>
+              <p className="col-span-2 break-words">{txn.memo}</p>
             </div>
           </>
         ) : (
