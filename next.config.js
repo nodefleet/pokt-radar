@@ -3,6 +3,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
-}
+  optimization: {
+    minimize: false,
+  },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
