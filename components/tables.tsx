@@ -133,6 +133,52 @@ export async function LatestMakerTable({ data }: MakerTransation) {
   );
 }
 
+interface MakerBlockTransation {
+  data: {
+    exchange: string;
+    pair: string;
+    price: number;
+    volume: number;
+    supply: number;
+  }[];
+}
+
+export async function LatestMakerBlockTable({ data }: MakerBlockTransation) {
+  const headers = ["Exchange", "Pair", "Price", "Daily Volume", "Supply"];
+  return (
+    <BaseTable headers={headers}>
+      {data &&
+        data.map((row, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-black">{row.exchange}</td>
+            <td className="border-0">{row.pair}</td>
+            <td className="border-0">
+              {row.price.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </td>
+            <td className="border-0">
+              {row.volume.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </td>
+            <td className="border-0">
+              {row.supply.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </td>
+          </tr>
+        ))}
+    </BaseTable>
+  );
+}
+
 interface MakerExchange {
   data: { pair: string; volume: number }[];
 }
