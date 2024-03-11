@@ -1,11 +1,4 @@
-"use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import {
-  MagnifyingGlassIcon,
-  ArrowRightIcon,
-} from "@heroicons/react/24/outline";
-import FromNow from "./FromNow";
 import DataTable from "./DataTable";
 import ClientPagination from "./ClientPagination";
 import { shortHash } from "@/utils";
@@ -20,40 +13,7 @@ export interface ITransaction {
   gas: string;
 }
 
-function SearchBar({
-  txns,
-  setFilteredTxns,
-}: {
-  txns: ITransaction[];
-  setFilteredTxns: CallableFunction;
-}) {
-  const [filterBy, setFilter] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (filterBy && filterBy.length > 37) {
-      setFilteredTxns(
-        txns.filter(
-          (txn) => txn.from.includes(filterBy) || txn.to.includes(filterBy)
-        )
-      );
-    } else {
-      setFilteredTxns(txns);
-    }
-  }, [filterBy, setFilteredTxns, txns]);
-  return (
-    <div className="flex items-center w-2/5 mb-5 px-3 py-2 self-end border border-gray-6 rounded-xl text-gray-6">
-      <input
-        className="outline-0 grow text-gray-3"
-        type="text"
-        placeholder="Filter by address"
-        onChange={(value) => setFilter(value.target.value)}
-      />
-      <MagnifyingGlassIcon className="w-4 h-4" />
-    </div>
-  );
-}
-
-export default function AddressTransactions({
+export default async function AddressTransactions({
   transactions,
 }: {
   transactions: Transaction[];
@@ -68,12 +28,10 @@ export default function AddressTransactions({
     "Memo",
   ];
 
-  const [displayRows, setDisplayRows] = useState<Transaction[]>(transactions);
-
   return (
     <div className="flex flex-col">
       <DataTable headers={tableHeaders}>
-        {displayRows.map((txn, index: number) => (
+        {transactions.map((txn, index: number) => (
           <tr key={index} className="border-y border-gray-bera">
             <td className="border-0 text-black font-bold hover:text-blue_primary">
               <Link href={`/transaction/${txn.hash}`}>
@@ -106,11 +64,11 @@ export default function AddressTransactions({
         ))}
       </DataTable>
       <div className="flex mt-4 justify-end">
-        <ClientPagination
-          data={displayRows}
-          setRows={setDisplayRows}
+        {/* <ClientPagination
+          data={transactions}
+          setRows={[]}
           perPage={10}
-        />
+        /> */}
       </div>
     </div>
   );

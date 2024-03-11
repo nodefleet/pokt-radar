@@ -3,7 +3,7 @@ import { formatISO, format } from "date-fns";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
-// import { getTransaction } from "@/utils/txns";
+import { getTransaction } from "@/utils/txns";
 
 interface Transaction {
   hash: string;
@@ -34,7 +34,8 @@ export default async function Transaction({
 }: {
   params: { hash: string };
 }) {
-  // const txn = await getTransaction(params.hash);
+  // const txns = await getTransaction(params.hash);
+  // console.log(txns);
   const txn: Transaction | null = exampleTransaction;
   return (
     <div className="mx-4 md:mx-24 my-8">

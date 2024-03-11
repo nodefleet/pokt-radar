@@ -5,113 +5,13 @@ import FromNow from "@/components/FromNow";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
 import { Transaction } from "@/app/transaction/page";
+import { getBlock } from "@/utils/blocks";
 
-export default function Block({ params }: { params: { block: string } }) {
+export default async function Block({ params }: { params: { block: string } }) {
   const queryBlock = parseInt(params.block);
-  const exampleBlock = {
-    height: 1234,
-    hash: "0xabcdef123456",
-    time: new Date(),
-    tx_total: 10,
-    tx_count: 5,
-    proposer_address: "0xabcdef123456",
-  };
+  let block = (await getBlock(queryBlock))[0];
+  console.log(block);
 
-  const transactionsTable: Transaction[] = [
-    {
-      hash: "0x123456789abcdef1",
-      method: "Transfer",
-      block: 1234,
-      from: "0x9876543210ABCDEF1",
-      to: "0xFEDCBA0987654321",
-      value: "0.005 ETH",
-      memo: "Payment for services rendered",
-    },
-    {
-      hash: "0x123456789abcdef2",
-      method: "Swap",
-      block: 1235,
-      from: "0x9876543210ABCDEF2",
-      to: "0xFEDCBA0987654322",
-      value: "0.01 ETH",
-      memo: "Exchange transaction",
-    },
-    {
-      hash: "0x123456789abcdef3",
-      method: "Transfer",
-      block: 1236,
-      from: "0x9876543210ABCDEF3",
-      to: "0xFEDCBA0987654323",
-      value: "0.0025 ETH",
-      memo: "Test transaction",
-    },
-    {
-      hash: "0x123456789abcdef4",
-      method: "Transfer",
-      block: 1237,
-      from: "0x9876543210ABCDEF4",
-      to: "0xFEDCBA0987654324",
-      value: "0.003 ETH",
-      memo: "Transaction memo",
-    },
-    {
-      hash: "0x123456789abcdef5",
-      method: "Swap",
-      block: 1238,
-      from: "0x9876543210ABCDEF5",
-      to: "0xFEDCBA0987654325",
-      value: "0.015 ETH",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef6",
-      method: "Transfer",
-      block: 1239,
-      from: "0x9876543210ABCDEF6",
-      to: "0xFEDCBA0987654326",
-      value: "0.007 ETH",
-      memo: "Transaction notes",
-    },
-    {
-      hash: "0x123456789abcdef7",
-      method: "Swap",
-      block: 1240,
-      from: "0x9876543210ABCDEF7",
-      to: "0xFEDCBA0987654327",
-      value: "0.02 ETH",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef8",
-      method: "Transfer",
-      block: 1241,
-      from: "0x9876543210ABCDEF8",
-      to: "0xFEDCBA0987654328",
-      value: "0.009 ETH",
-      memo: "Payment memo",
-    },
-    {
-      hash: "0x123456789abcdef9",
-      method: "Transfer",
-      block: 1242,
-      from: "0x9876543210ABCDEF9",
-      to: "0xFEDCBA0987654329",
-      value: "0.0055 ETH",
-      memo: "Payment details",
-    },
-    {
-      hash: "0x123456789abcdef10",
-      method: "Swap",
-      block: 1243,
-      from: "0x9876543210ABCDEF10",
-      to: "0xFEDCBA09876543210",
-      value: "0.025 ETH",
-      memo: "Swap notes",
-    },
-  ];
-
-  let block;
-  block = exampleBlock;
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
     date: `week ${(i + 1).toString().padStart(2, "0")}`,
     count: i === 5 ? 300 : 100 * i,
@@ -125,9 +25,7 @@ export default function Block({ params }: { params: { block: string } }) {
             <h1 className="mb-3 lg:mb-0 text-xl font-semibold">
               {block && `Block ID`}
             </h1>
-            <p className="font-medium text-3xl">
-              {block && `${block?.height}`}
-            </p>
+            <p className="font-medium text-3xl">{block && `${block.height}`}</p>
             <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
               Last 10s
             </span>
@@ -147,7 +45,7 @@ export default function Block({ params }: { params: { block: string } }) {
             </div>
           </div>
 
-          <div className="p-6 space-y-7 rounded-3xl shadow-xl overflow-x-hidden bg-white w-full">
+          <div className="p-6 space-y-7 rounded-3xl shadow-xl overflow-x-hidden bg-white w-full truncate">
             {block ? (
               <>
                 <h5 className="text-xl font-semibold">Overview</h5>
@@ -159,11 +57,11 @@ export default function Block({ params }: { params: { block: string } }) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Block hash</p>
-                  <p className="col-span-2">{block?.hash}</p>
+                  <p className="col-span-2 truncate">{block?.hash}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Time</p>
-                  <p className="col-span-2">
+                  <p className="col-span-2 truncate">
                     {block.time && <FromNow datetime={formatISO(block.time)} />}{" "}
                     (
                     {block.time && format(block.time, "MMM dd yyyy, H:mm:ss O")}
@@ -172,7 +70,7 @@ export default function Block({ params }: { params: { block: string } }) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Transactions</p>
-                  <p className="col-span-2">
+                  <p className="col-span-2 truncate">
                     Total{" "}
                     <Link
                       className="text-link"
@@ -192,20 +90,26 @@ export default function Block({ params }: { params: { block: string } }) {
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
-                  <p className="font-medium">Contract Internal Transactions</p>
-                  <p className="col-span-2">{block?.tx_count}</p>
+                  <p className="font-medium truncate">
+                    Contract Internal Transactions
+                  </p>
+                  <p className="col-span-2 truncate">{block?.tx_count}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Gas used</p>
-                  <p className="col-span-2">{block?.proposer_address}</p>
+                  <p className="col-span-2 truncate">
+                    {block?.proposer_address}
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Gas limit</p>
-                  <p className="col-span-2">{block?.proposer_address}</p>
+                  <p className="col-span-2 truncate">
+                    {block?.proposer_address}
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Previous Block Hash</p>
-                  <p className="col-span-2">{block?.hash}</p>
+                  <p className="col-span-2 truncate1">{block?.hash}</p>
                 </div>
               </>
             ) : (
@@ -220,7 +124,7 @@ export default function Block({ params }: { params: { block: string } }) {
                 Relays per block
               </p>
             </div>
-            <div className="w-full h-full max-h-96">
+            <div className="w-full h-full" style={{ maxHeight: "500px" }}>
               <TransactionsChart data={weeksArray} />
             </div>
           </div>
@@ -230,7 +134,7 @@ export default function Block({ params }: { params: { block: string } }) {
       <div className="mt-5 mb-4 ">
         <div className="bg-white px-5 py-4 rounded-3xl shadow-lg overflow-x-auto">
           <a className="px-4 py-1 font-semibold text-xl">Latest Transactions</a>
-          <AddressTransactions transactions={transactionsTable} />
+          {/* <AddressTransactions transactions={transactionsTable} /> */}
         </div>
       </div>
     </div>

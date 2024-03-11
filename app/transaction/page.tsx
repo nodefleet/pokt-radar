@@ -9,6 +9,7 @@ import Pagination from "@/components/Pagination";
 // import { getTransactions } from "@/utils/txns";
 import { shortHash } from "@/utils";
 import TransactionsChart from "@/components/TransactionsChart";
+import { getTransactions } from "@/utils/txns";
 
 export interface Transaction {
   hash: string;
@@ -39,104 +40,11 @@ export default async function Transactions({
 
   const PAGE_SIZE = 10;
   const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
-  // const { transactions, count: totalTxns } = await getTransactions({
-  //   take: PAGE_SIZE,
-  //   skip: SKIP,
-  //   block: filterByBlock,
-  // });
-
-  const transactions: Transaction[] = [
-    {
-      hash: "0x123456789abcdef1",
-      method: "Transfer",
-      block: 1234,
-      from: "0x9876543210ABCDEF1",
-      to: "0xFEDCBA0987654321",
-      value: "0.005 ETH",
-      memo: "Payment for services rendered",
-    },
-    {
-      hash: "0x123456789abcdef2",
-      method: "Swap",
-      block: 1235,
-      from: "0x9876543210ABCDEF2",
-      to: "0xFEDCBA0987654322",
-      value: "0.01 ETH",
-      memo: "Exchange transaction",
-    },
-    {
-      hash: "0x123456789abcdef3",
-      method: "Transfer",
-      block: 1236,
-      from: "0x9876543210ABCDEF3",
-      to: "0xFEDCBA0987654323",
-      value: "0.0025 ETH",
-      memo: "Test transaction",
-    },
-    {
-      hash: "0x123456789abcdef4",
-      method: "Transfer",
-      block: 1237,
-      from: "0x9876543210ABCDEF4",
-      to: "0xFEDCBA0987654324",
-      value: "0.003 ETH",
-      memo: "Transaction memo",
-    },
-    {
-      hash: "0x123456789abcdef5",
-      method: "Swap",
-      block: 1238,
-      from: "0x9876543210ABCDEF5",
-      to: "0xFEDCBA0987654325",
-      value: "0.015 ETH",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef6",
-      method: "Transfer",
-      block: 1239,
-      from: "0x9876543210ABCDEF6",
-      to: "0xFEDCBA0987654326",
-      value: "0.007 ETH",
-      memo: "Transaction notes",
-    },
-    {
-      hash: "0x123456789abcdef7",
-      method: "Swap",
-      block: 1240,
-      from: "0x9876543210ABCDEF7",
-      to: "0xFEDCBA0987654327",
-      value: "0.02 ETH",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef8",
-      method: "Transfer",
-      block: 1241,
-      from: "0x9876543210ABCDEF8",
-      to: "0xFEDCBA0987654328",
-      value: "0.009 ETH",
-      memo: "Payment memo",
-    },
-    {
-      hash: "0x123456789abcdef9",
-      method: "Transfer",
-      block: 1242,
-      from: "0x9876543210ABCDEF9",
-      to: "0xFEDCBA0987654329",
-      value: "0.0055 ETH",
-      memo: "Payment details",
-    },
-    {
-      hash: "0x123456789abcdef10",
-      method: "Swap",
-      block: 1243,
-      from: "0x9876543210ABCDEF10",
-      to: "0xFEDCBA09876543210",
-      value: "0.025 ETH",
-      memo: "Swap notes",
-    },
-  ];
+  const { transactions, count: totalTxns } = await getTransactions({
+    take: PAGE_SIZE,
+    skip: SKIP,
+    block: filterByBlock,
+  });
 
   const tableHeaders = [
     "Transaction ID",
@@ -158,7 +66,7 @@ export default async function Transactions({
       count = 300;
     } else {
       count = i % 2 === 0 ? 100 * i : 300 - 100 * i;
-      count = count < 0 ? 0 : count; // Asegurar que count no sea negativo
+      count = count < 0 ? 0 : count;
     }
     return {
       date: date,
@@ -206,26 +114,28 @@ export default async function Transactions({
                 </td>
                 <td className="border-0">
                   <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
-                    {txn.method}
+                    Transfer
                   </p>
                 </td>
                 <td className="border-0 font-bold text-black hover:text-blue_primary">
-                  <Link href={`/block/${txn.block}`}>
-                    {txn.block && txn.block.toString()}
+                  <Link href={`/block/${txn.height}`}>
+                    {txn.height && txn.height.toString()}
                   </Link>
                 </td>
                 <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
-                  <Link href={`/address/${txn.from}`}>
-                    {txn.from && shortHash(txn.from)}
+                  <Link href={`/address/${txn.from_address}`}>
+                    {txn.from_address && shortHash(txn.from_address)}
                   </Link>
                 </td>
                 <td className="border-0 font-bold text-black hover:text-blue_primary">
-                  <Link href={`/address/${txn.to}`}>
-                    {txn.to && shortHash(txn.to)}
+                  <Link href={`/address/${txn.to_address}`}>
+                    {txn.to_address && shortHash(txn.to_address)}
                   </Link>
                 </td>
-                <td className="border-0 text-black">{txn.value}</td>
-                <td className="border-0 text-black">{txn.memo}</td>
+                <td className="border-0 text-black">
+                  {txn.fee_denomination && txn.fee_denomination}
+                </td>
+                <td className="border-0 text-black">{txn.message_type}</td>
               </tr>
             ))}
           </DataTable>
@@ -235,7 +145,7 @@ export default async function Transactions({
               searchParams={{ block: filterByBlock }}
               currentPage={page}
               size={PAGE_SIZE}
-              total={transactions.length}
+              total={totalTxns}
             />
           </div>
         </div>

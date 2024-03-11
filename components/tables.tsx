@@ -5,6 +5,8 @@ import FromNow from "./FromNow";
 import { shortHash } from "@/utils";
 // import { getLatestBlocks } from "@/utils/blocks";
 import React from "react";
+import { getLatestTransactions } from "@/utils/txns";
+import { getLatestBlocks } from "@/utils/blocks";
 
 function BaseTable({
   children,
@@ -29,19 +31,11 @@ function BaseTable({
   );
 }
 
-interface BlockData {
-  height: number;
-  time?: string;
-  size?: string | null;
-  tx_total: number;
-  tx_count?: number;
-}
-
-export async function LatestBlocksTable({ data }: { data: BlockData[] }) {
+export async function LatestBlocksTable() {
   const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
-  // const lastBlockHeightData = getLatestBlocks();
+  const lastBlockHeightData = getLatestBlocks();
+  const [data] = await Promise.all([lastBlockHeightData]);
 
-  // const [latestBlocks] = await Promise.all([lastBlockHeightData]);
   return (
     <BaseTable headers={headers}>
       {data &&
@@ -58,7 +52,7 @@ export async function LatestBlocksTable({ data }: { data: BlockData[] }) {
                 <FromNow datetime={formatISO(new Date(block.time))} />
               )}
             </td>
-            <td className="border-0">{block.size ? block.size : "N/A"}</td>
+            <td className="border-0">{"N/A"}</td>
             <td className="border-0">{block.tx_total}</td>
             <td className="border-0">{block.tx_count?.toFixed()}</td>
           </tr>
@@ -67,20 +61,9 @@ export async function LatestBlocksTable({ data }: { data: BlockData[] }) {
   );
 }
 
-interface TransactionData {
-  hash?: string | null;
-  blockchains: string;
-  height: number | null;
-  from_address: string;
-  to_address: string;
-}
-
-export async function LatestTransactionsTable({
-  data,
-}: {
-  data: TransactionData[];
-}) {
+export async function LatestTransactionsTable() {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
+  const data = await getLatestTransactions();
   return (
     <BaseTable headers={headers}>
       {data &&
@@ -96,7 +79,7 @@ export async function LatestTransactionsTable({
             </td>
             <td className="border-0">
               <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
-                {txn.blockchains}
+                Transfer
               </p>
             </td>
             <td className="border-0 truncate">
