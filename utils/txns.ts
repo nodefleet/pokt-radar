@@ -58,7 +58,6 @@ export const getTransactionsByBlock = cache(async (block: number) => {
   return await prisma.transactions.findMany({
     where: { height: block },
     orderBy: { height: "desc" },
-    take: 10,
   });
 });
 

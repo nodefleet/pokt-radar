@@ -10,7 +10,6 @@ import { getBlock } from "@/utils/blocks";
 export default async function Block({ params }: { params: { block: string } }) {
   const queryBlock = parseInt(params.block);
   let block = (await getBlock(queryBlock))[0];
-  console.log(block);
 
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
     date: `week ${(i + 1).toString().padStart(2, "0")}`,
@@ -18,8 +17,8 @@ export default async function Block({ params }: { params: { block: string } }) {
   }));
 
   return (
-    <div className="grow mx-4 md:mx-24 my-6">
-      <div className="grid grid-cols-2 gap-2">
+    <div className="grow mx-4 md:mx-16 my-6">
+      <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col items-center justify-between gap-2">
           <div className="bg-white p-6 text-black rounded-3xl shadow-lg flex flex-row w-full items-center justify-between">
             <h1 className="mb-3 lg:mb-0 text-xl font-semibold">
@@ -31,13 +30,13 @@ export default async function Block({ params }: { params: { block: string } }) {
             </span>
             <div className="flex p-1 rounded-full shadow-xl space-x-6 bg-neutral-300">
               <Link
-                href={block?.height ? `/block/${block?.height}` : ""}
+                href={block?.height ? `/block/${block?.height - 1}` : ""}
                 className=""
               >
                 <ChevronLeftIcon className="w-5 h-5 stroke-white stroke-2" />
               </Link>
               <Link
-                href={block?.height ? `/block/${block?.height}` : ""}
+                href={block?.height ? `/block/${block?.height + 1}` : ""}
                 className=""
               >
                 <ChevronRightIcon className="w-5 h-5 stroke-white stroke-2" />
@@ -109,7 +108,7 @@ export default async function Block({ params }: { params: { block: string } }) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Previous Block Hash</p>
-                  <p className="col-span-2 truncate1">{block?.hash}</p>
+                  <p className="col-span-2 truncate">{block?.hash}</p>
                 </div>
               </>
             ) : (
@@ -130,13 +129,17 @@ export default async function Block({ params }: { params: { block: string } }) {
           </div>
         </div>
       </div>
-
-      <div className="mt-5 mb-4 ">
-        <div className="bg-white px-5 py-4 rounded-3xl shadow-lg overflow-x-auto">
-          <a className="px-4 py-1 font-semibold text-xl">Latest Transactions</a>
-          {/* <AddressTransactions transactions={transactionsTable} /> */}
+      {block && (
+        <div className="mt-5 mb-4 ">
+          <div className="bg-white px-5 py-4 rounded-3xl shadow-lg overflow-x-auto">
+            <a className="px-4 py-1 font-semibold text-xl">
+              Latest Transactions
+            </a>
+            {/* @ts-expect-error Async Server Component 
+            <AddressTransactions params={block?.height} />*/}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

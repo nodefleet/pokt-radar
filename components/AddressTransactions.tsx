@@ -3,6 +3,7 @@ import DataTable from "./DataTable";
 import ClientPagination from "./ClientPagination";
 import { shortHash } from "@/utils";
 import { Transaction } from "@/app/transaction/page";
+import { getTransactionsByBlock } from "@/utils/txns";
 
 export interface ITransaction {
   hash: string;
@@ -14,9 +15,9 @@ export interface ITransaction {
 }
 
 export default async function AddressTransactions({
-  transactions,
+  params,
 }: {
-  transactions: Transaction[];
+  params: number;
 }) {
   const tableHeaders = [
     "Transaction ID",
@@ -27,7 +28,8 @@ export default async function AddressTransactions({
     "Value",
     "Memo",
   ];
-
+  const transactions = await getTransactionsByBlock(params);
+  console.log(transactions);
   return (
     <div className="flex flex-col">
       <DataTable headers={tableHeaders}>
@@ -40,26 +42,28 @@ export default async function AddressTransactions({
             </td>
             <td className="border-0">
               <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
-                {txn.method}
+                Transfer
               </p>
             </td>
             <td className="border-0 font-bold text-black hover:text-blue_primary">
-              <Link href={`/block/${txn.block}`}>
-                {txn.block && txn.block.toString()}
+              <Link href={`/block/${txn.height}`}>
+                {txn.height && txn.height.toString()}
               </Link>
             </td>
             <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
-              <Link href={`/address/${txn.from}`}>
-                {txn.from && shortHash(txn.from)}
+              <Link href={`/address/${txn.from_address}`}>
+                {txn.from_address && shortHash(txn.from_address)}
               </Link>
             </td>
             <td className="border-0 font-bold text-black hover:text-blue_primary">
-              <Link href={`/address/${txn.to}`}>
-                {txn.to && shortHash(txn.to)}
+              <Link href={`/address/${txn.to_address}`}>
+                {txn.to_address && shortHash(txn.to_address)}
               </Link>
             </td>
-            <td className="border-0 text-black">{txn.value}</td>
-            <td className="border-0 text-black">{txn.memo}</td>
+            <td className="border-0 text-black">
+              {txn.amount && (txn.amount as unknown as number)}
+            </td>
+            <td className="border-0 text-black">{txn.fee_denomination}</td>
           </tr>
         ))}
       </DataTable>
