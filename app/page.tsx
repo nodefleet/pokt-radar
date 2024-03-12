@@ -36,7 +36,8 @@ export default async function Home() {
               Latest Transactions
             </h6>
             <hr />
-            {/*  <LatestTransactionsTable /> */}
+            {/* @ts-expect-error Async Server Component */}
+            <LatestTransactionsTable />
           </div>
           <Link
             href="/transaction"

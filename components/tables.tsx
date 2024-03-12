@@ -5,6 +5,7 @@ import FromNow from "./FromNow";
 import { shortHash } from "@/utils";
 import { getLatestBlocks } from "@/utils/blocks";
 import React from "react";
+import { getLatestTransactions, getTransactions } from "@/utils/txns";
 
 function BaseTable({
   children,
@@ -59,8 +60,12 @@ export async function LatestBlocksTable() {
   );
 }
 
-export async function LatestTransactionsTable(latestTransactions: any[]) {
+export async function LatestTransactionsTable() {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
+  const lastTransationkHeightData = getLatestTransactions();
+
+  const [latestTransactions] = await Promise.all([lastTransationkHeightData]);
+  console.log(latestTransactions);
   return (
     <BaseTable headers={headers}>
       {latestTransactions &&
