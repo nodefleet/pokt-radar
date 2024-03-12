@@ -34,8 +34,8 @@ export default async function Transaction({
 }: {
   params: { hash: string };
 }) {
-  // const txns = await getTransaction(params.hash);
-  // console.log(txns);
+  const txns = (await getTransaction(params.hash))[0];
+  console.log(txns);
   const txn: Transaction | null = exampleTransaction;
   return (
     <div className="mx-4 md:mx-24 my-8">

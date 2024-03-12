@@ -41,9 +41,10 @@ export const getLatestTransactions = cache(async () => {
 });
 
 export const getTransaction = cache(async (hash: string) => {
-  const result = await prisma.$queryRaw<any[]>`
-  SELECT * FROM transactions WHERE hash = ${hash}`;
-  return result;
+  return await prisma.transactions.findMany({
+    where: { hash: hash },
+    orderBy: { height: "desc" },
+  });
 });
 
 export const getTransactionsByAddress = cache(async (address: string) => {
@@ -77,3 +78,5 @@ export const getTransactionsByBlock = cache(async (block: number) => {
 // });
 
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */
+
+/* SELECT  date_trunc('day', b.time) AS date, COUNT(t.height) AS count FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; */
