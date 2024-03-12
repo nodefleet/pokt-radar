@@ -1,7 +1,6 @@
 import "server-only";
 import { cache } from "react";
 import { prisma } from "./db";
-import { ejecutarConsultasPorMes } from ".";
 
 export const getTotalTransactions = cache(async () => {
   return await prisma.transactions.count({
@@ -36,16 +35,15 @@ export const getTransactions = cache(
 );
 
 export const getLatestTransactions = cache(async () => {
-  return await prisma.transactions.findMany({
-    take: 10,
-    orderBy: { height: "desc" },
-  });
+  const result = await prisma.$queryRaw<any[]>`
+     SELECT * FROM transactions ORDER BY id DESC LIMIT 10;`;
+  return result;
 });
 
 export const getTransaction = cache(async (hash: string) => {
-  return await prisma.transactions.findFirst({
-    where: { hash: hash },
-  });
+  const result = await prisma.$queryRaw<any[]>`
+  SELECT * FROM transactions WHERE hash = ${hash}`;
+  return result;
 });
 
 export const getTransactionsByAddress = cache(async (address: string) => {
@@ -60,30 +58,22 @@ export const getTransactionsByBlock = cache(async (block: number) => {
   return await prisma.transactions.findMany({
     where: { height: block },
     orderBy: { height: "desc" },
-    take: 10,
   });
 });
 
-const cacheData: { [key: string]: any } = {};
+// export const getTransactionStats = cache(async () => {
+//   const result = await prisma.$queryRaw<any[]>`
+//   SELECT date_trunc('day', b.time) AS date,
+//   COUNT(t.height) AS count
+//   FROM (
+//     SELECT generate_series(NOW() - INTERVAL '15 days', NOW(), INTERVAL '1 day')::date AS date
+//   ) AS d
+//   LEFT JOIN blocks b ON date_trunc('day', b.time) = d.date
+//   LEFT JOIN transactions_within_time_range t ON t.height = b.height
+//   GROUP BY date_trunc('day', b.time)
+//   ORDER BY date ASC
+//   LIMIT 10`;
+//   return result;
+// });
 
-export const getTransactionStats = cache(async () => {
-  const cachedStats = cacheData["transactionStats"];
-  if (cachedStats) {
-    return cachedStats;
-  }
-
-  // const result = await prisma.$queryRaw<any[]>`
-  // SELECT date_trunc('day', b.time) AS date,
-  // COUNT(t.height) AS count
-  // FROM (
-  //   SELECT generate_series(NOW() - INTERVAL '15 days', NOW(), INTERVAL '1 day')::date AS date
-  // ) AS d
-  // LEFT JOIN blocks b ON date_trunc('day', b.time) = d.date
-  // LEFT JOIN transactions_within_time_range t ON t.height = b.height
-  // GROUP BY date_trunc('day', b.time)
-  // ORDER BY date ASC
-  // LIMIT 10`;
-
-  // cacheData["transactionStats"] = result;
-  // return result;
-});
+/*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */

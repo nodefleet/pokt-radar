@@ -3,7 +3,7 @@ import Link from "next/link";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import FromNow from "@/components/FromNow";
-import { getBlocks } from "@/utils/blocks";
+// import { getBlocks } from "@/utils/blocks";
 import TransactionsChart from "@/components/TransactionsChart";
 
 export default async function Blocks({
@@ -16,17 +16,111 @@ export default async function Blocks({
       !isNaN(parseInt(searchParams.page)) &&
       parseInt(searchParams.page)) ||
     1;
-  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
-    date: `week ${(i + 1).toString().padStart(2, "0")}`,
-    count: i === 5 ? 300 : 100 * i,
-  }));
+  const currentDate = new Date();
+  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const weeksArray = Array.from({ length: 10 }, (_, i) => {
+    let count;
+    if (i === 2) {
+      count = 300;
+    } else {
+      count = i % 2 === 0 ? 100 * i : 300 - 100 * i;
+      count = count < 0 ? 0 : count;
+    }
+    return {
+      date: `${(i + 1).toString().padStart(2, "0")}/${currentMonth}`,
+      count: count,
+    };
+  });
 
   const PAGE_SIZE = 10;
   const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
-  const { blocks, count: totalBlocks } = await getBlocks({
-    take: PAGE_SIZE,
-    skip: SKIP,
-  });
+  // const { blocks, count: totalBlocks } = await getBlocks({
+  //   take: PAGE_SIZE,
+  //   skip: SKIP,
+  // });
+
+  const blocks = [
+    {
+      height: 1234,
+      time: "2024-02-29T12:30:00Z",
+      proposer_address: "0xABCDEF1234567890",
+      tx_total: 10,
+      tx_count: 8,
+      size: 256,
+    },
+    {
+      height: 1235,
+      time: "2024-02-29T12:35:00Z",
+      proposer_address: "0xABCDEF0987654321",
+      tx_total: 15,
+      tx_count: 12,
+      size: 128,
+    },
+    {
+      height: 1236,
+      time: "2024-02-29T12:40:00Z",
+      proposer_address: "0xABCDEF5432167890",
+      tx_total: 8,
+      tx_count: 6,
+      size: 512,
+    },
+    {
+      height: 1237,
+      time: "2024-02-29T12:45:00Z",
+      proposer_address: "0xABCDEF0987654321",
+      tx_total: 20,
+      tx_count: 18,
+      size: 384,
+    },
+    {
+      height: 1238,
+      time: "2024-02-29T12:50:00Z",
+      proposer_address: "0xABCDEF1234567890",
+      tx_total: 12,
+      tx_count: 10,
+      size: 192,
+    },
+    {
+      height: 1239,
+      time: "2024-02-29T12:55:00Z",
+      proposer_address: "0xABCDEF5432167890",
+      tx_total: 6,
+      tx_count: 4,
+      size: 320,
+    },
+    {
+      height: 1240,
+      time: "2024-02-29T13:00:00Z",
+      proposer_address: "0xABCDEF1234567890",
+      tx_total: 18,
+      tx_count: 15,
+      size: 448,
+    },
+    {
+      height: 1241,
+      time: "2024-02-29T13:05:00Z",
+      proposer_address: "0xABCDEF0987654321",
+      tx_total: 25,
+      tx_count: 22,
+      size: 256,
+    },
+    {
+      height: 1242,
+      time: "2024-02-29T13:10:00Z",
+      proposer_address: "0xABCDEF5432167890",
+      tx_total: 14,
+      tx_count: 12,
+      size: 512,
+    },
+    {
+      height: 1243,
+      time: "2024-02-29T13:15:00Z",
+      proposer_address: "0xABCDEF1234567890",
+      tx_total: 9,
+      tx_count: 7,
+      size: 384,
+    },
+  ];
 
   const tableHeaders = [
     "Block",
@@ -72,7 +166,9 @@ export default async function Blocks({
                   >{`${block.height}`}</Link>
                 </td>
                 <td className="border-0">
-                  {block.time && <FromNow datetime={formatISO(block.time)} />}
+                  {block.time && (
+                    <FromNow datetime={formatISO(new Date(block.time))} />
+                  )}
                 </td>
                 <td className="border-0">{block.tx_total}</td>
                 <td className="border-0">{block.tx_total}</td>
@@ -87,7 +183,7 @@ export default async function Blocks({
               path="/block"
               currentPage={page}
               size={PAGE_SIZE}
-              total={totalBlocks}
+              total={blocks.length}
             />
           </div>
         </div>

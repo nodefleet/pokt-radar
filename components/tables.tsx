@@ -3,9 +3,9 @@ import Link from "next/link";
 
 import FromNow from "./FromNow";
 import { shortHash } from "@/utils";
-import { getLatestBlocks } from "@/utils/blocks";
 import React from "react";
-import { getLatestTransactions, getTransactions } from "@/utils/txns";
+import { getLatestTransactions } from "@/utils/txns";
+import { getLatestBlocks } from "@/utils/blocks";
 
 function BaseTable({
   children,
@@ -33,12 +33,12 @@ function BaseTable({
 export async function LatestBlocksTable() {
   const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
   const lastBlockHeightData = getLatestBlocks();
+  const [data] = await Promise.all([lastBlockHeightData]);
 
-  const [latestBlocks] = await Promise.all([lastBlockHeightData]);
   return (
     <BaseTable headers={headers}>
-      {latestBlocks &&
-        latestBlocks.map((block, index) => (
+      {data &&
+        data.map((block, index) => (
           <tr
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
@@ -47,11 +47,11 @@ export async function LatestBlocksTable() {
               <Link href={`/block/${block.height}`}>{`${block.height}`}</Link>
             </td>
             <td className="border-0">
-              {block.time && <FromNow datetime={formatISO(block.time)} />}
+              {block.time && (
+                <FromNow datetime={formatISO(new Date(block.time))} />
+              )}
             </td>
-            <td className="border-0">
-              {block.proposer_address ? block.proposer_address : "N/A"}
-            </td>
+            <td className="border-0">{"N/A"}</td>
             <td className="border-0">{block.tx_total}</td>
             <td className="border-0">{block.tx_count?.toFixed()}</td>
           </tr>
@@ -62,29 +62,30 @@ export async function LatestBlocksTable() {
 
 export async function LatestTransactionsTable() {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
-  const lastTransationkHeightData = getLatestTransactions();
-
-  const [latestTransactions] = await Promise.all([lastTransationkHeightData]);
-  console.log(latestTransactions);
+  const data = await getLatestTransactions();
   return (
     <BaseTable headers={headers}>
-      {latestTransactions &&
-        latestTransactions.map((txn, index) => (
+      {data &&
+        data.map((txn, index) => (
           <tr
             key={index}
-            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+            className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-black">
+            <td className="border-0 text-black truncate">
               <Link href={txn.hash ? `/transaction/${txn.hash}` : "/"}>
                 {txn.hash ? shortHash(txn.hash) : "N/A"}
               </Link>
             </td>
-            <td className="border-0">{txn.blockchains}</td>
             <td className="border-0">
+              <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
+                Transfer
+              </p>
+            </td>
+            <td className="border-0 truncate">
               {txn.height !== null ? txn.height.toString() : "N/A"}
             </td>
-            <td className="border-0">{txn.from_address}</td>
-            <td className="border-0">{txn.to_address}</td>
+            <td className="border-0 truncate max-w-36">{txn.from_address}</td>
+            <td className="border-0 truncate max-w-36">{txn.to_address}</td>
           </tr>
         ))}
     </BaseTable>
@@ -108,6 +109,52 @@ export async function LatestMakerTable({ data }: MakerTransation) {
             <td className="border-0 text-black">{index + 1}</td>
             <td className="border-0 font-bold">{row.pair}</td>
             <td className="border-0">{row.volume}</td>
+          </tr>
+        ))}
+    </BaseTable>
+  );
+}
+
+interface MakerBlockTransation {
+  data: {
+    exchange: string;
+    pair: string;
+    price: number;
+    volume: number;
+    supply: number;
+  }[];
+}
+
+export async function LatestMakerBlockTable({ data }: MakerBlockTransation) {
+  const headers = ["Exchange", "Pair", "Price", "Daily Volume", "Supply"];
+  return (
+    <BaseTable headers={headers}>
+      {data &&
+        data.map((row, index) => (
+          <tr
+            key={index}
+            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+          >
+            <td className="border-0 text-black">{row.exchange}</td>
+            <td className="border-0">{row.pair}</td>
+            <td className="border-0">
+              {row.price.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </td>
+            <td className="border-0">
+              {row.volume.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </td>
+            <td className="border-0">
+              {row.supply.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </td>
           </tr>
         ))}
     </BaseTable>

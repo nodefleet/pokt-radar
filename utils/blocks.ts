@@ -24,13 +24,14 @@ export const getBlocks = cache(
   }
 );
 
-export const getLatestBlocks = cache(async () => {
-  return await prisma.blocks.findMany({
-    take: 10,
-    orderBy: { height: "desc" },
-  });
-});
+export const getLatestBlocks = async () => {
+  return await prisma.$queryRaw<any[]>`
+  SELECT * FROM blocks
+  ORDER BY height DESC
+  LIMIT 10;
+`;
+};
 
 export const getBlock = cache(async (height: number) => {
-  return await prisma.blocks.findFirst({ where: { height: height } });
+  return await prisma.blocks.findMany({ where: { height: height } });
 });

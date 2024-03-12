@@ -6,9 +6,20 @@ import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
-import { getTransactions } from "@/utils/txns";
+// import { getTransactions } from "@/utils/txns";
 import { shortHash } from "@/utils";
 import TransactionsChart from "@/components/TransactionsChart";
+import { getTransactions } from "@/utils/txns";
+
+export interface Transaction {
+  hash: string;
+  method: string;
+  block: number;
+  from: string;
+  to: string;
+  value: string;
+  memo: string;
+}
 
 export default async function Transactions({
   searchParams,
@@ -35,15 +46,36 @@ export default async function Transactions({
     block: filterByBlock,
   });
 
-  const tableHeaders = ["Tx Hash", "Block", "Time", "From", "", "To"];
+  const tableHeaders = [
+    "Transaction ID",
+    "Method",
+    "Block",
+    "From",
+    "To",
+    "Value",
+    "Memo",
+  ];
 
-  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
-    date: `week ${(i + 1).toString().padStart(2, "0")}`,
-    count: i === 5 ? 300 : 100 * i,
-  }));
+  const currentDate = new Date();
+  const weeksArray = Array.from({ length: 10 }, (_, i) => {
+    const date = new Date(
+      currentDate.getTime() + (i + 1) * 60 * 60 * 1000
+    ).toLocaleString("En-en", { timeStyle: "medium" });
+    let count;
+    if (i === 2) {
+      count = 300;
+    } else {
+      count = i % 2 === 0 ? 100 * i : 300 - 100 * i;
+      count = count < 0 ? 0 : count;
+    }
+    return {
+      date: date,
+      count: count,
+    };
+  });
 
   return (
-    <div className="grow p-6 max-sm:p-0 max-sm:py-4">
+    <div className="grow mx-4 md:mx-24 my-6">
       <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-7 h-full">
         <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-3xl shadow-lg w-full">
           <div className="p-4 flex justify-between text-black">
@@ -75,32 +107,35 @@ export default async function Transactions({
           <DataTable headers={tableHeaders}>
             {transactions.map((txn, index: number) => (
               <tr key={index} className="border-y border-gray-bera">
-                <td className="border-0 text-black font-medium">
+                <td className="border-0 text-black font-bold hover:text-blue_primary">
                   <Link href={`/transaction/${txn.hash}`}>
                     {txn.hash && shortHash(txn.hash)}
                   </Link>
                 </td>
-                <td className="border-0 text-black">
+                <td className="border-0">
+                  <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
+                    Transfer
+                  </p>
+                </td>
+                <td className="border-0 font-bold text-black hover:text-blue_primary">
                   <Link href={`/block/${txn.height}`}>
                     {txn.height && txn.height.toString()}
                   </Link>
                 </td>
-                <td className="border-0">asdsad</td>
-                <td className="border-0 xl:pr-0  text-black">
+                <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
                   <Link href={`/address/${txn.from_address}`}>
                     {txn.from_address && shortHash(txn.from_address)}
                   </Link>
                 </td>
-                <td className="border-0 pl-0 ">
-                  <div className="flex justify-center bg-green-2 p-1 rounded-md">
-                    <ArrowRightIcon className="w-3 h-3" />
-                  </div>
-                </td>
-                <td className="border-0 text-black">
+                <td className="border-0 font-bold text-black hover:text-blue_primary">
                   <Link href={`/address/${txn.to_address}`}>
                     {txn.to_address && shortHash(txn.to_address)}
                   </Link>
                 </td>
+                <td className="border-0 text-black">
+                  {txn.fee_denomination && txn.fee_denomination}
+                </td>
+                <td className="border-0 text-black">{txn.message_type}</td>
               </tr>
             ))}
           </DataTable>

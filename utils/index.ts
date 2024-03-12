@@ -41,10 +41,10 @@ export async function ejecutarConsultaParaMes(
       SELECT t.*
       FROM transactions t
       WHERE EXISTS (
-        SELECT * 
-        FROM blocks b 
-        WHERE b.height = t.height 
-        AND b.time >= '${fechaInicio.toISOString()}'::timestamp 
+        SELECT *
+        FROM blocks b
+        WHERE b.height = t.height
+        AND b.time >= '${fechaInicio.toISOString()}'::timestamp
         AND b.time < '${fechaFin.toISOString()}'::timestamp
       )
     `;
