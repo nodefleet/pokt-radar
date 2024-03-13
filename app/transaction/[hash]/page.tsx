@@ -5,51 +5,28 @@ import FromNow from "@/components/FromNow";
 import SearchBar from "@/components/SearchBar";
 import { getTransaction } from "@/utils/txns";
 
-interface Transaction {
-  hash: string;
-  height: number | null;
-  timestamp: Date | null;
-  from_address: string;
-  to_address: string;
-  value: string;
-  raw: string;
-  servicerURL: string;
-  memo: string;
-}
-
-const exampleTransaction: Transaction = {
-  hash: "0x123456789abcdef",
-  height: 1234,
-  timestamp: new Date("2024-02-29T12:30:00Z"),
-  from_address: "0x9876543210ABCDEF",
-  to_address: "0xFEDCBA0987654321",
-  value: "0.005 ETH",
-  raw: "0xabc123def456",
-  servicerURL: "https://example.com/servicer",
-  memo: "Payment for services rendered",
-};
-
 export default async function Transaction({
   params,
 }: {
   params: { hash: string };
 }) {
-  const txns = (await getTransaction(params.hash))[0];
-  console.log(txns);
-  const txn: Transaction | null = exampleTransaction;
+  const { block, transation } = await getTransaction(params.hash);
+  const txn = transation;
+  type JsonObject = { [key: string]: any };
+  const stdtx = txn.stdtx as JsonObject;
   return (
     <div className="mx-4 md:mx-24 my-8">
-      <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white">
+      <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
         {txn ? (
           <>
             <h5 className="font-semibold text-xl">Overview</h5>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Transaction ID</p>
-              <p className="col-span-2">{txn.hash}</p>
+              <p className="col-span-2 truncate">{txn.hash}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Block</p>
-              <p className="col-span-2 font-bold hover:text-blue_primary">
+              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
                 <Link href={`/block/${txn.height}`}>
                   {txn.height !== null && txn.height.toString()}
                 </Link>
@@ -57,19 +34,21 @@ export default async function Transaction({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Block Time</p>
-              <p className="col-span-2">
-                {txn.timestamp && (
-                  <FromNow datetime={formatISO(txn.timestamp)} />
-                )}
+              <p className="col-span-2 truncate">
+                {block.time && <FromNow datetime={formatISO(block.time)} />}
               </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Fee</p>
-              <p className="col-span-2">0.0029 POKT</p>
+              <p className="col-span-2 truncate uppercase">
+                {txn.fee_denomination && txn.fee
+                  ? txn.fee.toLocaleString("en-EN") + " " + txn.fee_denomination
+                  : txn.fee}
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">From</p>
-              <p className="col-span-2 font-bold hover:text-blue_primary">
+              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
                 <Link href={`/address/${txn.from_address}`}>
                   {txn.from_address}
                 </Link>
@@ -77,7 +56,7 @@ export default async function Transaction({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">To</p>
-              <p className="col-span-2 font-bold hover:text-blue_primary">
+              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
                 <Link href={`/address/${txn.to_address}`}>
                   {txn.to_address}
                 </Link>
@@ -85,19 +64,21 @@ export default async function Transaction({
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Value</p>
-              <p className="col-span-2">{txn.value}</p>
+              <p className="col-span-2 truncate">{stdtx?.msg?.value?.amount}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Raw Transaction</p>
-              <p className="col-span-2">{txn.raw}</p>
+              <p className="col-span-2 truncate">{txn.tx}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Service URL</p>
-              <p className="col-span-2 break-words">{txn.servicerURL}</p>
+              <p className="col-span-2 break-words truncate font-bold">
+                www.nodefleet.org
+              </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Memo</p>
-              <p className="col-span-2 break-words">{txn.memo}</p>
+              <p className="col-span-2 break-words truncate">{stdtx.memo}</p>
             </div>
           </>
         ) : (

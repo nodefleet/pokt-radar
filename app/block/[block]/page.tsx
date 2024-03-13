@@ -4,12 +4,31 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
-import { Transaction } from "@/app/transaction/page";
 import { getBlock } from "@/utils/blocks";
 
-export default async function Block({ params }: { params: { block: string } }) {
-  const queryBlock = parseInt(params.block);
-  let block = (await getBlock(queryBlock))[0];
+export default async function Block({
+  searchParams,
+}: {
+  searchParams: { block: string | undefined; page: string | undefined };
+}) {
+  let filterByBlock =
+    (searchParams.block &&
+      !isNaN(parseInt(searchParams.block)) &&
+      parseInt(searchParams.block)) ||
+    undefined;
+  const page =
+    (searchParams.page &&
+      !isNaN(parseInt(searchParams.page)) &&
+      parseInt(searchParams.page)) ||
+    1;
+
+  const PAGE_SIZE = 10;
+  const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
+  const { block, transations, count } = await getBlock({
+    take: PAGE_SIZE,
+    skip: SKIP,
+    height: filterByBlock,
+  });
 
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
     date: `week ${(i + 1).toString().padStart(2, "0")}`,
@@ -69,22 +88,8 @@ export default async function Block({ params }: { params: { block: string } }) {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Transactions</p>
-                  <p className="col-span-2 truncate">
-                    Total{" "}
-                    <Link
-                      className="text-link"
-                      href={{
-                        pathname: "/transaction",
-                        query: {
-                          block:
-                            block?.height !== null
-                              ? block.height.toString()
-                              : "",
-                        },
-                      }}
-                    >
-                      {block.tx_total}
-                    </Link>{" "}
+                  <p className="col-span-2 truncate ">
+                    Total <span className="text-link"> {block?.tx_count}</span>{" "}
                     transactions
                   </p>
                 </div>
@@ -135,8 +140,14 @@ export default async function Block({ params }: { params: { block: string } }) {
             <a className="px-4 py-1 font-semibold text-xl">
               Latest Transactions
             </a>
-            {/* @ts-expect-error Async Server Component 
-            <AddressTransactions params={block?.height} />*/}
+            {/* @ts-expect-error Async Server Component */}
+            <AddressTransactions
+              data={transations}
+              PAGE_SIZE={PAGE_SIZE}
+              page={page}
+              block={filterByBlock}
+              txtrow={count}
+            />
           </div>
         </div>
       )}

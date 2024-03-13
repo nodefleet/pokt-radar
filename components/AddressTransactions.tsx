@@ -1,23 +1,20 @@
 import Link from "next/link";
 import DataTable from "./DataTable";
-import ClientPagination from "./ClientPagination";
 import { shortHash } from "@/utils";
-import { Transaction } from "@/app/transaction/page";
-import { getTransactionsByBlock } from "@/utils/txns";
-
-export interface ITransaction {
-  hash: string;
-  from: string;
-  to: string;
-  time: string | undefined;
-  block_height: string;
-  gas: string;
-}
+import Pagination from "./Pagination";
 
 export default async function AddressTransactions({
-  params,
+  data,
+  PAGE_SIZE,
+  block,
+  page,
+  txtrow,
 }: {
-  params: number;
+  data: any[];
+  PAGE_SIZE: number;
+  page: number;
+  block: number | undefined;
+  txtrow: number;
 }) {
   const tableHeaders = [
     "Transaction ID",
@@ -28,19 +25,18 @@ export default async function AddressTransactions({
     "Value",
     "Memo",
   ];
-  const transactions = await getTransactionsByBlock(params);
-  console.log(transactions);
+
   return (
     <div className="flex flex-col">
       <DataTable headers={tableHeaders}>
-        {transactions.map((txn, index: number) => (
+        {data.map((txn, index: number) => (
           <tr key={index} className="border-y border-gray-bera">
             <td className="border-0 text-black font-bold hover:text-blue_primary">
               <Link href={`/transaction/${txn.hash}`}>
                 {txn.hash && shortHash(txn.hash)}
               </Link>
             </td>
-            <td className="border-0">
+            <td className="border-0 w-8">
               <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
                 Transfer
               </p>
@@ -61,18 +57,20 @@ export default async function AddressTransactions({
               </Link>
             </td>
             <td className="border-0 text-black">
-              {txn.amount && (txn.amount as unknown as number)}
+              {txn.stdtx?.msg?.value?.amount}
             </td>
-            <td className="border-0 text-black">{txn.fee_denomination}</td>
+            <td className="border-0 text-black">{txn.stdtx.memo}</td>
           </tr>
         ))}
       </DataTable>
       <div className="flex mt-4 justify-end">
-        {/* <ClientPagination
-          data={transactions}
-          setRows={[]}
-          perPage={10}
-        /> */}
+        <Pagination
+          path={`/block/${block}/`}
+          searchParams={{ block: block }}
+          currentPage={page}
+          size={PAGE_SIZE}
+          total={txtrow}
+        />
       </div>
     </div>
   );

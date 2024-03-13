@@ -41,10 +41,16 @@ export const getLatestTransactions = cache(async () => {
 });
 
 export const getTransaction = cache(async (hash: string) => {
-  return await prisma.transactions.findMany({
+  const transation = await prisma.transactions.findMany({
     where: { hash: hash },
-    orderBy: { height: "desc" },
   });
+  const blocks = await prisma.blocks.findMany({
+    where: { height: transation[0].height },
+  });
+  return {
+    transation: transation[0],
+    block: blocks[0],
+  };
 });
 
 export const getTransactionsByAddress = cache(async (address: string) => {

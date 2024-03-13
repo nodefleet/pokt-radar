@@ -53,7 +53,7 @@ export async function LatestBlocksTable() {
             </td>
             <td className="border-0">{"N/A"}</td>
             <td className="border-0">{block.tx_total}</td>
-            <td className="border-0">{block.tx_count?.toFixed()}</td>
+            <td className="border-0">{block.tx_count}</td>
           </tr>
         ))}
     </BaseTable>
@@ -76,16 +76,20 @@ export async function LatestTransactionsTable() {
                 {txn.hash ? shortHash(txn.hash) : "N/A"}
               </Link>
             </td>
-            <td className="border-0">
-              <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
+            <td className="border-0 w-6">
+              <p className="font-normal uppercase text-sm rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
                 Transfer
               </p>
             </td>
             <td className="border-0 truncate">
               {txn.height !== null ? txn.height.toString() : "N/A"}
             </td>
-            <td className="border-0 truncate max-w-36">{txn.from_address}</td>
-            <td className="border-0 truncate max-w-36">{txn.to_address}</td>
+            <td className="border-0 truncate max-w-36">
+              {txn.from_address === null ? "N/A" : txn.from_address}
+            </td>
+            <td className="border-0 truncate max-w-36">
+              {txn.to_address === null ? "N/A" : txn.to_address}
+            </td>
           </tr>
         ))}
     </BaseTable>

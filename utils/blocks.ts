@@ -32,6 +32,32 @@ export const getLatestBlocks = async () => {
 `;
 };
 
-export const getBlock = cache(async (height: number) => {
-  return await prisma.blocks.findMany({ where: { height: height } });
-});
+export const getBlock = cache(
+  async ({
+    take,
+    skip,
+    height,
+  }: {
+    take: number;
+    skip: number;
+    height: number | undefined;
+  }) => {
+    const blocks = await prisma.blocks.findMany({
+      where: { height: height },
+    });
+    const transactions = await prisma.transactions.findMany({
+      where: { height: height },
+      take,
+      skip,
+      orderBy: { height: "desc" },
+    });
+    const count = await prisma.transactions.count({
+      where: { height: height },
+    });
+    return {
+      transations: transactions,
+      block: blocks[0],
+      count,
+    };
+  }
+);
