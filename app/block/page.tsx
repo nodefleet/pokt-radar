@@ -4,8 +4,7 @@ import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import FromNow from "@/components/FromNow";
 import TransactionsChart from "@/components/TransactionsChart";
-import { getBlocks } from "@/utils/blocks";
-import { getTransactionStats } from "@/utils/txns";
+import { getBlockStats, getBlocks } from "@/utils/blocks";
 
 export default async function Blocks({
   searchParams,
@@ -19,19 +18,6 @@ export default async function Blocks({
     1;
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-  const weeksArray = Array.from({ length: 10 }, (_, i) => {
-    let count;
-    if (i === 2) {
-      count = 300;
-    } else {
-      count = i % 2 === 0 ? 100 * i : 300 - 100 * i;
-      count = count < 0 ? 0 : count;
-    }
-    return {
-      date: `${(i + 1).toString().padStart(2, "0")}/${currentMonth}`,
-      count: count,
-    };
-  });
 
   const PAGE_SIZE = 10;
   const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
@@ -40,7 +26,7 @@ export default async function Blocks({
     skip: SKIP,
   });
 
-  const dataChart = await getTransactionStats();
+  const dataChart = await getBlockStats();
 
   const tableHeaders = [
     "Block",
@@ -72,7 +58,7 @@ export default async function Blocks({
             </div>
           </div>
           <div className="w-full h-full max-h-96">
-            <TransactionsChart data={weeksArray} />
+            <TransactionsChart data={dataChart} />
           </div>
         </div>
 

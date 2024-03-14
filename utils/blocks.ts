@@ -66,9 +66,8 @@ export const getBlockStats = cache(async () => {
   const result = await prisma.$queryRaw<any[]>`
     SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
     FROM blocks AS b
-    LEFT JOIN transactions_30_days t ON t.height = b.height
     GROUP BY date
     ORDER BY date DESC
-    LIMIT 30`;
+    LIMIT 7`;
   return result;
 });
