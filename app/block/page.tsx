@@ -16,8 +16,6 @@ export default async function Blocks({
       !isNaN(parseInt(searchParams.page)) &&
       parseInt(searchParams.page)) ||
     1;
-  const currentDate = new Date();
-  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
 
   const PAGE_SIZE = 10;
   const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
@@ -27,6 +25,12 @@ export default async function Blocks({
   });
 
   const dataChart = await getBlockStats();
+  const last7Data = dataChart.map((value) => ({
+    date: new Date(value.date).toLocaleDateString("es-es", {
+      dateStyle: "short",
+    }),
+    count: Number(value.count),
+  }));
 
   const tableHeaders = [
     "Block",
@@ -58,7 +62,7 @@ export default async function Blocks({
             </div>
           </div>
           <div className="w-full h-full max-h-96">
-            <TransactionsChart data={dataChart} />
+            <TransactionsChart data={last7Data} />
           </div>
         </div>
 
