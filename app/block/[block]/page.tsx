@@ -142,10 +142,11 @@ export default async function Block({
             </a>
             {/* @ts-expect-error Async Server Component */}
             <AddressTransactions
+              path={`/block/${filterByBlock}/`}
               data={transations}
               PAGE_SIZE={PAGE_SIZE}
               page={page}
-              block={filterByBlock}
+              block={{ block: filterByBlock }}
               txtrow={count}
             />
           </div>

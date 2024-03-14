@@ -9,12 +9,16 @@ export default async function AddressTransactions({
   block,
   page,
   txtrow,
+  address,
+  path,
 }: {
   data: any[];
   PAGE_SIZE: number;
   page: number;
-  block: number | undefined;
+  block?: { block: number | undefined };
   txtrow: number;
+  address?: { address: string | undefined };
+  path: string;
 }) {
   const tableHeaders = [
     "Transaction ID",
@@ -65,8 +69,8 @@ export default async function AddressTransactions({
       </DataTable>
       <div className="flex mt-4 justify-end">
         <Pagination
-          path={`/block/${block}/`}
-          searchParams={{ block: block }}
+          path={path}
+          searchParams={(block && block) || (address && address)}
           currentPage={page}
           size={PAGE_SIZE}
           total={txtrow}

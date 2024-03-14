@@ -43,7 +43,7 @@ export async function LatestBlocksTable() {
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-black font-bold">
+            <td className="border-0 text-black font-bold hover:text-blue_primary">
               <Link href={`/block/${block.height}`}>{`${block.height}`}</Link>
             </td>
             <td className="border-0">
@@ -71,7 +71,7 @@ export async function LatestTransactionsTable() {
             key={index}
             className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-black truncate">
+            <td className="border-0 text-black truncate hover:text-blue_primary">
               <Link href={txn.hash ? `/transaction/${txn.hash}` : "/"}>
                 {txn.hash ? shortHash(txn.hash) : "N/A"}
               </Link>
@@ -81,14 +81,20 @@ export async function LatestTransactionsTable() {
                 Transfer
               </p>
             </td>
-            <td className="border-0 truncate">
-              {txn.height !== null ? txn.height.toString() : "N/A"}
+            <td className="border-0 text-black hover:text-blue_primary">
+              <Link href={`/block/${txn.height}`}>
+                {txn.height !== null ? txn.height.toString() : "N/A"}
+              </Link>
             </td>
-            <td className="border-0 truncate max-w-36">
-              {txn.from_address === null ? "N/A" : txn.from_address}
+            <td className="border-0 xl:pr-0 text-black hover:text-blue_primary">
+              <Link href={`/address/${txn.from_address}`}>
+                {txn.from_address && shortHash(txn.from_address)}
+              </Link>
             </td>
-            <td className="border-0 truncate max-w-36">
-              {txn.to_address === null ? "N/A" : txn.to_address}
+            <td className="border-0 text-black hover:text-blue_primary">
+              <Link href={`/address/${txn.to_address}`}>
+                {txn.to_address && shortHash(txn.to_address)}
+              </Link>
             </td>
           </tr>
         ))}

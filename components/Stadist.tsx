@@ -1,6 +1,36 @@
+"use client";
+import { useEffect, useState } from "react";
 import { DoughnutsChartHome, TransationChartHome } from "./charts";
 
-export default async function Stadist() {
+export default function Stadist({
+  dataChart,
+}: {
+  dataChart: { date: string; count: number }[];
+}) {
+  const [selectedOption, setSelectedOption] = useState(1);
+  const [newData, setNewData] = useState<{ date: string; count: number }[]>([]);
+
+  const handleSelectChange = (e: any) => {
+    setSelectedOption(parseInt(e.target.value));
+  };
+
+  useEffect(() => {
+    const last7Data = dataChart
+      .slice(selectedOption === 1 ? -7 : selectedOption === 2 ? -30 : -7)
+      .map((value) => ({
+        date: new Date(value.date).toLocaleDateString("es-es", {
+          dateStyle:
+            selectedOption === 1
+              ? "medium"
+              : selectedOption === 2
+              ? "short"
+              : "short",
+        }),
+        count: Number(value.count),
+      }));
+    setNewData(last7Data);
+  }, [selectedOption, dataChart]);
+
   return (
     <div className="col-span-2 flex flex-row max-sm:flex-col max-md:flex-col gap-4 w-full">
       <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 bg-white rounded-xl shadow-lg w-full">
@@ -14,6 +44,7 @@ export default async function Stadist() {
               <select
                 className="border border-black py-3 text-base px-4 outline-none rounded-full appearance-none w-full cursor-pointer relative z-10 bg-transparent"
                 id="selectMo"
+                onChange={handleSelectChange}
               >
                 <option value={1}>Weekly</option>
                 <option value={2}>Monthly</option>
@@ -21,8 +52,7 @@ export default async function Stadist() {
             </div>
           </div>
           <div className="w-full h-full max-h-96">
-            {/* @ts-expect-error Async Server Component */}
-            <TransationChartHome />
+            <TransationChartHome data={newData} />
           </div>
         </div>
       </div>
@@ -32,7 +62,6 @@ export default async function Stadist() {
             Chains Distribution
           </p>
           <div className="w-full h-full max-h-96">
-            {/* @ts-expect-error Async Server Component */}
             <DoughnutsChartHome />
           </div>
         </div>

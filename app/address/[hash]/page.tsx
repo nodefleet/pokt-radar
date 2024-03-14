@@ -1,112 +1,27 @@
-import { Transaction } from "@/app/transaction/page";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
+import { getAccount  } from "@/utils/accounts";
+import { getTransactionsByAddress } from "@/utils/txns";
 
 export default async function Address({
-  params: { hash: address },
+  params: { hash: address, page: page },
 }: {
-  params: { hash: string };
+  params: { hash: string; page: string | undefined };
 }) {
-  // const accountData = getAccount(address);
-  // const transactionsData = await getTransactionsByAddress(address);
+  const pages = (page && !isNaN(parseInt(page)) && parseInt(page)) || 1;
 
-  // // const [account, transactions] = await Promise.all([
-  // //   accountData,
-  // //   transactionsData,
-  // // ]);
+  const PAGE_SIZE = 10;
+  const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
+  const accountData = getAccount(address);
+  const { transactions, count } = await getTransactionsByAddress(
+    address,
+    PAGE_SIZE,
+    SKIP
+  );
 
-  const transactions: Transaction[] = [
-    {
-      hash: "0x123456789abcdef1",
-      method: "Transfer",
-      block: 1234,
-      from: "0x9876543210ABCDEF1",
-      to: "0xFEDCBA0987654321",
-      value: "0.005 ETH",
-      memo: "Payment for services rendered",
-    },
-    {
-      hash: "0x123456789abcdef2",
-      method: "Swap",
-      block: 1235,
-      from: "0x9876543210ABCDEF2",
-      to: "0xFEDCBA0987654322",
-      value: "0.01 ETH",
-      memo: "Exchange transaction",
-    },
-    {
-      hash: "0x123456789abcdef3",
-      method: "Transfer",
-      block: 1236,
-      from: "0x9876543210ABCDEF3",
-      to: "0xFEDCBA0987654323",
-      value: "0.0025 ETH",
-      memo: "Test transaction",
-    },
-    {
-      hash: "0x123456789abcdef4",
-      method: "Transfer",
-      block: 1237,
-      from: "0x9876543210ABCDEF4",
-      to: "0xFEDCBA0987654324",
-      value: "0.003 ETH",
-      memo: "Transaction memo",
-    },
-    {
-      hash: "0x123456789abcdef5",
-      method: "Swap",
-      block: 1238,
-      from: "0x9876543210ABCDEF5",
-      to: "0xFEDCBA0987654325",
-      value: "0.015 ETH",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef6",
-      method: "Transfer",
-      block: 1239,
-      from: "0x9876543210ABCDEF6",
-      to: "0xFEDCBA0987654326",
-      value: "0.007 ETH",
-      memo: "Transaction notes",
-    },
-    {
-      hash: "0x123456789abcdef7",
-      method: "Swap",
-      block: 1240,
-      from: "0x9876543210ABCDEF7",
-      to: "0xFEDCBA0987654327",
-      value: "0.02 ETH",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef8",
-      method: "Transfer",
-      block: 1241,
-      from: "0x9876543210ABCDEF8",
-      to: "0xFEDCBA0987654328",
-      value: "0.009 ETH",
-      memo: "Payment memo",
-    },
-    {
-      hash: "0x123456789abcdef9",
-      method: "Transfer",
-      block: 1242,
-      from: "0x9876543210ABCDEF9",
-      to: "0xFEDCBA0987654329",
-      value: "0.0055 ETH",
-      memo: "Payment details",
-    },
-    {
-      hash: "0x123456789abcdef10",
-      method: "Swap",
-      block: 1243,
-      from: "0x9876543210ABCDEF10",
-      to: "0xFEDCBA09876543210",
-      value: "0.025 ETH",
-      memo: "Swap notes",
-    },
-  ];
+  const [account] = await Promise.all([accountData]);
+  console.log({ account, transactions });
+
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   const weeksArray = Array.from({ length: 5 }, (_, i) => ({
@@ -236,7 +151,15 @@ export default async function Address({
           <a className="px-4 py-1 bg-white rounded-t-xl ">Transactions</a>
         </div>
         <div className="bg-white px-5 py-4 rounded-r-xl rounded-bl-xl shadow-lg overflow-x-auto">
-          <AddressTransactions transactions={transactions} />
+          {/* @ts-expect-error Async Server Component */}
+          <AddressTransactions
+            path={`/address/${address}`}
+            data={transactions}
+            PAGE_SIZE={PAGE_SIZE}
+            page={pages}
+            address={{ address: address }}
+            txtrow={count}
+          />
         </div>
       </div>
     </div>

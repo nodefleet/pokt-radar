@@ -1,8 +1,10 @@
 // import { getTransactionStats } from "@/utils/txns";
+import { getTransactionStats } from "@/utils/txns";
+import { formatISO } from "date-fns";
 import DoughnutsChart from "./Doughnut";
 import TransactionsChart from "./TransactionsChart";
 
-export async function DoughnutsChartHome() {
+export function DoughnutsChartHome() {
   const dataDought = [
     { date: "Ethereum", count: 900 },
     { date: "BSC Mainnet", count: 500 },
@@ -13,7 +15,7 @@ export async function DoughnutsChartHome() {
   return <DoughnutsChart data={dataDought} />;
 }
 
-export async function DoughnutsChartMakert() {
+export function DoughnutsChartMakert() {
   const dataDought = [
     { date: "CEX", count: 900 },
     { date: "DEX ", count: 500 },
@@ -40,12 +42,12 @@ export async function DoughnutsChartMakert() {
   );
 }
 
-export async function TransationChartHome() {
-  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
-    date: `week ${(i + 1).toString().padStart(2, "0")}`,
-    count: i === 5 ? 300 : 100 * i,
-  }));
-  return <TransactionsChart data={weeksArray} />;
+export function TransationChartHome({
+  data,
+}: {
+  data: { date: string; count: number }[];
+}) {
+  return <TransactionsChart data={data} />;
 }
 
 export async function GovernancePage() {

@@ -45,7 +45,6 @@ export default async function Transactions({
     skip: SKIP,
     block: filterByBlock,
   });
-  console.log(transactions);
   const tableHeaders = [
     "Transaction ID",
     "Method",

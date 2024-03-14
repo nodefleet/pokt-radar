@@ -25,7 +25,7 @@ export default function TransactionsChart({
     labels: data.map((value) => value.date),
     datasets: [
       {
-        data: data.map((value) => value.count),
+        data: data.map((value) => Number(value.count)),
         borderColor: "#698DFF",
         backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;

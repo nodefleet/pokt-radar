@@ -53,13 +53,20 @@ export const getTransaction = cache(async (hash: string) => {
   };
 });
 
-export const getTransactionsByAddress = cache(async (address: string) => {
-  return await prisma.transactions.findMany({
-    where: { OR: [{ from_address: address }, { to_address: address }] },
-    orderBy: { height: "desc" },
-    take: 10,
-  });
-});
+export const getTransactionsByAddress = cache(
+  async (address: string, take: number, skip: number) => {
+    const count = await prisma.transactions.count({
+      where: { OR: [{ from_address: address }, { to_address: address }] },
+    });
+    const transactions = await prisma.transactions.findMany({
+      where: { OR: [{ from_address: address }, { to_address: address }] },
+      orderBy: { height: "desc" },
+      take: take,
+      skip: skip,
+    });
+    return { transactions: transactions, count: count };
+  }
+);
 
 export const getTransactionsByBlock = cache(async (block: number) => {
   return await prisma.transactions.findMany({
@@ -68,21 +75,34 @@ export const getTransactionsByBlock = cache(async (block: number) => {
   });
 });
 
-// export const getTransactionStats = cache(async () => {
-//   const result = await prisma.$queryRaw<any[]>`
-//   SELECT date_trunc('day', b.time) AS date,
-//   COUNT(t.height) AS count
-//   FROM (
-//     SELECT generate_series(NOW() - INTERVAL '15 days', NOW(), INTERVAL '1 day')::date AS date
-//   ) AS d
-//   LEFT JOIN blocks b ON date_trunc('day', b.time) = d.date
-//   LEFT JOIN transactions_within_time_range t ON t.height = b.height
-//   GROUP BY date_trunc('day', b.time)
-//   ORDER BY date ASC
-//   LIMIT 10`;
-//   return result;
-// });
+export const getTransactionStats = cache(async () => {
+  const result = await prisma.$queryRaw<any[]>`
+WITH recent_data AS (
+    SELECT date_trunc('day', b.time) AS date, COUNT(t.height) AS count
+    FROM blocks AS b
+    LEFT JOIN transactions t ON t.height = b.height
+    WHERE b.time >= NOW() - INTERVAL '30 days' OR b.time IS NULL
+    GROUP BY date
+    ORDER BY date DESC
+),
+last_30_days AS (
+    SELECT date_trunc('day', b.time) AS date, COUNT(t.height) AS count
+    FROM blocks AS b
+    LEFT JOIN transactions t ON t.height = b.height
+    GROUP BY date
+    ORDER BY date DESC
+    LIMIT 30
+)
+SELECT date, count
+    FROM recent_data
+    UNION ALL
+    SELECT date, count
+    FROM last_30_days
+    ORDER BY date DESC
+`;
+  return result;
+});
 
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */
 
-/* SELECT  date_trunc('day', b.time) AS date, COUNT(t.height) AS count FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; */
+/* SELECT date_trunc('day', b.time) AS date, COUNT(t.height) AS count FROM blocks AS b LEFT JOIN transactions t ON t.height = b.height WHERE b.time >= NOW() - INTERVAL '30 days' OR b.time IS NULL GROUP BY date */
