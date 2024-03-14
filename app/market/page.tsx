@@ -98,7 +98,6 @@ export default async function Market() {
             <p className="mb-4 text-black font-semibold text-sm">CEX/DEX/OTC</p>
             <hr className="border-gray-bera w-12/12 mx-4 justify-self-center" />
             <div className="w-full h-full max-h-96 p-4">
-              {/* @ts-expect-error Async Server Component */}
               <DoughnutsChartMakert />
             </div>
           </div>

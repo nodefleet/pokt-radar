@@ -229,7 +229,6 @@ export default function Governance() {
             <hr className="border-gray-bera w-12/12 mx-4 justify-self-center" />
             <div className="flex flex-col justify-center items-center h-full">
               <div className="w-full h-full max-h-96 p-4">
-                {/* @ts-expect-error Async Server Component */}
                 <DoughnutsChartMakert />
               </div>
             </div>

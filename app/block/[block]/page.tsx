@@ -9,7 +9,11 @@ import { getBlock } from "@/utils/blocks";
 
 export default async function Block({ params }: { params: { block: string } }) {
   const queryBlock = parseInt(params.block);
-  let block = (await getBlock(queryBlock))[0];
+  let { block, count, transations } = await getBlock({
+    height: queryBlock,
+    skip: 10,
+    take: 10,
+  });
 
   const weeksArray = Array.from({ length: 10 }, (_, i) => ({
     date: `week ${(i + 1).toString().padStart(2, "0")}`,
@@ -30,13 +34,25 @@ export default async function Block({ params }: { params: { block: string } }) {
             </span>
             <div className="flex p-1 rounded-full shadow-xl space-x-6 bg-neutral-300">
               <Link
-                href={block?.height ? `/block/${block?.height - 1}` : ""}
+                href={
+                  block?.height
+                    ? `/block/${
+                        block?.height !== null ? Number(block.height) - 1 : null
+                      }`
+                    : ""
+                }
                 className=""
               >
                 <ChevronLeftIcon className="w-5 h-5 stroke-white stroke-2" />
               </Link>
               <Link
-                href={block?.height ? `/block/${block?.height + 1}` : ""}
+                href={
+                  block?.height
+                    ? `/block/${
+                        block?.height !== null ? Number(block.height) + 1 : null
+                      }`
+                    : ""
+                }
                 className=""
               >
                 <ChevronRightIcon className="w-5 h-5 stroke-white stroke-2" />
@@ -83,7 +99,7 @@ export default async function Block({ params }: { params: { block: string } }) {
                         },
                       }}
                     >
-                      {block.tx_total}
+                      {block.tx_total !== null ? block.tx_total.toString() : ""}
                     </Link>{" "}
                     transactions
                   </p>
@@ -92,7 +108,10 @@ export default async function Block({ params }: { params: { block: string } }) {
                   <p className="font-medium truncate">
                     Contract Internal Transactions
                   </p>
-                  <p className="col-span-2 truncate">{block?.tx_count}</p>
+                  <p className="col-span-2 truncate">
+                    {" "}
+                    {block.tx_count !== null ? block.tx_count.toString() : ""}
+                  </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Gas used</p>
