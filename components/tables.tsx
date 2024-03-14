@@ -63,6 +63,7 @@ export async function LatestBlocksTable() {
 export async function LatestTransactionsTable() {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
   const data = await getLatestTransactions();
+  console.log(data);
   return (
     <BaseTable headers={headers}>
       {data &&

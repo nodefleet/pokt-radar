@@ -5,6 +5,7 @@ import Pagination from "@/components/Pagination";
 import FromNow from "@/components/FromNow";
 import TransactionsChart from "@/components/TransactionsChart";
 import { getBlocks } from "@/utils/blocks";
+import { getTransactionStats } from "@/utils/txns";
 
 export default async function Blocks({
   searchParams,
@@ -38,6 +39,8 @@ export default async function Blocks({
     take: PAGE_SIZE,
     skip: SKIP,
   });
+
+  const dataChart = await getTransactionStats();
 
   const tableHeaders = [
     "Block",
@@ -87,9 +90,15 @@ export default async function Blocks({
                     <FromNow datetime={formatISO(new Date(block.time))} />
                   )}
                 </td>
-                <td className="border-0">{block.tx_total}</td>
-                <td className="border-0">{block.tx_total}</td>
-                <td className="border-0">{block.tx_count}</td>
+                <td className="border-0">
+                  {block.tx_total !== null ? block.tx_total.toString() : ""}
+                </td>
+                <td className="border-0">
+                  {block.tx_total !== null ? block.tx_total.toString() : ""}
+                </td>
+                <td className="border-0">
+                  {block.tx_count !== null ? block.tx_count.toString() : ""}
+                </td>
                 <td className="border-0">197</td>
                 <td className="border-0 font-bold">www.nodefleet.org</td>
               </tr>

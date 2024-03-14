@@ -2,7 +2,6 @@ import Link from "next/link";
 import { formatISO, format } from "date-fns";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
-import SearchBar from "@/components/SearchBar";
 import { getTransaction } from "@/utils/txns";
 
 export default async function Transaction({
@@ -41,8 +40,8 @@ export default async function Transaction({
             <div className="grid grid-cols-3">
               <p className="font-medium">Fee</p>
               <p className="col-span-2 truncate uppercase">
-                {txn.fee_denomination && txn.fee
-                  ? txn.fee.toLocaleString("en-EN") + " " + txn.fee_denomination
+                {txn.fee !== null
+                  ? txn.fee.toString() + " " + txn.fee_denomination
                   : txn.fee}
               </p>
             </div>

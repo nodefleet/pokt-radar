@@ -121,7 +121,7 @@ export default async function Transactions({
                   </td>
                   <td className="border-0 font-bold text-black hover:text-blue_primary">
                     <Link href={`/block/${txn.height}`}>
-                      {txn.height && txn.height.toString()}
+                      {txn.height !== null ? txn.height.toString() : ""}
                     </Link>
                   </td>
                   <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">

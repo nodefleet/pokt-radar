@@ -77,29 +77,12 @@ export const getTransactionsByBlock = cache(async (block: number) => {
 
 export const getTransactionStats = cache(async () => {
   const result = await prisma.$queryRaw<any[]>`
-WITH recent_data AS (
-    SELECT date_trunc('day', b.time) AS date, COUNT(t.height) AS count
+    SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
     FROM blocks AS b
-    LEFT JOIN transactions t ON t.height = b.height
-    WHERE b.time >= NOW() - INTERVAL '30 days' OR b.time IS NULL
+    LEFT JOIN transactions_30_days t ON t.height = b.height
     GROUP BY date
     ORDER BY date DESC
-),
-last_30_days AS (
-    SELECT date_trunc('day', b.time) AS date, COUNT(t.height) AS count
-    FROM blocks AS b
-    LEFT JOIN transactions t ON t.height = b.height
-    GROUP BY date
-    ORDER BY date DESC
-    LIMIT 30
-)
-SELECT date, count
-    FROM recent_data
-    UNION ALL
-    SELECT date, count
-    FROM last_30_days
-    ORDER BY date DESC
-`;
+    LIMIT 30`;
   return result;
 });
 

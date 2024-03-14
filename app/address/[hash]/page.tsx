@@ -1,6 +1,6 @@
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
-import { getAccount  } from "@/utils/accounts";
+import { getAccount } from "@/utils/accounts";
 import { getTransactionsByAddress } from "@/utils/txns";
 
 export default async function Address({
@@ -20,7 +20,7 @@ export default async function Address({
   );
 
   const [account] = await Promise.all([accountData]);
-  console.log({ account, transactions });
+  // console.log({ account, transactions });
 
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");

@@ -8,58 +8,58 @@ datasource db {
 }
 
 model blocks {
-  id               Int       @id @default(autoincrement())
+  id               BigInt    @id @default(autoincrement())
   hash             String?   @db.Char(64)
-  height           Int?
+  height           BigInt?
   time             DateTime? @db.Timestamp(6)
-  proposer_address String?   @db.Char(40)
-  tx_count         Int?
-  tx_total         Int?
+  proposer_address String?   @db.Char(48)
+  tx_total         BigInt?
+  tx_count         BigInt?
 }
 
 model transactions {
-  id               Int      @id @default(autoincrement())
+  id               BigInt   @id @default(autoincrement())
   hash             String?  @db.Char(64)
   from_address     String?  @db.Char(40)
   to_address       String?  @db.Char(40)
   app_pub_key      String?  @db.Char(64)
   blockchains      String?
   message_type     String?
-  height           Int?
-  index            Int?
+  height           BigInt?
+  index            BigInt?
   stdtx            Json?
   tx_result        Json?
   tx               String?
   entropy          BigInt?
-  fee              Int?
-  fee_denomination String?  @db.VarChar(5)
+  fee              BigInt?
+  fee_denomination String?  @db.VarChar(18)
   amount           Decimal? @db.Decimal
 }
 
 model accounts {
-  id                   Int      @id @default(autoincrement())
-  address              String?  @db.Char(40)
-  height               Int?
+  id                   BigInt   @id @default(autoincrement())
+  address              String?  @db.Char(68)
+  height               BigInt?
   account_type         String?
   balance              Decimal? @db.Decimal
-  balance_denomination String?  @db.VarChar(5)
+  balance_denomination String?  @db.VarChar(18)
 }
 
 model apps {
-  id            Int      @id @default(autoincrement())
-  address       String?  @db.Char(40)
-  height        Int?
+  id            BigInt   @id @default(autoincrement())
+  address       String?  @db.Char(48)
+  height        BigInt?
   jailed        Boolean?
-  public_key    String?  @db.Char(64)
+  public_key    String?  @db.Char(72)
   staked_tokens Decimal? @db.Decimal
 }
 
 model nodes {
-  id          Int      @id @default(autoincrement())
-  address     String?  @db.Char(40)
-  height      Int?
+  id          BigInt   @id @default(autoincrement())
+  address     String?  @db.Char(48)
+  height      BigInt?
   jailed      Boolean?
-  public_key  String?  @db.Char(64)
+  public_key  String?  @db.Char(72)
   service_url String?
   tokens      Decimal? @db.Decimal
 }
