@@ -80,6 +80,7 @@ export const getTransactionStats = cache(async () => {
     SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
     FROM blocks AS b
     LEFT JOIN transactions_30_days t ON t.height = b.height
+    WHERE message_type ='pocketcore/claim'
     GROUP BY date
     ORDER BY date DESC
     LIMIT 30`;
