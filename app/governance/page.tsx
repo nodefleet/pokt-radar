@@ -6,7 +6,6 @@ import {
   GovernanceTable2,
   LatestMakerTable,
 } from "@/components/tables";
-import { Transaction } from "../transaction/page";
 import DataTable from "@/components/DataTable";
 import Link from "next/link";
 import Pagination from "@/components/Pagination";
@@ -34,7 +33,7 @@ export default function Governance() {
     { parameters: "Parameter5", amount: 1000 },
   ];
 
-  const transactionses: Transaction[] = [
+  const transactionses = [
     {
       hash: "0x123456789abcdef1",
       method: "Transfer",
