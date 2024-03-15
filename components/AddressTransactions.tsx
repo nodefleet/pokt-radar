@@ -52,18 +52,18 @@ export default async function AddressTransactions({
             </td>
             <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
               <Link href={`/address/${txn.from_address}`}>
-                {txn.from_address && shortHash(txn.from_address)}
+                {txn.from_address ? shortHash(txn.from_address) : "N/A"}
               </Link>
             </td>
             <td className="border-0 font-bold text-black hover:text-blue_primary">
               <Link href={`/address/${txn.to_address}`}>
-                {txn.to_address && shortHash(txn.to_address)}
+                {txn.to_address ? shortHash(txn.to_address) : "N/A"}
               </Link>
             </td>
             <td className="border-0 text-black">
-              {txn.stdtx?.msg?.value?.amount}
+              {txn.stdtx?.msg?.value?.amount || "N/A"}
             </td>
-            <td className="border-0 text-black">{txn.stdtx.memo}</td>
+            <td className="border-0 text-black">{txn.stdtx.memo || "N/A"}</td>
           </tr>
         ))}
       </DataTable>

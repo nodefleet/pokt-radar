@@ -4,20 +4,30 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
-import { Transaction } from "@/app/transaction/page";
 import { getBlock } from "@/utils/blocks";
 
-export default async function Block({ params }: { params: { block: string } }) {
+export default async function Block({
+  params,
+}: {
+  params: { block: string; page: string | undefined };
+}) {
   const queryBlock = parseInt(params.block);
-  let { block, count, transations } = await getBlock({
-    height: queryBlock,
-    skip: 10,
-    take: 10,
-  });
+  const pages =
+    (params.page && !isNaN(parseInt(params.page)) && parseInt(params.page)) ||
+    1;
 
-  const weeksArray = Array.from({ length: 10 }, (_, i) => ({
-    date: `week ${(i + 1).toString().padStart(2, "0")}`,
-    count: i === 5 ? 300 : 100 * i,
+  const PAGE_SIZE = 10;
+  const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
+  let { block, count, transations, chartData } = await getBlock({
+    height: queryBlock,
+    skip: SKIP,
+    take: PAGE_SIZE,
+  });
+  const last7Data = chartData.map((value) => ({
+    date: new Date(value.date).toLocaleDateString("es-es", {
+      dateStyle: "short",
+    }),
+    count: Number(value.count),
   }));
 
   return (
@@ -143,7 +153,7 @@ export default async function Block({ params }: { params: { block: string } }) {
               </p>
             </div>
             <div className="w-full h-full" style={{ maxHeight: "500px" }}>
-              <TransactionsChart data={weeksArray} />
+              <TransactionsChart data={last7Data} />
             </div>
           </div>
         </div>
@@ -154,8 +164,15 @@ export default async function Block({ params }: { params: { block: string } }) {
             <a className="px-4 py-1 font-semibold text-xl">
               Latest Transactions
             </a>
-            {/* @ts-expect-error Async Server Component 
-            <AddressTransactions params={block?.height} />*/}
+            {/* @ts-expect-error Async Server Component */}
+            <AddressTransactions
+              path={`/block/${queryBlock}`}
+              data={transations}
+              PAGE_SIZE={PAGE_SIZE}
+              page={pages}
+              block={{ block: queryBlock }}
+              txtrow={count}
+            />
           </div>
         </div>
       )}

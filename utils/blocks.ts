@@ -54,10 +54,20 @@ export const getBlock = cache(
     const count = await prisma.transactions.count({
       where: { height: height },
     });
+    const result = await prisma.$queryRaw<any[]>`
+    SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
+    FROM blocks AS b
+    LEFT JOIN transactions t ON t.height = b.height
+    WHERE message_type ='pocketcore/claim'
+    AND b.height = ${height} 
+    GROUP BY date
+    ORDER BY date DESC
+    LIMIT 30;`;
     return {
       transations: transactions,
       block: blocks[0],
       count,
+      chartData: result,
     };
   }
 );
