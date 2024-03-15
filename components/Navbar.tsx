@@ -4,8 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import InputSearch from "./InputSearch";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
+  const [paths, setPaths] = useState("/");
+  const [active, setActive] = useState(true);
   const pathname = usePathname();
   const Menu = [
     { name: "Home", path: "/" },
@@ -15,6 +18,9 @@ export default function Navbar() {
     { name: "Relays", path: "/relay" },
     { name: "Governance", path: "/governance" },
   ];
+  useEffect(() => {
+    setTimeout(() => setActive(false), 1000);
+  }, [pathname, paths]);
 
   return (
     <header className={`bg-white px-3 py-1 sticky top-0 z-50`}>
@@ -48,9 +54,19 @@ export default function Navbar() {
                 className={`text-base font-semibold text-black_custom ${
                   pathname === path && "text-blue_primary"
                 }`}
+                onClick={() => {
+                  if (path !== pathname) {
+                    setPaths(path);
+                    setActive(true);
+                  }
+                }}
                 href={path}
               >
-                {name}
+                {active && paths === path ? (
+                  <i className="fa-solid fa-spinner animate-spin"></i>
+                ) : (
+                  name
+                )}
               </Link>
             ))}
             <button className="px-10 py-3 bg-black rounded-full justify-center items-center gap-2 flex flex-row text-white">

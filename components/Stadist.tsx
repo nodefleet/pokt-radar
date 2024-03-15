@@ -4,11 +4,16 @@ import { DoughnutsChartHome, TransationChartHome } from "./charts";
 
 export default function Stadist({
   dataChart,
+  resultDought,
 }: {
   dataChart: { date: string; count: number }[];
+  resultDought: { date: string; count: number }[];
 }) {
   const [selectedOption, setSelectedOption] = useState(1);
   const [newData, setNewData] = useState<{ date: string; count: number }[]>([]);
+  const [newDataDoought, setNewDataDoought] = useState<
+    { date: string; count: number }[]
+  >([]);
 
   const handleSelectChange = (e: any) => {
     setSelectedOption(parseInt(e.target.value));
@@ -28,8 +33,13 @@ export default function Stadist({
         }),
         count: Number(value.count),
       }));
+    const last7DataDought = resultDought.map((value) => ({
+      date: value.date,
+      count: Number(value.count),
+    }));
+    setNewDataDoought(last7DataDought);
     setNewData(last7Data);
-  }, [selectedOption, dataChart]);
+  }, [selectedOption, dataChart, resultDought]);
 
   return (
     <div className="col-span-2 flex flex-row max-sm:flex-col max-md:flex-col gap-4 w-full">
@@ -62,7 +72,7 @@ export default function Stadist({
             Chains Distribution
           </p>
           <div className="w-full h-full max-h-96">
-            <DoughnutsChartHome />
+            <DoughnutsChartHome dataDought={newDataDoought} />
           </div>
         </div>
       </div>

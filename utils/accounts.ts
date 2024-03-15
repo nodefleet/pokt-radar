@@ -3,5 +3,12 @@ import { cache } from "react";
 import { prisma } from "./db";
 
 export const getAccount = cache(async (address: string) => {
-  return await prisma.accounts.findFirst({ where: { address: address } });
+  const blocks = await prisma.blocks.findMany({
+    take: 1,
+    orderBy: { height: "desc" },
+  });
+  const account = await prisma.accounts.findMany({
+    where: { address: address, height: Number(blocks[0].height) },
+  });
+  return account;
 });

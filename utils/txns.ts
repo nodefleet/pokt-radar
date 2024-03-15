@@ -3,9 +3,7 @@ import { cache } from "react";
 import { prisma } from "./db";
 
 export const getTotalTransactions = cache(async () => {
-  return await prisma.transactions.count({
-    take: 10,
-  });
+  return await prisma.transactions.count({});
 });
 
 export const getTransactions = cache(
@@ -18,25 +16,31 @@ export const getTransactions = cache(
     skip: number;
     block: number | undefined;
   }) => {
-    const transactions = await prisma.transactions.findMany({
-      where: { height: block },
-      take,
-      skip,
-      orderBy: { height: "desc" },
-    });
-    const count = await prisma.transactions.count({
-      where: { height: block },
-    });
+    // const transactions = await prisma.transactions.findMany({
+    //   where: { height: block },
+    //   take,
+    //   skip,
+    //   orderBy: { height: "desc" },
+    // });
+    const transactions = await prisma.$queryRaw<any[]>`
+    SELECT * 
+    FROM transactions_30_days
+    ORDER BY block_id DESC
+    LIMIT ${take}
+    OFFSET ${skip};`;
+    const count = await prisma.$queryRaw<any[]>`
+    SELECT COUNT(*)
+    FROM transactions_30_days`;
     return {
       transactions,
-      count,
+      count: Number(count[0].count),
     };
   }
 );
 
 export const getLatestTransactions = cache(async () => {
   const result = await prisma.$queryRaw<any[]>`
-     SELECT * FROM transactions ORDER BY id DESC LIMIT 10;`;
+     SELECT * FROM transactions_30_days ORDER BY block_id DESC LIMIT 10;`;
   return result;
 });
 
@@ -84,7 +88,16 @@ export const getTransactionStats = cache(async () => {
     GROUP BY date
     ORDER BY date DESC
     LIMIT 30`;
-  return result;
+  const resultDought = await prisma.$queryRaw<any[]>`
+    SELECT message_type as date, COUNT(message_type) AS count
+    FROM transactions_30_days
+    WHERE message_type IS NOT NULL
+    GROUP BY message_type
+    ORDER BY count DESC`;
+  return {
+    dataChartVetical: result,
+    resultDought: resultDought,
+  };
 });
 
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */

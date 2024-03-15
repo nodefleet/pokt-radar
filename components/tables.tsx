@@ -6,6 +6,8 @@ import { shortHash } from "@/utils";
 import React from "react";
 import { getLatestTransactions } from "@/utils/txns";
 import { getLatestBlocks } from "@/utils/blocks";
+import DataTable from "./DataTable";
+import Pagination from "./Pagination";
 
 function BaseTable({
   children,
@@ -52,8 +54,12 @@ export async function LatestBlocksTable() {
               )}
             </td>
             <td className="border-0">{"N/A"}</td>
-            <td className="border-0">{block.tx_total}</td>
-            <td className="border-0">{block.tx_count}</td>
+            <td className="border-0">
+              {block.tx_total !== null ? block.tx_total.toString() : "N/A"}
+            </td>
+            <td className="border-0">
+              {block.tx_count !== null ? block.tx_count.toString() : "N/A"}
+            </td>
           </tr>
         ))}
     </BaseTable>
@@ -63,7 +69,6 @@ export async function LatestBlocksTable() {
 export async function LatestTransactionsTable() {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
   const data = await getLatestTransactions();
-  console.log(data);
   return (
     <BaseTable headers={headers}>
       {data &&
@@ -73,12 +78,18 @@ export async function LatestTransactionsTable() {
             className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
             <td className="border-0 text-black truncate hover:text-blue_primary">
-              <Link href={txn.hash ? `/transaction/${txn.hash}` : "/"}>
-                {txn.hash ? shortHash(txn.hash) : "N/A"}
+              <Link
+                href={
+                  txn.transaction_hash
+                    ? `/transaction/${txn.transaction_hash}`
+                    : "/"
+                }
+              >
+                {txn.transaction_hash ? shortHash(txn.transaction_hash) : "N/A"}
               </Link>
             </td>
             <td className="border-0 w-6">
-              <p className="font-normal uppercase text-sm rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
+              <p className="font-normal uppercase text-sm rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4">
                 Transfer
               </p>
             </td>
@@ -89,12 +100,12 @@ export async function LatestTransactionsTable() {
             </td>
             <td className="border-0 xl:pr-0 text-black hover:text-blue_primary">
               <Link href={`/address/${txn.from_address}`}>
-                {txn.from_address && shortHash(txn.from_address)}
+                {txn.from_address ? shortHash(txn.from_address) : "N/A"}
               </Link>
             </td>
             <td className="border-0 text-black hover:text-blue_primary">
               <Link href={`/address/${txn.to_address}`}>
-                {txn.to_address && shortHash(txn.to_address)}
+                {txn.to_address ? shortHash(txn.to_address) : "N/A"}
               </Link>
             </td>
           </tr>

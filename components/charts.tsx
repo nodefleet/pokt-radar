@@ -4,14 +4,11 @@ import { formatISO } from "date-fns";
 import DoughnutsChart from "./Doughnut";
 import TransactionsChart from "./TransactionsChart";
 
-export function DoughnutsChartHome() {
-  const dataDought = [
-    { date: "Ethereum", count: 900 },
-    { date: "BSC Mainnet", count: 500 },
-    { date: "Polygon Mainnet", count: 700 },
-    { date: "FUSE Mainnet", count: 600 },
-    { date: "Others", count: 300 },
-  ];
+export function DoughnutsChartHome({
+  dataDought,
+}: {
+  dataDought: { date: string; count: number }[];
+}) {
   return <DoughnutsChart data={dataDought} />;
 }
 

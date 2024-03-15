@@ -1,25 +1,6 @@
-import Link from "next/link";
-import { formatISO } from "date-fns";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
-
-import FromNow from "@/components/FromNow";
-import SearchBar from "@/components/SearchBar";
-import DataTable from "@/components/DataTable";
-import Pagination from "@/components/Pagination";
-// import { getTransactions } from "@/utils/txns";
-import { shortHash } from "@/utils";
 import TransactionsChart from "@/components/TransactionsChart";
 import { getTransactions } from "@/utils/txns";
-
-export interface Transaction {
-  hash: string;
-  method: string;
-  block: number;
-  from: string;
-  to: string;
-  value: string;
-  memo: string;
-}
+import TableClient from "@/components/TableClient";
 
 export default async function Transactions({
   searchParams,
@@ -45,16 +26,6 @@ export default async function Transactions({
     skip: SKIP,
     block: filterByBlock,
   });
-
-  const tableHeaders = [
-    "Transaction ID",
-    "Method",
-    "Block",
-    "From",
-    "To",
-    "Value",
-    "Memo",
-  ];
 
   const currentDate = new Date();
   const weeksArray = Array.from({ length: 10 }, (_, i) => {
@@ -102,57 +73,13 @@ export default async function Transactions({
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-3xl shadow-xl overflow-x-auto">
-          <p className="font-semibold text-xl pl-4">Latest Transactions</p>
-          <DataTable headers={tableHeaders}>
-            {transactions.map((txn, index: number) => {
-              type JsonObject = { [key: string]: any };
-              const stdtx = txn.stdtx as JsonObject;
-              return (
-                <tr key={index} className="border-y border-gray-bera">
-                  <td className="border-0 text-black font-bold hover:text-blue_primary">
-                    <Link href={`/transaction/${txn.hash}`}>
-                      {txn.hash && shortHash(txn.hash)}
-                    </Link>
-                  </td>
-                  <td className="border-0 w-6">
-                    <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
-                      Transfer
-                    </p>
-                  </td>
-                  <td className="border-0 font-bold text-black hover:text-blue_primary">
-                    <Link href={`/block/${txn.height}`}>
-                      {txn.height !== null ? txn.height.toString() : ""}
-                    </Link>
-                  </td>
-                  <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
-                    <Link href={`/address/${txn.from_address}`}>
-                      {txn.from_address && shortHash(txn.from_address)}
-                    </Link>
-                  </td>
-                  <td className="border-0 font-bold text-black hover:text-blue_primary">
-                    <Link href={`/address/${txn.to_address}`}>
-                      {txn.to_address && shortHash(txn.to_address)}
-                    </Link>
-                  </td>
-                  <td className="border-0 text-black">
-                    {stdtx?.msg?.value?.amount}
-                  </td>
-                  <td className="border-0 text-black">{stdtx?.memo}</td>
-                </tr>
-              );
-            })}
-          </DataTable>
-          <div className="flex mt-4 justify-end">
-            <Pagination
-              path="/transaction"
-              searchParams={{ block: filterByBlock }}
-              currentPage={page}
-              size={PAGE_SIZE}
-              total={totalTxns}
-            />
-          </div>
-        </div>
+        <TableClient
+          transactions={transactions}
+          PAGE_SIZE={PAGE_SIZE}
+          page={page}
+          block={filterByBlock}
+          totalTxns={totalTxns}
+        />
       </div>
     </div>
   );

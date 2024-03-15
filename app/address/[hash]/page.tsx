@@ -20,7 +20,7 @@ export default async function Address({
   );
 
   const [account] = await Promise.all([accountData]);
-  // console.log({ account, transactions });
+  console.log({ account });
 
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
