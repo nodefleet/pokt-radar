@@ -140,7 +140,7 @@ export default function Governance() {
 
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
-      <div className="grid grid-cols-2 max-sm:gap-2 gap-4">
+      <div className="grid grid-cols-2 max-sm:grid-cols-1 max-sm:gap-2 gap-4">
         <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg w-full">
           <div className="mt-8 md:mt-0 max-sm:mt-0">
             <div className="flex justify-between flex-row gap-3 max-sm:flex-col items-center">
@@ -166,7 +166,7 @@ export default function Governance() {
               </div>
             </div>
             <div className="flex flex-col justify-center items-center h-full">
-              <div className="w-full h-full">
+              <div className="w-full h-full overflow-x-auto">
                 {/* @ts-expect-error Async Server Component */}
                 <GovernanceTable data={block} />
               </div>
@@ -202,7 +202,7 @@ export default function Governance() {
                 <p className="font-normal">5</p>
               </div>
             </div>
-            <div className="w-full h-full">
+            <div className="w-full h-full overflow-x-auto">
               {/* @ts-expect-error Async Server Component */}
               <GovernanceTable2 data={parametr} />
             </div>
@@ -289,7 +289,7 @@ export default function Governance() {
                 </select>
               </div>
             </div>
-            <div className="w-full h-full max-h-96 ">
+            <div className="w-full h-full max-h-96 overflow-x-auto">
               {/* @ts-expect-error Async Server Component */}
               <GovernancePage data={transactions} />
             </div>
@@ -305,7 +305,7 @@ export default function Governance() {
               </p>
             </div>
           </div>
-          <div>
+          <div className="overflow-x-auto">
             <DataTable headers={tableHeaders}>
               {transactionses.map((txn, index: number) => (
                 <tr key={index} className="border-y border-gray-bera">

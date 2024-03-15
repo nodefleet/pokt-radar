@@ -87,10 +87,10 @@ export default async function Blocks({
                 <td className="border-0">
                   {block.tx_total !== null ? block.tx_total.toString() : ""}
                 </td>
+                <td className="border-0">197</td>
                 <td className="border-0">
                   {block.tx_count !== null ? block.tx_count.toString() : ""}
                 </td>
-                <td className="border-0">197</td>
                 <td className="border-0 font-bold">www.nodefleet.org</td>
               </tr>
             ))}
@@ -100,7 +100,7 @@ export default async function Blocks({
               path="/block"
               currentPage={page}
               size={PAGE_SIZE}
-              total={blocks.length}
+              total={totalBlocks}
             />
           </div>
         </div>

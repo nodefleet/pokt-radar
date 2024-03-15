@@ -129,7 +129,7 @@ export default async function Market() {
               Exchanges Trading POKT
             </p>
           </div>
-          <div className="w-full h-full">
+          <div className="w-full h-full overflow-x-auto">
             {/* @ts-expect-error Async Server Component */}
             <LatestMakerBlockTable data={extrachange} />
           </div>
