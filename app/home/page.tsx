@@ -16,11 +16,13 @@ export default async function Home() {
         <Stats />
         <Stadist dataChart={dataChartVetical} resultDought={resultDought} />
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
-          <div className="overflow-x-auto w-full">
+          <div className="w-full overflow-x-auto">
             <h6 className="ml-3 mb-2 text-xl text-black">Latest Blocks</h6>
             <hr />
-            {/* @ts-expect-error Async Server Component */}
-            <LatestBlocksTable />
+            <div className="overflow-x-auto">
+              {/* @ts-expect-error Async Server Component */}
+              <LatestBlocksTable />
+            </div>
           </div>
           <Link
             href="/block"
@@ -35,8 +37,10 @@ export default async function Home() {
               Latest Transactions
             </h6>
             <hr />
-            {/* @ts-expect-error Async Server Component */}
-            <LatestTransactionsTable />
+            <div className="overflow-x-auto">
+              {/* @ts-expect-error Async Server Component */}
+              <LatestTransactionsTable />
+            </div>
           </div>
           <Link
             href="/transaction"

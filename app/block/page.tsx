@@ -67,35 +67,38 @@ export default async function Blocks({
         </div>
 
         <div className=" bg-white mt-6 mb-10 p-5 rounded-xl shadow-xl overflow-x-auto">
-          <DataTable headers={tableHeaders}>
-            {blocks.map((block, index: number) => (
-              <tr key={index} className="text-black text-sm font-normal">
-                <td className="border-0 text-black font-bold">
-                  <Link
-                    href={`/block/${block.height}`}
-                    className="hover:text-blue_primary"
-                  >{`${block.height}`}</Link>
-                </td>
-                <td className="border-0">
-                  {block.time && (
-                    <FromNow datetime={formatISO(new Date(block.time))} />
-                  )}
-                </td>
-                <td className="border-0">
-                  {block.tx_total !== null ? block.tx_total.toString() : ""}
-                </td>
-                <td className="border-0">
-                  {block.tx_total !== null ? block.tx_total.toString() : ""}
-                </td>
-                <td className="border-0">197</td>
-                <td className="border-0">
-                  {block.tx_count !== null ? block.tx_count.toString() : ""}
-                </td>
-                <td className="border-0 font-bold">www.nodefleet.org</td>
-              </tr>
-            ))}
-          </DataTable>
-          <div className="flex mt-4 justify-end">
+          <p className="font-semibold text-xl pl-4">Latest Blocks</p>
+          <div className="overflow-x-auto">
+            <DataTable headers={tableHeaders}>
+              {blocks.map((block, index: number) => (
+                <tr key={index} className="text-black text-sm font-normal">
+                  <td className="border-0 text-black font-bold">
+                    <Link
+                      href={`/block/${block.height}`}
+                      className="hover:text-blue_primary"
+                    >{`${block.height}`}</Link>
+                  </td>
+                  <td className="border-0">
+                    {block.time && (
+                      <FromNow datetime={formatISO(new Date(block.time))} />
+                    )}
+                  </td>
+                  <td className="border-0">
+                    {block.tx_total !== null ? block.tx_total.toString() : ""}
+                  </td>
+                  <td className="border-0">
+                    {block.tx_total !== null ? block.tx_total.toString() : ""}
+                  </td>
+                  <td className="border-0">197</td>
+                  <td className="border-0">
+                    {block.tx_count !== null ? block.tx_count.toString() : ""}
+                  </td>
+                  <td className="border-0 font-bold">www.nodefleet.org</td>
+                </tr>
+              ))}
+            </DataTable>
+          </div>
+          <div className="flex mt-4 justify-end max-sm:justify-center">
             <Pagination
               path="/block"
               currentPage={page}
