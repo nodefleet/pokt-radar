@@ -1,53 +1,36 @@
-import Link from "next/link";
-import Stats from "@/components/Stats";
-import {
-  LatestBlocksTable,
-  LatestTransactionsTable,
-} from "@/components/tables";
-import Stadist from "@/components/Stadist";
-import { getTransactionStats } from "@/utils/txns";
+"use client";
 
-export const revalidate = 60;
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import BeraIcon from "../public/img/poker_logo.png";
 
-export default async function Home() {
-  const { dataChartVetical, resultDought } = await getTransactionStats();
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/home");
+  }, [router]);
+
   return (
-    <main className="flex flex-col py-11 px-10 max-sm:p-4 ">
+    <div className="flex flex-col py-11 px-10 max-sm:p-4 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
-        {/* @ts-expect-error Async Server Component */}
-        <Stats />
-        <Stadist dataChart={dataChartVetical} resultDought={resultDought} />
-        <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
-          <div className="overflow-x-auto w-full">
-            <h6 className="ml-3 mb-2 text-xl text-black">Latest Blocks</h6>
-            <hr />
-            {/* @ts-expect-error Async Server Component */}
-            <LatestBlocksTable />
+        <div className="flex flex-col p-5 h-96 gap-2 items-center justify-center bg-white rounded-xl shadow-lg col-span-2">
+          <div className="flex flex-col justify-center items-center gap-8">
+            <div className="flex items-center">
+              <Image src={BeraIcon} alt="Pocket icon" />
+              <div className="ml-7  max-sm:ml-4">
+                <p className="text-black text-3xl max-sm:text-2xl font-semibold">
+                  POCKET RADAR
+                </p>
+              </div>
+            </div>
+            <div>
+              <i className="fa-solid fa-spinner animate-spin fa-4x"></i>
+            </div>
           </div>
-          <Link
-            href="/block"
-            className="btn btn-outline mt-2 border-black text-black rounded-full"
-          >
-            View all blocks
-          </Link>
-        </div>
-        <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
-          <div className="overflow-x-auto w-full">
-            <h6 className="ml-3 mb-2 text-xl text-black">
-              Latest Transactions
-            </h6>
-            <hr />
-            {/* @ts-expect-error Async Server Component */}
-            <LatestTransactionsTable />
-          </div>
-          <Link
-            href="/transaction"
-            className="btn btn-outline mt-2 border-black text-black rounded-full"
-          >
-            View all transactions
-          </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

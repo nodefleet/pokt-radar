@@ -11,7 +11,7 @@ export default function Navbar() {
   const [active, setActive] = useState(true);
   const pathname = usePathname();
   const Menu = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/home" },
     { name: "Transactions", path: "/transaction" },
     { name: "Blocks", path: "/block" },
     { name: "Market", path: "/market" },
@@ -25,7 +25,7 @@ export default function Navbar() {
   return (
     <header className={`bg-white px-3 py-1 sticky top-0 z-50`}>
       <div className="flex-rows justify-between items-center w-full h-full flex gap-2">
-        <Link href="/">
+        <Link href="/home">
           <Image
             src={"/img/logo.svg"}
             width="100"
