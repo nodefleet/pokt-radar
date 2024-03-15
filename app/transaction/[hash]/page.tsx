@@ -9,7 +9,7 @@ export default async function Transaction({
 }: {
   params: { hash: string };
 }) {
-  const { block, transation } = await getTransaction(params.hash);
+  const { transation } = await getTransaction(params.hash);
   const txn = transation;
   type JsonObject = { [key: string]: any };
   const stdtx = txn.stdtx as JsonObject;
@@ -21,7 +21,7 @@ export default async function Transaction({
             <h5 className="font-semibold text-xl">Overview</h5>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Transaction ID</p>
-              <p className="col-span-2 truncate">{txn.hash}</p>
+              <p className="col-span-2 truncate">{txn.transaction_hash}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Block</p>
@@ -34,7 +34,7 @@ export default async function Transaction({
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Block Time</p>
               <p className="col-span-2 truncate">
-                {block.time && <FromNow datetime={formatISO(block.time)} />}
+                {txn.time && <FromNow datetime={formatISO(txn.time)} />}
               </p>
             </div>
             <div className="grid grid-cols-3">

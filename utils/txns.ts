@@ -1,6 +1,62 @@
 import "server-only";
 import { cache } from "react";
 import { prisma } from "./db";
+import { Decimal } from "@prisma/client/runtime";
+
+interface TransactionData {
+  block_id: bigint;
+  block_hash: string;
+  block_height: bigint;
+  block_time: Date;
+  block_proposer_address: string;
+  block_tx_count: bigint;
+  block_tx_total: bigint;
+  transaction_id: bigint;
+  transaction_hash: string;
+  from_address: string;
+  to_address: string;
+  app_pub_key: string;
+  blockchains: string;
+  message_type: string;
+  height: bigint;
+  index: bigint;
+  stdtx: {
+    fee: { denom: string; amount: string }[];
+    msg: {
+      type: string;
+      value: {
+        amount: string;
+        to_address: string;
+        from_address: string;
+      };
+    };
+    memo: string;
+    entropy: bigint;
+    signature: { pub_key: string; signature: string };
+  };
+  tx_result: {
+    log: string;
+    code: number;
+    data: string;
+    info: string;
+    events: string;
+    signer: string;
+    codespace: string;
+    recipient: string;
+    message_type: string;
+  };
+  tx: string;
+  entropy: bigint;
+  fee: bigint;
+  fee_denomination: string;
+  amount: Decimal;
+  id: bigint;
+  hash: string;
+  time: Date;
+  proposer_address: string;
+  tx_total: bigint;
+  tx_count: bigint;
+}
 
 export const getTotalTransactions = cache(async () => {
   return await prisma.transactions.count({});
@@ -45,15 +101,13 @@ export const getLatestTransactions = cache(async () => {
 });
 
 export const getTransaction = cache(async (hash: string) => {
-  const transation = await prisma.transactions.findMany({
-    where: { hash: hash },
-  });
-  const blocks = await prisma.blocks.findMany({
-    where: { height: transation[0].height },
-  });
+  const result = await prisma.$queryRaw<TransactionData[]>`
+  SELECT *
+  FROM transactions_30_days AS t
+  LEFT JOIN blocks AS b ON t.height = b.height
+  WHERE t.transaction_hash = ${hash};`;
   return {
-    transation: transation[0],
-    block: blocks[0],
+    transation: result[0],
   };
 });
 
