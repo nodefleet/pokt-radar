@@ -57,7 +57,7 @@ export const getBlock = cache(
     const result = await prisma.$queryRaw<any[]>`
     SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
     FROM blocks AS b
-    LEFT JOIN transactions t ON t.height = b.height
+    LEFT JOIN transactions_30_days t ON t.height = b.height
     WHERE message_type ='pocketcore/claim'
     AND b.height = ${height} 
     GROUP BY date

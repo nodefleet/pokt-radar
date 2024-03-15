@@ -73,6 +73,7 @@ export default async function Blocks({
                 <td className="border-0 text-black font-bold">
                   <Link
                     href={`/block/${block.height}`}
+                    className="hover:text-blue_primary"
                   >{`${block.height}`}</Link>
                 </td>
                 <td className="border-0">
