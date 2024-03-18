@@ -18,7 +18,7 @@ export default async function Block({
 
   const PAGE_SIZE = 10;
   const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
-  let { block, count, transations, chartData } = await getBlock({
+  let { block, count, transactions, chartData } = await getBlock({
     height: queryBlock,
     skip: SKIP,
     take: PAGE_SIZE,
@@ -38,7 +38,9 @@ export default async function Block({
             <h1 className="mb-3 lg:mb-0 text-xl font-semibold">
               {block && `Block ID`}
             </h1>
-            <p className="font-medium text-3xl">{block && `${block.height}`}</p>
+            <p className="font-medium text-3xl">
+              {block && `${block?.height}`}
+            </p>
             <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
               Last 10s
             </span>
@@ -167,7 +169,7 @@ export default async function Block({
             {/* @ts-expect-error Async Server Component */}
             <AddressTransactions
               path={`/block/${queryBlock}`}
-              data={transations}
+              data={transactions}
               PAGE_SIZE={PAGE_SIZE}
               page={pages}
               block={{ block: queryBlock }}

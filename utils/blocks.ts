@@ -45,15 +45,14 @@ export const getBlock = cache(
     const blocks = await prisma.blocks.findMany({
       where: { height: height },
     });
-    const transactions = await prisma.transactions.findMany({
-      where: { height: height },
-      take,
-      skip,
-      orderBy: { height: "desc" },
-    });
-    const count = await prisma.transactions.count({
-      where: { height: height },
-    });
+    const transactions = await prisma.$queryRaw<any[]>`
+    SELECT *,transaction_hash as hash
+    FROM transactions_30_days
+    ORDER BY block_id DESC
+    LIMIT ${take}
+    OFFSET ${skip};`;
+    const count = await prisma.$queryRaw<any[]>`
+     SELECT COUNT(transaction_id) FROM transactions_30_days;`;
     const result = await prisma.$queryRaw<any[]>`
     SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
     FROM blocks AS b
@@ -64,9 +63,9 @@ export const getBlock = cache(
     ORDER BY date DESC
     LIMIT 30;`;
     return {
-      transations: transactions,
+      transactions,
       block: blocks[0],
-      count,
+      count: Number(count[0].count),
       chartData: result,
     };
   }

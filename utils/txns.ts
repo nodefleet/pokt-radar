@@ -81,12 +81,14 @@ export const getTransactions = cache(
     const transactions = await prisma.$queryRaw<any[]>`
     SELECT * 
     FROM transactions_30_days
-    ORDER BY block_id DESC
+    WHERE transaction_id IS NOT NULL
+    ORDER BY block_time DESC
     LIMIT ${take}
     OFFSET ${skip};`;
     const count = await prisma.$queryRaw<any[]>`
     SELECT COUNT(*)
-    FROM transactions_30_days`;
+    FROM transactions_30_days
+    WHERE transaction_id IS NOT NULL`;
     return {
       transactions,
       count: Number(count[0].count),
@@ -96,7 +98,7 @@ export const getTransactions = cache(
 
 export const getLatestTransactions = cache(async () => {
   const result = await prisma.$queryRaw<any[]>`
-     SELECT * FROM transactions_30_days ORDER BY block_id DESC LIMIT 10;`;
+     SELECT * FROM transactions_30_days WHERE transaction_id IS NOT NULL ORDER BY block_id DESC LIMIT 10;`;
   return result;
 });
 
