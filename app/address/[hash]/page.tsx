@@ -12,15 +12,14 @@ export default async function Address({
 
   const PAGE_SIZE = 10;
   const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
-  const accountData = getAccount(address);
+  const { account, nodes } = await getAccount(address);
   const { transactions, count } = await getTransactionsByAddress(
     address,
     PAGE_SIZE,
     SKIP
   );
 
-  const [account] = await Promise.all([accountData]);
-  console.log({ account });
+  console.log({ account, nodes });
 
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
@@ -37,7 +36,9 @@ export default async function Address({
             <h6 className="font-semibold text-xl">Overview</h6>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Balance</p>
-              <p className="col-span-2">0.626038472049 HONEY</p>
+              <p className="col-span-2">
+                {account.amount.toLocaleString("en-EN")} POKT
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Pokt Value</p>
@@ -49,7 +50,7 @@ export default async function Address({
             </div>
           </div>
 
-          <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm">
+          <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm truncate">
             <h6 className="font-semibold text-xl">Non-custodial Info</h6>
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -92,27 +93,31 @@ export default async function Address({
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Balance</p>
-              <p className="col-span-2">45,010.00 POKT</p>
+              <p className="col-span-2">
+                {nodes.balance.toLocaleString("en-EN")} POKT
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Jailed</p>
-              <p className="col-span-2">45,010.00 POKT</p>
+              <p className="col-span-2 truncate">
+                {nodes.jailed ? "Si" : "No"}
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium"> Public Key</p>
-              <p className="col-span-2">45,010.00 POKT</p>
+              <p className="col-span-2 truncate">{nodes.public_key}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium"> Service URL</p>
-              <p className="col-span-2 font-bold">nodefleet.org</p>
+              <p className="col-span-2 font-bold">{nodes.service_url}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium"> Domain</p>
-              <p className="col-span-2 font-bold">nodefleet.org</p>
+              <p className="col-span-2 font-bold">{nodes.service_domain}</p>
             </div>
           </div>
         </div>
