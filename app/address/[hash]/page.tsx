@@ -19,7 +19,7 @@ export default async function Address({
     SKIP
   );
 
-  console.log({ account, nodes });
+  // console.log({ account, nodes });
 
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
@@ -30,8 +30,8 @@ export default async function Address({
 
   return (
     <div className="grow mx-4 md:mx-24 my-6">
-      <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 max-sm:grid-cols-1 gap-4">
+        <div className="flex flex-row max-sm:flex-col gap-4">
           <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm">
             <h6 className="font-semibold text-xl">Overview</h6>
             <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -51,9 +51,9 @@ export default async function Address({
           </div>
 
           <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm truncate">
-            <h6 className="font-semibold text-xl">Non-custodial Info</h6>
+            {/* <h6 className="font-semibold text-xl">Non-custodial Info</h6> */}
 
-            <div className="grid grid-cols-1 sm:grid-cols-3">
+            {/* <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Total Nodes</p>
               <div className="col-span-2">
                 <div className="bg-white grid grid-cols-4 font-medium rounded-full p-2 divide-x-2 text-center gap-4 rounded-ful border border-neutral-300 w-full">
@@ -85,7 +85,7 @@ export default async function Address({
                   <div>196.84 POKT</div>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium text-xl">Node Info</p>
@@ -122,7 +122,7 @@ export default async function Address({
           </div>
         </div>
 
-        <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-3xl shadow-lg w-full">
+        {/* <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-3xl shadow-lg w-full">
           <div className="p-4 flex justify-between text-black">
             <p className=" font-semibold text-xl">Performance</p>
             <div className="flex justify-between gap-3 max-sm:flex-col">
@@ -149,7 +149,7 @@ export default async function Address({
           >
             <TransactionsChart data={weeksArray} tension={0.1} />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="mt-3 ">
         <div className="flex text-black font-semibold">

@@ -48,7 +48,7 @@ export default async function Transactions({
   return (
     <div className="grow p-6 max-sm:p-0 max-sm:py-4">
       <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-7 h-full">
-        <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-xl shadow-lg w-full">
+        {/* <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-xl shadow-lg w-full">
           <div className="p-4 flex justify-between text-black">
             <div className="flex flex-col gap-3">
               <p className=" font-semibold text-xl">Transactions</p>
@@ -71,7 +71,7 @@ export default async function Transactions({
           <div className="w-full h-full max-h-96">
             <TransactionsChart data={weeksArray} />
           </div>
-        </div>
+        </div> */}
 
         <TableClient
           transactions={transactions}

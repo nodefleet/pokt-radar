@@ -5,19 +5,55 @@ import BlockIcon from "../public/blocks.svg";
 import TxnsIcon from "../public/txns.svg";
 import { formatISO } from "date-fns";
 
-// import { getLastBlockHeight } from "@/utils/blocks";
-// import { getTotalTransactions } from "@/utils/txns";
-// import TransactionsChart from "./TransactionsChart";
+import { getLastBlockHeight } from "@/utils/blocks";
+import { fetchData } from "@/utils/db";
 
 export default async function Stats() {
-  // const lastBlockHeightData = getLastBlockHeight();
-  // const totalTxnsData = getTotalTransactions();
+  function getFirstDayOfMonth() {
+    const now = new Date();
+    const year = now.getUTCFullYear();
+    const month = now.getUTCMonth() + 1;
+    const firstDayOfMonth = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
+    const formattedDate = `${firstDayOfMonth.getUTCFullYear()}-${String(
+      firstDayOfMonth.getUTCMonth() + 1
+    ).padStart(2, "0")}-${String(firstDayOfMonth.getUTCDate()).padStart(
+      2,
+      "0"
+    )}T00:00:00.000Z`;
 
-  // const [lastBlockHeight, totalTxns] = await Promise.all([
-  //   lastBlockHeightData,
-  //   totalTxnsData,
-  // ]);
+    return formattedDate;
+  }
 
+  const firstDayOfMonth = getFirstDayOfMonth();
+  const today = new Date().toISOString();
+  // const fechData = fetchData(`
+  // query {
+  //   previous24Hs: GetNetworkSummaryBetweenDates(input: {
+  //     start_date: "${firstDayOfMonth}",
+  //     end_date: "${today}",
+  //     date_format: "YYYY-MM-DDTHH:mm:ss.SSSZ",
+  //     timezone: "UTC"
+  //   }) {
+  //     total_relays
+  //     total_minted
+  //     nodes_staked
+  //     apps_staked
+  //     total_new_apps
+  //     total_new_nodes
+  //     took_avg_by_block
+  //     nodes_unstaking
+  //     nodes_jailed
+  //     __typename
+  //   }
+  // }
+  // `);
+  const lastBlockHeightData = getLastBlockHeight();
+
+  const [lastBlockHeight] = await Promise.all([
+    lastBlockHeightData,
+    // fechData,
+  ]);
+  // console.log(previous24Hs);, { previous24Hs, last24Hs }
   return (
     <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg col-span-2">
       <div className="flex flex-col gap-8">
@@ -36,10 +72,10 @@ export default async function Stats() {
         <div className="flex items-center max-sm:items-start max-sm:flex-col gap-4">
           <div className="ml-7 flex flex-row max-sm:flex-col max-sm:ml-4">
             <p className="text-black text-xl font-normal">Block Height</p>
-            <p className="font-black text-xl rounded-full ml-5 max-sm:ml-0">
-              {/* {lastBlockHeight && lastBlockHeight.height !== null
+            <p className="font-bold text-xl rounded-full ml-5 max-sm:ml-0">
+              {lastBlockHeight && lastBlockHeight.height !== null
                 ? lastBlockHeight.height.toString()
-                : ""} */}
+                : ""}
               <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
                 Last 10s
               </span>
@@ -77,7 +113,7 @@ export default async function Stats() {
             <p className="text-black text-xl font-medium leading-10">
               Total DApps
             </p>
-            <p className="font-normal text-xl">1,023</p>
+            <p className="font-normal text-xl">14</p>
           </div>
 
           <div>

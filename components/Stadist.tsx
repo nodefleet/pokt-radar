@@ -72,7 +72,7 @@ export default function Stadist({
             Chains Distribution
           </p>
           <div className="w-full h-full max-h-96">
-            <DoughnutsChartHome dataDought={newDataDoought} />
+            <DoughnutsChartHome dataDought={newDataDoought}  />
           </div>
         </div>
       </div>

@@ -1,9 +1,6 @@
 import "server-only";
 import { cache } from "react";
-import { prisma } from "./db";
-
-const apiUrl = "https://api.poktscan.com/poktscan/api/graphql";
-const authToken = "461fc459-6254-443c-939a-a84da4f495fb";
+import { prisma, apiUrl, authToken } from "./db";
 
 export const getAccount = cache(async (address: string) => {
   const account = await getAccountPocker(address);

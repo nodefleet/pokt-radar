@@ -46,6 +46,7 @@ export default function DoughnutsChart({
     "rgba(250, 224, 134, 0.80)",
     "rgba(0, 168, 107, 0.80)",
     "rgba(221, 0, 53, 0.80)",
+    "rgba(128, 128, 128, 0.80)",
   ];
   const br = borderColor || [
     "rgba(105, 141, 255, 1)",
@@ -53,6 +54,7 @@ export default function DoughnutsChart({
     "rgba(250, 224, 134, 1)",
     "rgba(0, 168, 107, 1)",
     "rgba(221, 0, 53, 1)",
+    "rgba(128, 128, 128, 1)",
   ];
   const chartData = {
     labels: data.map((value) => value.date),

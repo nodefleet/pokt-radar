@@ -1,7 +1,8 @@
 import "server-only";
 import { cache } from "react";
-import { prisma } from "./db";
+import { prisma, apiUrl, authToken, fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";
+import { count } from "console";
 
 interface TransactionData {
   block_id: bigint;
@@ -137,23 +138,67 @@ export const getTransactionsByBlock = cache(async (block: number) => {
 });
 
 export const getTransactionStats = cache(async () => {
-  const result = await prisma.$queryRaw<any[]>`
-    SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
-    FROM blocks AS b
-    LEFT JOIN transactions_30_days t ON t.height = b.height
-    WHERE message_type ='pocketcore/claim'
-    GROUP BY date
-    ORDER BY date DESC
-    LIMIT 30`;
-  const resultDought = await prisma.$queryRaw<any[]>`
-    SELECT message_type as date, COUNT(message_type) AS count
-    FROM transactions_30_days
-    WHERE message_type IS NOT NULL
-    GROUP BY message_type
-    ORDER BY count DESC`;
+  const resultDoughts = await fetchData(`
+  query {
+      GetRelaysByChainAndGatewayReport{
+      last_updated
+      relays_by_chain{
+        chain
+        relays
+      }
+    }
+   }
+  `);
+  const dataDought =
+    resultDoughts.GetRelaysByChainAndGatewayReport.relays_by_chain
+      .slice(0, 5)
+      .map((x: any) => ({
+        date: x.chain,
+        count: x.relays,
+      }));
+  const omittedRelaysCount =
+    resultDoughts.GetRelaysByChainAndGatewayReport.relays_by_chain
+      .slice(5)
+      .reduce((total: number, chainData: any) => total + chainData.relays, 0);
+
+  if (omittedRelaysCount > 0) {
+    dataDought.push({ date: "Others", count: omittedRelaysCount });
+  }
+  const getLastMonthDates = () => {
+    const today = new Date();
+    const lastMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const startDate = lastMonth.toISOString().split("T")[0];
+    const endDate = new Date().toISOString().split("T")[0];
+    return { startDate, endDate };
+  };
+
+  const { startDate, endDate } = getLastMonthDates();
+  console.log(endDate);
+  const { GetChainRewardsByUnitBetweenDates: dataRelay } =
+    await fetchData(`query {
+    GetChainRewardsByUnitBetweenDates(input: {
+      start_date: "${startDate}",
+      end_date: "${endDate}",
+      unit_time: week,
+      date_format: "YYYY-MM-DD",
+      timezone: "UTC",
+    }) {
+      point_format
+      points {
+        point
+        rewards_by_chain{
+          chain
+        }
+      }
+    }
+  }`);
+  const dataRelays = dataRelay.points.map((x: any) => ({
+    date: x.point,
+    count: x.rewards_by_chain.length,
+  }));
   return {
-    dataChartVetical: result,
-    resultDought: resultDought,
+    dataChartVetical: dataRelays,
+    resultDought: dataDought,
   };
 });
 

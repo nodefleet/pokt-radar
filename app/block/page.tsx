@@ -24,13 +24,13 @@ export default async function Blocks({
     skip: SKIP,
   });
 
-  const dataChart = await getBlockStats();
-  const last7Data = dataChart.map((value) => ({
-    date: new Date(value.date).toLocaleDateString("es-es", {
-      dateStyle: "short",
-    }),
-    count: Number(value.count),
-  }));
+  // const dataChart = await getBlockStats();
+  // const last7Data = dataChart.map((value) => ({
+  //   date: new Date(value.date).toLocaleDateString("es-es", {
+  //     dateStyle: "short",
+  //   }),
+  //   count: Number(value.count),
+  // }));
 
   const tableHeaders = [
     "Block",
@@ -45,7 +45,7 @@ export default async function Blocks({
   return (
     <div className="grow p-6 max-sm:p-0 max-sm:py-4">
       <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 h-full">
-        <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-xl shadow-lg w-full">
+        {/* <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-xl shadow-lg w-full">
           <div className="p-4 flex justify-between">
             <p className="text-black font-semibold text-xl">Relays per block</p>
             <div className="relative w-28">
@@ -64,7 +64,7 @@ export default async function Blocks({
           <div className="w-full h-full max-h-96">
             <TransactionsChart data={last7Data} />
           </div>
-        </div>
+        </div> */}
 
         <div className=" bg-white mt-6 mb-10 p-5 rounded-xl shadow-xl overflow-x-auto">
           <p className="font-semibold text-xl pl-4">Latest Blocks</p>

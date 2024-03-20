@@ -9,7 +9,7 @@ export function DoughnutsChartHome({
 }: {
   dataDought: { date: string; count: number }[];
 }) {
-  return <DoughnutsChart data={dataDought} roundedOption={true} />;
+  return <DoughnutsChart data={dataDought} roundedOption={false} />;
 }
 
 export function DoughnutsChartMakert() {
@@ -33,7 +33,7 @@ export function DoughnutsChartMakert() {
       ]}
       position="right"
       align="start"
-      roundedOption={true}
+      roundedOption={false}
       labelfom="rectRounded"
     />
   );
