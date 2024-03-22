@@ -173,7 +173,6 @@ export const getTransactionStats = cache(async () => {
   };
 
   const { startDate, endDate } = getLastMonthDates();
-  console.log(endDate);
   const { GetChainRewardsByUnitBetweenDates: dataRelay } =
     await fetchData(`query {
     GetChainRewardsByUnitBetweenDates(input: {

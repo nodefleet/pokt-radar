@@ -16,16 +16,18 @@ export default function TransactionsChart({
   data,
   option,
   tension,
+  datasets,
 }: {
-  data: { date: string; count: number }[];
+  data?: { date: string; count: number }[];
   option?: ChartOptions<"line">;
   tension?: number;
+  datasets?: { datasets: any[]; labels: any[] };
 }) {
-  const chartData = {
-    labels: data.map((value) => value.date),
+  const chartData = datasets || {
+    labels: data?.map((value) => value.date),
     datasets: [
       {
-        data: data.map((value) => Number(value.count)),
+        data: data?.map((value) => Number(value.count)),
         borderColor: "#698DFF",
         backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;
@@ -68,8 +70,23 @@ export default function TransactionsChart({
             weight: 600,
           },
           callback: function (value, index, values) {
-            const numericValue = Number(value).toFixed(0) + "K";
-            return numericValue;
+            const numericValue = Number(value);
+            if (!isNaN(numericValue)) {
+              const suffixes = ["", "K", "M", "K", "T"];
+              const suffixNum = Math.floor(("" + numericValue).length / 3);
+              let shortValue = parseFloat(
+                (suffixNum != 0
+                  ? numericValue / Math.pow(1000, suffixNum)
+                  : numericValue
+                ).toPrecision(2)
+              );
+              if (shortValue % 1 != 0) {
+                shortValue = parseFloat(shortValue.toFixed(1));
+              }
+              return shortValue + suffixes[suffixNum];
+            } else {
+              return value;
+            }
           },
         },
         border: {

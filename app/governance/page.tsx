@@ -1,142 +1,64 @@
-import InputSearch from "@/components/InputSearch";
-import { RadioButtonGroup } from "@/components/RadioButton";
-import { DoughnutsChartMakert, GovernancePage } from "@/components/charts";
+import {
+  DoughnutsChartGoubernance,
+  DoughnutsChartMakert,
+  GovernancePage,
+} from "@/components/charts";
 import {
   GovernanceTable,
   GovernanceTable2,
-  LatestMakerTable,
+  GovernanceTableTransaction,
 } from "@/components/tables";
-import DataTable from "@/components/DataTable";
-import Link from "next/link";
-import Pagination from "@/components/Pagination";
+import { getGobernance } from "@/utils/governance";
 
-export default function Governance() {
-  const transactions = [
-    { pair: "BTC/USD", volume: 100 },
-    { pair: "ETH/USD", volume: 200 },
-    { pair: "XRP/USD", volume: 150 },
-    { pair: "LTC/USD", volume: 180 },
-    { pair: "BCH/USD", volume: 220 },
-  ];
+export default async function Governance({
+  searchParams,
+}: {
+  searchParams: { page: string | undefined };
+}) {
+  const page =
+    (searchParams.page &&
+      !isNaN(parseInt(searchParams.page)) &&
+      parseInt(searchParams.page)) ||
+    1;
   const block = [
-    { block: "block123", status: "Activated", height: 5600 },
-    { block: "block234", status: "Activated", height: 5890 },
-    { block: "block345", status: "Activated", height: 6012 },
-    { block: "block456", status: "Activated", height: 6125 },
-    { block: "block567", status: "Activated", height: 6321 },
+    { block: "RewardDelegators", status: "Activated", height: 123083 },
+    { block: "BLOCK", status: "Activated", height: 102698 },
+    { block: "OEDIT", status: "Activated", height: 102695 },
+    { block: "CRVAL", status: "Activated", height: 102690 },
+    { block: "NCUST", status: "Activated", height: 74620 },
+    { block: "RSCAL", status: "Activated", height: 69232 },
+    { block: "MREL", status: "Activated", height: 69232 },
+    { block: "REDUP", status: "Activated", height: 57620 },
   ];
-  const parametr = [
-    { parameters: "Parameter1", amount: 100 },
-    { parameters: "Parameter2", amount: 250 },
-    { parameters: "Parameter3", amount: 500 },
-    { parameters: "Parameter4", amount: 750 },
-    { parameters: "Parameter5", amount: 1000 },
-  ];
-
-  const transactionses = [
-    {
-      hash: "0x123456789abcdef1",
-      method: "Transfer",
-      block: 1234,
-      from: "0x9876543210ABCDEF1",
-      to: "0xFEDCBA0987654321",
-      value: "0.005",
-      memo: "Payment for services rendered",
-    },
-    {
-      hash: "0x123456789abcdef2",
-      method: "Swap",
-      block: 1235,
-      from: "0x9876543210ABCDEF2",
-      to: "0xFEDCBA0987654322",
-      value: "0.01",
-      memo: "Exchange transaction",
-    },
-    {
-      hash: "0x123456789abcdef3",
-      method: "Transfer",
-      block: 1236,
-      from: "0x9876543210ABCDEF3",
-      to: "0xFEDCBA0987654323",
-      value: "0.0025",
-      memo: "Test transaction",
-    },
-    {
-      hash: "0x123456789abcdef4",
-      method: "Transfer",
-      block: 1237,
-      from: "0x9876543210ABCDEF4",
-      to: "0xFEDCBA0987654324",
-      value: "0.003",
-      memo: "Transaction memo",
-    },
-    {
-      hash: "0x123456789abcdef5",
-      method: "Swap",
-      block: 1238,
-      from: "0x9876543210ABCDEF5",
-      to: "0xFEDCBA0987654325",
-      value: "0.015",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef6",
-      method: "Transfer",
-      block: 1239,
-      from: "0x9876543210ABCDEF6",
-      to: "0xFEDCBA0987654326",
-      value: "0.007",
-      memo: "Transaction notes",
-    },
-    {
-      hash: "0x123456789abcdef7",
-      method: "Swap",
-      block: 1240,
-      from: "0x9876543210ABCDEF7",
-      to: "0xFEDCBA0987654327",
-      value: "0.02",
-      memo: "Swap details",
-    },
-    {
-      hash: "0x123456789abcdef8",
-      method: "Transfer",
-      block: 1241,
-      from: "0x9876543210ABCDEF8",
-      to: "0xFEDCBA0987654328",
-      value: "0.009",
-      memo: "Payment memo",
-    },
-    {
-      hash: "0x123456789abcdef9",
-      method: "Transfer",
-      block: 1242,
-      from: "0x9876543210ABCDEF9",
-      to: "0xFEDCBA0987654329",
-      value: "0.0055",
-      memo: "Payment details",
-    },
-    {
-      hash: "0x123456789abcdef10",
-      method: "Swap",
-      block: 1243,
-      from: "0x9876543210ABCDEF10",
-      to: "0xFEDCBA09876543210",
-      value: "0.025",
-      memo: "Swap notes",
-    },
-  ];
-
   const PAGE_SIZE = 10;
+  const SKIP = page * PAGE_SIZE;
+  const PAGE_LIMIT = 50;
+  const { params, dataTransaction, dataExpense, dataIncome } =
+    await getGobernance(SKIP);
 
-  const tableHeaders = [
-    "",
-    "Status",
-    "Type",
-    "Total POKT",
-    "Transaction ID",
-    "From",
-    "To",
-  ];
+  const totalAmount = dataExpense.points.reduce(
+    (total: any, value: { amount: any }) => total + value.amount,
+    0
+  );
+  const totalRewards = dataIncome.points.reduce(
+    (total: any, value: { total_dao_rewards: any }) =>
+      total + value.total_dao_rewards,
+    0
+  );
+
+  const parametr = params.parameters
+    .map((x: any) => {
+      const amount = Number(x.value);
+      if (!isNaN(amount)) {
+        return {
+          parameters: x.name,
+          amount: amount.toLocaleString(),
+        };
+      } else {
+        return null;
+      }
+    })
+    .filter((x: any) => x !== null);
 
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
@@ -165,9 +87,8 @@ export default function Governance() {
                 <p className="font-normal">August 1, 2023</p>
               </div>
             </div>
-            <div className="flex flex-col justify-center items-center h-full">
-              <div className="w-full h-full overflow-x-auto">
-                {/* @ts-expect-error Async Server Component */}
+            <div className="flex flex-col justify-center items-center">
+              <div className="w-full h-full max-h-96 overflow-auto">
                 <GovernanceTable data={block} />
               </div>
             </div>
@@ -202,8 +123,7 @@ export default function Governance() {
                 <p className="font-normal">5</p>
               </div>
             </div>
-            <div className="w-full h-full overflow-x-auto">
-              {/* @ts-expect-error Async Server Component */}
+            <div className="w-full h-full max-h-96 overflow-auto">
               <GovernanceTable2 data={parametr} />
             </div>
           </div>
@@ -228,7 +148,12 @@ export default function Governance() {
             <hr className="border-gray-bera w-12/12 mx-4 justify-self-center" />
             <div className="flex flex-col justify-center items-center h-full">
               <div className="w-full h-full max-h-96 p-4">
-                <DoughnutsChartMakert />
+                <DoughnutsChartGoubernance
+                  resultDought={[
+                    { date: "Income", count: totalRewards },
+                    { date: "Expenses", count: totalAmount },
+                  ]}
+                />
               </div>
             </div>
           </div>
@@ -258,13 +183,17 @@ export default function Governance() {
                 <p className="text-black font-semibold text-xl">
                   Income Last 30 days
                 </p>
-                <p className="font-normal">$625,749.35</p>
+                <p className="font-normal">
+                  {"$" + totalRewards.toLocaleString("en-EN")}
+                </p>
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
                 <p className="text-black font-semibold text-xl">
                   Expenses Last 30 Days
                 </p>
-                <p className="font-normal">$213.459.11</p>
+                <p className="font-normal">
+                  {"$" + totalAmount.toLocaleString("en-EN")}
+                </p>
               </div>
             </div>
             <div className="flex justify-between flex-row gap-3 max-sm:flex-col items-center">
@@ -290,64 +219,20 @@ export default function Governance() {
               </div>
             </div>
             <div className="w-full h-full max-h-96 overflow-x-auto">
-              {/* @ts-expect-error Async Server Component */}
-              <GovernancePage data={transactions} />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg w-full">
-        <div className="mt-8 md:mt-0 max-sm:mt-0">
-          <div className="flex justify-between flex-row gap-3 max-sm:flex-col items-center">
-            <div className="flex justify-start flex-row items-start">
-              <p className="mb-4 text-black font-semibold text-xl">
-                Latest Transactions
-              </p>
-            </div>
-          </div>
-          <div className="overflow-x-auto">
-            <DataTable headers={tableHeaders}>
-              {transactionses.map((txn, index: number) => (
-                <tr key={index} className="border-y border-gray-bera">
-                  <td className="border-0">
-                    <i className="fas fa-angle-right"></i>
-                  </td>
-                  <td className="border-0">
-                    <p className="font-normal uppercase text-base rounded-full text-white bg-green-600 text-center py-0.5 truncate">
-                      Success
-                    </p>
-                  </td>
-                  <td className="border-0">DAO Burn</td>
-                  <td className="border-0 text-black">
-                    {txn.value && txn.value}
-                  </td>
-                  <td className="border-0 text-black font-bold hover:text-blue_primary">
-                    <Link href={`/transaction/${txn.hash}`}>
-                      {txn.hash && txn.hash}
-                    </Link>
-                  </td>
-                  <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
-                    <Link href={`/address/${txn.from}`}>
-                      {txn.from && txn.from}
-                    </Link>
-                  </td>
-                  <td className="border-0 font-bold text-black hover:text-blue_primary">
-                    <Link href={`/address/${txn.to}`}>{txn.to && txn.to}</Link>
-                  </td>
-                </tr>
-              ))}
-            </DataTable>
-            <div className="flex mt-4 justify-end">
-              <Pagination
-                path="/governance"
-                currentPage={1}
-                size={PAGE_SIZE}
-                total={transactionses.length}
+              <GovernancePage
+                dataIncome={dataIncome}
+                dataExpense={dataExpense}
               />
             </div>
           </div>
         </div>
       </div>
+      <GovernanceTableTransaction
+        data={[...dataTransaction.items].slice(SKIP - 10, SKIP)}
+        PAGE_SIZE={PAGE_SIZE}
+        PAGE_LIMIT={PAGE_LIMIT}
+        page={page}
+      />
     </div>
   );
 }

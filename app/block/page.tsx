@@ -24,13 +24,13 @@ export default async function Blocks({
     skip: SKIP,
   });
 
-  // const dataChart = await getBlockStats();
-  // const last7Data = dataChart.map((value) => ({
-  //   date: new Date(value.date).toLocaleDateString("es-es", {
-  //     dateStyle: "short",
-  //   }),
-  //   count: Number(value.count),
-  // }));
+  const dataChart = await getBlockStats();
+  const last7Data = dataChart.map((value) => ({
+    date: new Date(value.date).toLocaleDateString("es-es", {
+      dateStyle: "short",
+    }),
+    count: Number(value.count),
+  }));
 
   const tableHeaders = [
     "Block",

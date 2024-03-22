@@ -210,7 +210,7 @@ interface GovernanceProsp {
   data: { block: string; status: string; height: number }[];
 }
 
-export async function GovernanceTable({ data }: GovernanceProsp) {
+export function GovernanceTable({ data }: GovernanceProsp) {
   const headers = ["Features", "Status", "Height"];
   return (
     <BaseTable headers={headers}>
@@ -233,7 +233,7 @@ interface GovernanceTable2 {
   data: { parameters: string; amount: number }[];
 }
 
-export async function GovernanceTable2({ data }: GovernanceTable2) {
+export function GovernanceTable2({ data }: GovernanceTable2) {
   const headers = ["Parameters", "Amount"];
   return (
     <BaseTable headers={headers}>
@@ -243,10 +243,93 @@ export async function GovernanceTable2({ data }: GovernanceTable2) {
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-black">{row.parameters}</td>
-            <td className="border-0">{row.amount}</td>
+            <td className="border-0 text-black">{row?.parameters}</td>
+            <td className="border-0">{row?.amount}</td>
           </tr>
         ))}
     </BaseTable>
+  );
+}
+
+export function GovernanceTableTransaction({
+  data,
+  PAGE_SIZE,
+  PAGE_LIMIT,
+  page,
+}: {
+  data: any[];
+  PAGE_SIZE: number;
+  PAGE_LIMIT: number;
+  page: number;
+}) {
+  const tableHeaders = [
+    "",
+    "Status",
+    "Type",
+    "Total POKT",
+    "Transaction ID",
+    "From",
+    "To",
+  ];
+  return (
+    <div
+      className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg w-full"
+      id="Transaction"
+    >
+      <div className="mt-8 md:mt-0 max-sm:mt-0">
+        <div className="flex justify-between flex-row gap-3 max-sm:flex-col items-center">
+          <div className="flex justify-start flex-row items-start">
+            <p className="mb-4 text-black font-semibold text-xl">
+              Latest Transactions
+            </p>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <DataTable headers={tableHeaders}>
+            {data.map((txn, index: number) => (
+              <tr key={index} className="border-y border-gray-bera">
+                <td className="border-0">
+                  <i className="fas fa-angle-right"></i>
+                </td>
+                <td className="border-0">
+                  <p className="font-normal uppercase text-base rounded-full text-white bg-green-600 text-center py-0.5 truncate">
+                    Success
+                  </p>
+                </td>
+                <td className="border-0 capitalize">
+                  {txn.type.split("_").join(" ")}
+                </td>
+                <td className="border-0 text-black">
+                  {txn.total_pokt !== 0 ? txn.total_pokt : "-"}
+                </td>
+                <td className="border-0 text-black font-bold hover:text-blue_primary">
+                  <Link href={`/transaction/${txn.hash}`}>
+                    {txn.hash && shortHash(txn.hash)}
+                  </Link>
+                </td>
+                <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
+                  <Link href={`/address/${txn.from_address}`}>
+                    {txn.from_address && shortHash(txn.from_address)}
+                  </Link>
+                </td>
+                <td className="border-0 font-bold text-black hover:text-blue_primary">
+                  <Link href={`/address/${txn.to_address}`}>
+                    {txn.to_address && shortHash(txn.to_address)}
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </DataTable>
+          <div className="flex mt-4 justify-end">
+            <Pagination
+              path="/governance"
+              currentPage={page}
+              size={PAGE_SIZE}
+              total={PAGE_LIMIT}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

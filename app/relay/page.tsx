@@ -2,8 +2,9 @@ import InputSearch from "@/components/InputSearch";
 import { RadioButtonGroup } from "@/components/RadioButton";
 import { DoughnutsChartMakert } from "@/components/charts";
 import { LatestMakerTable } from "@/components/tables";
+import { getTransactionStats } from "@/utils/txns";
 
-export default function Relays() {
+export default async function Relays() {
   const transactions = [
     { pair: "BTC/USD", volume: 100 },
     { pair: "ETH/USD", volume: 200 },
@@ -16,6 +17,7 @@ export default function Relays() {
     { label: "Nodies", value: "2" },
     { label: "Grove", value: "3" },
   ];
+  const { resultDought } = await getTransactionStats();
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
       <div className="flex flex-row max-sm:flex-col max-sm:gap-2 gap-4">
@@ -60,7 +62,7 @@ export default function Relays() {
             <p className="mb-4 text-black font-semibold text-sm">By Chain</p>
             <hr className="border-gray-bera w-12/12 mx-4 justify-self-center" />
             <div className="w-full h-full max-h-96 p-4">
-              <DoughnutsChartMakert />
+              <DoughnutsChartMakert resultDought={resultDought} />
             </div>
           </div>
         </div>

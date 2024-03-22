@@ -12,7 +12,7 @@ export default async function Transaction({
   const { transation } = await getTransaction(params.hash);
   const txn = transation;
   type JsonObject = { [key: string]: any };
-  const stdtx = txn.stdtx as JsonObject;
+  const stdtx = txn?.stdtx as JsonObject;
   return (
     <div className="mx-4 md:mx-24 my-8">
       <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
