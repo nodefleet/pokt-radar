@@ -8,6 +8,7 @@ import { getLatestTransactions } from "@/utils/txns";
 import { getLatestBlocks } from "@/utils/blocks";
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
+import Image from "next/image";
 
 function BaseTable({
   children,
@@ -149,7 +150,13 @@ export function LatestRelayTable({ data }: { data: any[] }) {
               key={index}
               className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
             >
-              <td className="border-0 text-black">{index + 1}</td>
+              <td className="border-0 text-black">
+                <img
+                  src={row.logoURL}
+                  alt={`logo_${row.logoURL}`}
+                  className="w-10 h-10 rounded-full shadow-xl "
+                />
+              </td>
               <td className="border-0 font-bold">{row.chain}</td>
               <td className="border-0">
                 {row.total_relays.toLocaleString("en-EN")}
