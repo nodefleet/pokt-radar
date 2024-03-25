@@ -8,8 +8,6 @@ const getLastMonthDates = () => {
   const endDate = today;
 
   startDate.setDate(startDate.getDate() - 7);
-  endDate.setDate(startDate.getDate() + 30);
-  endDate.setDate(startDate.getDate() - 31);
 
   return {
     startDate: startDate.toISOString().split("T")[0],
@@ -17,7 +15,7 @@ const getLastMonthDates = () => {
   };
 };
 
-const { startDate, endDate } = getLastMonthDates();
+export const { startDate, endDate } = getLastMonthDates();
 
 export const getGobernance = cache(async (limit: number) => {
   const GetLastBlockPoktParams = fetchData(`

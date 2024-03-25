@@ -49,6 +49,18 @@ export function DoughnutsChartMakert({
   );
 }
 
+export function DoughnutsChartRelay({ resultDought }: { resultDought: any[] }) {
+  return (
+    <DoughnutsChart
+      data={resultDought}
+      position="right"
+      align="start"
+      roundedOption={false}
+      labelfom="rectRounded"
+    />
+  );
+}
+
 export function DoughnutsChartGoubernance({
   resultDought,
 }: {

@@ -137,6 +137,29 @@ export async function LatestMakerTable({ data }: MakerTransation) {
   );
 }
 
+export function LatestRelayTable({ data }: { data: any[] }) {
+  const headers = ["#", "Chain", "Relay"];
+  return (
+    <BaseTable headers={headers}>
+      {data &&
+        data
+          .sort((a, b) => b.total_relays - a.total_relays)
+          .map((row, index) => (
+            <tr
+              key={index}
+              className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+            >
+              <td className="border-0 text-black">{index + 1}</td>
+              <td className="border-0 font-bold">{row.chain}</td>
+              <td className="border-0">
+                {row.total_relays.toLocaleString("en-EN")}
+              </td>
+            </tr>
+          ))}
+    </BaseTable>
+  );
+}
+
 interface MakerBlockTransation {
   data: {
     exchange: string;

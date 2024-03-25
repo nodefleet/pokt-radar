@@ -1,7 +1,8 @@
 import InputSearch from "@/components/InputSearch";
 import { RadioButtonGroup } from "@/components/RadioButton";
-import { DoughnutsChartMakert } from "@/components/charts";
-import { LatestMakerTable } from "@/components/tables";
+import { DoughnutsChartMakert, DoughnutsChartRelay } from "@/components/charts";
+import { LatestMakerTable, LatestRelayTable } from "@/components/tables";
+import { getRelaysByChains } from "@/utils/relay";
 import { getTransactionStats } from "@/utils/txns";
 
 export default async function Relays() {
@@ -17,6 +18,7 @@ export default async function Relays() {
     { label: "Nodies", value: "2" },
     { label: "Grove", value: "3" },
   ];
+  const { dataRelay } = await getRelaysByChains();
   const { resultDought } = await getTransactionStats();
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
@@ -39,9 +41,8 @@ export default async function Relays() {
                 className="w-full"
               />
             </div>
-            <div className="w-full h-full max-h-96">
-              {/* @ts-expect-error Async Server Component */}
-              <LatestMakerTable data={transactions} />
+            <div className="w-full h-full max-h-96 overflow-auto">
+              <LatestRelayTable data={dataRelay} />
             </div>
           </div>
         </div>
@@ -62,7 +63,7 @@ export default async function Relays() {
             <p className="mb-4 text-black font-semibold text-sm">By Chain</p>
             <hr className="border-gray-bera w-12/12 mx-4 justify-self-center" />
             <div className="w-full h-full max-h-96 p-4">
-              <DoughnutsChartMakert resultDought={resultDought} />
+              <DoughnutsChartRelay resultDought={resultDought} />
             </div>
           </div>
         </div>

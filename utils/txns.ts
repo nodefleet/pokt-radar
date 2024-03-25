@@ -3,6 +3,7 @@ import { cache } from "react";
 import { prisma, apiUrl, authToken, fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";
 import { count } from "console";
+import { chains } from "./relay";
 
 interface TransactionData {
   block_id: bigint;
@@ -153,7 +154,10 @@ export const getTransactionStats = cache(async () => {
     resultDoughts.GetRelaysByChainAndGatewayReport.relays_by_chain
       .slice(0, 5)
       .map((x: any) => ({
-        date: x.chain,
+        date:
+          chains.find((j) => j.id === x.chain)?.full_name === undefined
+            ? x.chain
+            : chains.find((j) => j.id === x.chain)?.full_name,
         count: x.relays,
       }));
   const omittedRelaysCount =
