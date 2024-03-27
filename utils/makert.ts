@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 export const getMarket = [
   {
     exchange: "OrangeX",
@@ -27,7 +29,7 @@ export const getMarket = [
     imageURL: "https://avfxtradinghub.com/wp-content/uploads/2023/05/Gate.png",
   },
   {
-    exchange: "BYBIT",
+    exchange: "Bybit",
     platform: "Bybit",
     pair: "POKT/USDT",
     price: 0.2584,
@@ -138,3 +140,23 @@ export const getMarket = [
     imageURL: "https://zexprwire.com/wp-content/uploads/2021/07/image-7.jpeg",
   },
 ];
+
+export const getPoktPrice = cache(async () => {
+  try {
+    const response = await fetch(
+      "https://pro-api.coingecko.com/api/v3/coins/pocket-network",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91",
+        },
+      }
+    );
+    const data = await response.json();
+    return { makert: data.tickers };
+  } catch (error) {
+    console.error(`Error getting POKT price: ${error}`);
+    return null;
+  }
+});

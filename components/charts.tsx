@@ -12,35 +12,50 @@ export function DoughnutsChartHome({
   return <DoughnutsChart data={dataDought} roundedOption={false} />;
 }
 
-export function DoughnutsChartMakert({
-  resultDought,
-}: {
-  resultDought?: any[];
-}) {
-  const dataDought = [
-    { date: "CEX", count: 900 },
-    { date: "DEX ", count: 500 },
-    { date: "OTC", count: 700 },
+export function DoughnutsChartMakert({ data }: { data: any[] }) {
+  const cexKeywords = [
+    "binance",
+    "coinbase",
+    "kraken",
+    "bitfinex",
+    "kucoin",
+    "huobi",
+    "gate",
+    "bybit",
+    "okex",
+    "bitstamp",
+    "orangex",
+    "bitget",
+    "coinex",
+    "bingx",
+    "mexc",
+    "CoinW",
+    "CoinEx",
   ];
+
+  let cexVolumeTotal = 0;
+  let dexVolumeTotal = 0;
+
+  data.forEach((ticker) => {
+    const marketName = ticker.market.name.toLowerCase();
+    if (
+      cexKeywords.some((keyword) => marketName.includes(keyword.toLowerCase()))
+    ) {
+      cexVolumeTotal += ticker.volume;
+    } else {
+      dexVolumeTotal += ticker.volume;
+    }
+  });
+  const chartData: { date: string; count: number }[] = [
+    { date: "CEX", count: cexVolumeTotal },
+    { date: "DEX", count: dexVolumeTotal },
+  ];
+
   return (
     <DoughnutsChart
-      data={resultDought || dataDought}
-      backgroundColor={[
-        "rgba(105, 141, 255, 1)",
-        "rgba(157, 180, 254, 1)",
-        "rgba(187, 203, 253, 1)",
-        "rgba(105, 132, 230, 1)",
-        "rgba(127, 156, 230, 1)",
-        "rgba(150, 176, 230, 1)",
-      ]}
-      borderColor={[
-        "rgba(105, 141, 255, 0.8)",
-        "rgba(157, 180, 254, 0.8)",
-        "rgba(187, 203, 253, 0.8)",
-        "rgba(105, 132, 230, 0.8)",
-        "rgba(127, 156, 230, 0.8)",
-        "rgba(150, 176, 230, 0.8)",
-      ]}
+      data={chartData}
+      backgroundColor={["rgba(105, 141, 255, 1)", "rgba(157, 180, 254, 1)"]}
+      borderColor={["rgba(105, 141, 255, 0.8)", "rgba(157, 180, 254, 0.8)"]}
       position="right"
       align="start"
       roundedOption={false}

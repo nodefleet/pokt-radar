@@ -117,17 +117,39 @@ export async function LatestTransactionsTable() {
 
 export function LatestMakerTable({ data }: { data: any[] }) {
   const headers = ["#", "Pair", "Volume"];
+  const groupedData: { [pair: string]: number } = data.reduce((acc, row) => {
+    const { target, base, volume } = row;
+    const pair = base + "/" + target;
+    acc[pair] = (acc[pair] || 0) + volume;
+    return acc;
+  }, {});
+
+  // Convertir el objeto agrupado en un array de objetos
+  const groupedPairs = Object.keys(groupedData).map((pair) => ({
+    pair,
+    totalVolumePercentage: parseFloat(groupedData[pair].toFixed(2)), // Limitar a 2 decimales
+  }));
+
+  // Ordenar el array por el total de porcentaje de volumen (opcional)
+  groupedPairs.sort(
+    (a, b) => b.totalVolumePercentage - a.totalVolumePercentage
+  );
   return (
     <BaseTable headers={headers}>
       {data &&
-        data.map((row, index) => (
+        groupedPairs.map((row, index) => (
           <tr
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
             <td className="border-0 text-black">{index + 1}</td>
-            <td className="border-0 font-bold">{row.pair}</td>
-            <td className="border-0">{row.volume_percentage}%</td>
+            <td className="border-0 text-black font-bold">{row.pair}</td>
+            <td className="border-0">
+              {row.totalVolumePercentage.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </td>
           </tr>
         ))}
     </BaseTable>
@@ -163,40 +185,82 @@ export function LatestRelayTable({ data }: { data: any[] }) {
   );
 }
 
-export function LatestMakerBlockTable({ data }: { data: any[] }) {
+export function LatestMakerBlockTable({
+  data,
+  image,
+}: {
+  data: any[];
+  image: any[];
+}) {
   const headers = ["Exchange", "Pair", "Price", "Daily Volume", "Supply"];
+  const cexKeywords = [
+    "binance",
+    "coinbase",
+    "kraken",
+    "bitfinex",
+    "kucoin",
+    "huobi",
+    "gate",
+    "bybit",
+    "okex",
+    "bitstamp",
+    "orangex",
+    "bitget",
+    "coinex",
+    "bingx",
+    "mexc",
+    "CoinW",
+    "CoinEx",
+  ];
+
   return (
     <BaseTable headers={headers}>
       {data &&
-        data.map((row, index) => (
-          <tr
-            key={index}
-            className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
-          >
-            <td className="border-0 flex justify-start items-center gap-4">
-              <img
-                src={row.imageURL}
-                alt={`logo_${row.imageURL}`}
-                className="w-10 h-10 rounded-full shadow-xl "
-              />
-              <p>{row.exchange}</p>
-            </td>
-            <td className="border-0 text-black">{row.pair}</td>
-            <td className="border-0">
-              {row.price.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
-            </td>
-            <td className="border-0">
-              {row.volume_24h.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
-            </td>
-            <td className="border-0">{row.platform}</td>
-          </tr>
-        ))}
+        data.map((row, index) => {
+          let providerType = "DEX";
+          const marketName = row.market.name.toLowerCase();
+          if (
+            cexKeywords.some((keyword) =>
+              marketName.includes(keyword.toLowerCase())
+            )
+          ) {
+            providerType = "CEX";
+          }
+
+          return (
+            <tr
+              key={index}
+              className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+            >
+              <td className="border-0 flex justify-start items-center gap-4">
+                <img
+                  src={
+                    image.find((x) => x.exchange === row.market.name)?.imageURL
+                  }
+                  alt={`logo_${row.trade_url}`}
+                  className="w-10 h-10 rounded-full shadow-xl "
+                />
+                <p>{row.market.name}</p>
+              </td>
+              <td className="border-0 text-black">
+                {row.base + "/" + row.target}
+              </td>
+              <td className="border-0">
+                {row.converted_last.usd.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })}
+              </td>
+              <td className="border-0">
+                {row.volume.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })}
+              </td>
+              <td className="border-0">{providerType}</td>
+            </tr>
+          );
+        })}
     </BaseTable>
   );
 }
