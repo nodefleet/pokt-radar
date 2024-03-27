@@ -115,11 +115,7 @@ export async function LatestTransactionsTable() {
   );
 }
 
-interface MakerTransation {
-  data: { pair: string; volume: number }[];
-}
-
-export async function LatestMakerTable({ data }: MakerTransation) {
+export function LatestMakerTable({ data }: { data: any[] }) {
   const headers = ["#", "Pair", "Volume"];
   return (
     <BaseTable headers={headers}>
@@ -131,7 +127,7 @@ export async function LatestMakerTable({ data }: MakerTransation) {
           >
             <td className="border-0 text-black">{index + 1}</td>
             <td className="border-0 font-bold">{row.pair}</td>
-            <td className="border-0">{row.volume}</td>
+            <td className="border-0">{row.volume_percentage}%</td>
           </tr>
         ))}
     </BaseTable>
@@ -167,17 +163,7 @@ export function LatestRelayTable({ data }: { data: any[] }) {
   );
 }
 
-interface MakerBlockTransation {
-  data: {
-    exchange: string;
-    pair: string;
-    price: number;
-    volume: number;
-    supply: number;
-  }[];
-}
-
-export async function LatestMakerBlockTable({ data }: MakerBlockTransation) {
+export function LatestMakerBlockTable({ data }: { data: any[] }) {
   const headers = ["Exchange", "Pair", "Price", "Daily Volume", "Supply"];
   return (
     <BaseTable headers={headers}>
@@ -187,8 +173,15 @@ export async function LatestMakerBlockTable({ data }: MakerBlockTransation) {
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-black">{row.exchange}</td>
-            <td className="border-0">{row.pair}</td>
+            <td className="border-0 flex justify-start items-center gap-4">
+              <img
+                src={row.imageURL}
+                alt={`logo_${row.imageURL}`}
+                className="w-10 h-10 rounded-full shadow-xl "
+              />
+              <p>{row.exchange}</p>
+            </td>
+            <td className="border-0 text-black">{row.pair}</td>
             <td className="border-0">
               {row.price.toLocaleString("en-US", {
                 style: "currency",
@@ -196,17 +189,12 @@ export async function LatestMakerBlockTable({ data }: MakerBlockTransation) {
               })}
             </td>
             <td className="border-0">
-              {row.volume.toLocaleString("en-US", {
+              {row.volume_24h.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}
             </td>
-            <td className="border-0">
-              {row.supply.toLocaleString("en-US", {
-                style: "currency",
-                currency: "USD",
-              })}
-            </td>
+            <td className="border-0">{row.platform}</td>
           </tr>
         ))}
     </BaseTable>

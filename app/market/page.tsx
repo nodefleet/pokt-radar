@@ -1,5 +1,6 @@
 import { DoughnutsChartMakert } from "@/components/charts";
 import { LatestMakerBlockTable, LatestMakerTable } from "@/components/tables";
+import { getMarket } from "@/utils/makert";
 
 export default async function Market() {
   const transactions = [
@@ -8,78 +9,6 @@ export default async function Market() {
     { pair: "XRP/USD", volume: 150 },
     { pair: "LTC/USD", volume: 180 },
     { pair: "BCH/USD", volume: 220 },
-  ];
-  const extrachange = [
-    {
-      exchange: "Binance",
-      pair: "BTC/USD",
-      price: 5000,
-      volume: 100,
-      supply: 50000,
-    },
-    {
-      exchange: "Coinbase",
-      pair: "ETH/USD",
-      price: 5100,
-      volume: 120,
-      supply: 61200,
-    },
-    {
-      exchange: "Kraken",
-      pair: "XRP/USD",
-      price: 4900,
-      volume: 90,
-      supply: 44100,
-    },
-    {
-      exchange: "Bitfinex",
-      pair: "LTC/USD",
-      price: 5050,
-      volume: 110,
-      supply: 55550,
-    },
-    {
-      exchange: "Bittrex",
-      pair: "ADA/USD",
-      price: 4980,
-      volume: 95,
-      supply: 47310,
-    },
-    {
-      exchange: "Gemini",
-      pair: "DOT/USD",
-      price: 5120,
-      volume: 130,
-      supply: 66600,
-    },
-    {
-      exchange: "Huobi",
-      pair: "LINK/USD",
-      price: 4975,
-      volume: 105,
-      supply: 52275,
-    },
-    {
-      exchange: "OKEx",
-      pair: "BNB/USD",
-      price: 4850,
-      volume: 85,
-      supply: 41225,
-    },
-    {
-      exchange: "Upbit",
-      pair: "XMR/USD",
-      price: 4955,
-      volume: 115,
-      supply: 57025,
-    },
-    {
-      exchange: "Bitstamp",
-      pair: "DOGE/USD",
-      price: 5035,
-      volume: 125,
-      supply: 62975,
-    },
   ];
 
   return (
@@ -114,9 +43,8 @@ export default async function Market() {
               </p>
             </div>
             <p className="mb-4 text-black font-semibold text-sm">By Volume</p>
-            <div className="w-full h-full max-h-96">
-              {/* @ts-expect-error Async Server Component */}
-              <LatestMakerTable data={transactions} />
+            <div className="w-full h-full max-h-96 overflow-auto">
+              <LatestMakerTable data={getMarket} />
             </div>
           </div>
         </div>
@@ -130,8 +58,7 @@ export default async function Market() {
             </p>
           </div>
           <div className="w-full h-full overflow-x-auto">
-            {/* @ts-expect-error Async Server Component */}
-            <LatestMakerBlockTable data={extrachange} />
+            <LatestMakerBlockTable data={getMarket} />
           </div>
         </div>
       </div>
