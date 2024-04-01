@@ -4,6 +4,7 @@ import { prisma, apiUrl, authToken, fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";
 import { count } from "console";
 import { chains } from "./relay";
+import { endDate, startDate } from "./governance";
 
 interface TransactionData {
   block_id: bigint;
@@ -168,15 +169,7 @@ export const getTransactionStats = cache(async () => {
   if (omittedRelaysCount > 0) {
     dataDought.push({ date: "Others", count: omittedRelaysCount });
   }
-  const getLastMonthDates = () => {
-    const today = new Date();
-    const lastMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const startDate = lastMonth.toISOString().split("T")[0];
-    const endDate = new Date().toISOString().split("T")[0];
-    return { startDate, endDate };
-  };
 
-  const { startDate, endDate } = getLastMonthDates();
   const { GetChainRewardsByUnitBetweenDates: dataRelay } =
     await fetchData(`query {
     GetChainRewardsByUnitBetweenDates(input: {
