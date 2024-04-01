@@ -115,14 +115,33 @@ export async function LatestTransactionsTable() {
   );
 }
 
-export function LatestMakerTable({ data }: { data: any[] }) {
+export function LatestMakerTable({ cex, dex }: { cex: any[]; dex: any[] }) {
   const headers = ["#", "Pair", "Volume"];
-  const groupedData: { [pair: string]: number } = data.reduce((acc, row) => {
-    const { target, base, volume } = row;
-    const pair = base + "/" + target;
-    acc[pair] = (acc[pair] || 0) + volume;
-    return acc;
-  }, {});
+  const filteredDex = dex.filter((item) => item.market.name !== "Bilaxy");
+  const filteredCex = dex.filter((item) => item.market.name === "Bilaxy");
+  filteredCex[0].supply = "CEX";
+
+  const addSupplyField = (item: any) => {
+    item.supply = cex.some(
+      (cexItem) => cexItem.market.name === item.market.name
+    )
+      ? "CEX"
+      : "DEX";
+    return item;
+  };
+  const cexWithSupply = cex.map(addSupplyField);
+  const dexWithSupply = filteredDex.map(addSupplyField);
+
+  const mergedArray = [...cexWithSupply, ...dexWithSupply, ...filteredCex];
+  const groupedData: { [pair: string]: number } = mergedArray.reduce(
+    (acc, row) => {
+      const { target, base, volume } = row;
+      const pair = base + "/" + target;
+      acc[pair] = (acc[pair] || 0) + volume;
+      return acc;
+    },
+    {}
+  );
 
   // Convertir el objeto agrupado en un array de objetos
   const groupedPairs = Object.keys(groupedData).map((pair) => ({
@@ -136,14 +155,16 @@ export function LatestMakerTable({ data }: { data: any[] }) {
   );
   return (
     <BaseTable headers={headers}>
-      {data &&
+      {cex &&
         groupedPairs.map((row, index) => (
           <tr
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
             <td className="border-0 text-black">{index + 1}</td>
-            <td className="border-0 text-black font-bold">{row.pair}</td>
+            <td className="border-0 text-black font-bold truncate max-w-16">
+              {row.pair}
+            </td>
             <td className="border-0">
               {row.totalVolumePercentage.toLocaleString("en-US", {
                 style: "currency",
@@ -186,47 +207,36 @@ export function LatestRelayTable({ data }: { data: any[] }) {
 }
 
 export function LatestMakerBlockTable({
-  data,
+  cex,
+  dex,
   image,
 }: {
-  data: any[];
+  cex: any[];
+  dex: any[];
   image: any[];
 }) {
   const headers = ["Exchange", "Pair", "Price", "Daily Volume", "Supply"];
-  const cexKeywords = [
-    "binance",
-    "coinbase",
-    "kraken",
-    "bitfinex",
-    "kucoin",
-    "huobi",
-    "gate",
-    "bybit",
-    "okex",
-    "bitstamp",
-    "orangex",
-    "bitget",
-    "coinex",
-    "bingx",
-    "mexc",
-    "CoinW",
-    "CoinEx",
-  ];
+  const filteredDex = dex.filter((item) => item.market.name !== "Bilaxy");
+  const filteredCex = dex.filter((item) => item.market.name === "Bilaxy");
+  filteredCex[0].supply = "CEX";
+
+  const addSupplyField = (item: any) => {
+    item.supply = cex.some(
+      (cexItem) => cexItem.market.name === item.market.name
+    )
+      ? "CEX"
+      : "DEX";
+    return item;
+  };
+  const cexWithSupply = cex.map(addSupplyField);
+  const dexWithSupply = filteredDex.map(addSupplyField);
+
+  const mergedArray = [...cexWithSupply, ...dexWithSupply, ...filteredCex];
 
   return (
     <BaseTable headers={headers}>
-      {data &&
-        data.map((row, index) => {
-          let providerType = "DEX";
-          const marketName = row.market.name.toLowerCase();
-          if (
-            cexKeywords.some((keyword) =>
-              marketName.includes(keyword.toLowerCase())
-            )
-          ) {
-            providerType = "CEX";
-          }
-
+      {cex &&
+        mergedArray.map((row, index) => {
           return (
             <tr
               key={index}
@@ -235,29 +245,26 @@ export function LatestMakerBlockTable({
               <td className="border-0 flex justify-start items-center gap-4">
                 <img
                   src={
-                    image.find((x) => x.exchange === row.market.name)?.imageURL
+                    image.find((x) => x.exchange === row.market.name)
+                      ?.imageURL ||
+                    "https://th.bing.com/th/id/OIP.wV3DwlQhuq0YkHOeVKWRugHaH_?rs=1&pid=ImgDetMain"
                   }
                   alt={`logo_${row.trade_url}`}
                   className="w-10 h-10 rounded-full shadow-xl "
                 />
                 <p>{row.market.name}</p>
               </td>
-              <td className="border-0 text-black">
+              <td className="border-0 text-black truncate max-w-16">
                 {row.base + "/" + row.target}
               </td>
-              <td className="border-0">
-                {row.converted_last.usd.toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })}
-              </td>
+              <td className="border-0">{row.last}</td>
               <td className="border-0">
                 {row.volume.toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
                 })}
               </td>
-              <td className="border-0">{providerType}</td>
+              <td className="border-0">{row.supply}</td>
             </tr>
           );
         })}

@@ -3,11 +3,10 @@ import { fetchData } from "./db";
 
 const getLastMonthDates = () => {
   const today = new Date();
-  const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-  const startDate = lastMonth;
+  const startDate = new Date();
   const endDate = today;
 
-  startDate.setDate(startDate.getDate() - 7);
+  startDate.setDate(startDate.getDate() - 29);
 
   return {
     startDate: startDate.toISOString().split("T")[0],
@@ -16,7 +15,6 @@ const getLastMonthDates = () => {
 };
 
 export const { startDate, endDate } = getLastMonthDates();
-
 export const getGobernance = cache(async (limit: number) => {
   const GetLastBlockPoktParams = fetchData(`
     query {

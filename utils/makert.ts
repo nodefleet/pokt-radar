@@ -1,5 +1,3 @@
-import { cache } from "react";
-
 export const getMarket = [
   {
     exchange: "OrangeX",
@@ -139,24 +137,53 @@ export const getMarket = [
     sponsored: null,
     imageURL: "https://zexprwire.com/wp-content/uploads/2021/07/image-7.jpeg",
   },
+  {
+    exchange: "Korbit",
+    imageURL:
+      "https://th.bing.com/th/id/R.e60947778288ae2a5258ef2e802a3b83?rik=5mIxJnz1n7rX2g&pid=ImgRaw&r=0",
+  },
+
+  {
+    exchange: "Upbit",
+    imageURL:
+      "https://th.bing.com/th/id/OIP.5LKhDteq6zVeH93Y1-olBgHaHa?rs=1&pid=ImgDetMain",
+  },
+  {
+    exchange: "Uniswap V2 (Ethereum)",
+    imageURL: "https://cryptologos.cc/logos/uniswap-uni-logo.png",
+  },
+  {
+    exchange: "Bilaxy",
+    imageURL:
+      "https://icohigh.net/uploads/posts/2019-07/1564414838_bilaxy_logo_new.png",
+  },
 ];
 
-export const getPoktPrice = cache(async () => {
+export const getPoktPrice = async () => {
   try {
-    const response = await fetch(
+    const options = {
+      method: "GET",
+      headers: { "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91" },
+    };
+
+    const dataCEX = await fetch(
       "https://pro-api.coingecko.com/api/v3/coins/pocket-network",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91",
-        },
-      }
-    );
-    const data = await response.json();
-    return { makert: data.tickers };
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => response)
+      .catch((err) => console.error(err));
+
+    const dataDEX = await fetch(
+      "https://pro-api.coingecko.com/api/v3/coins/wrapped-pokt?localization=false&tickers=true&market_data=false&community_data=false&developer_data=false&sparkline=false",
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => response)
+      .catch((err) => console.error(err));
+    return { cex: dataCEX.tickers, dex: dataDEX.tickers };
   } catch (error) {
     console.error(`Error getting POKT price: ${error}`);
     return null;
   }
-});
+};

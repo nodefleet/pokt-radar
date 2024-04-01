@@ -12,40 +12,37 @@ export function DoughnutsChartHome({
   return <DoughnutsChart data={dataDought} roundedOption={false} />;
 }
 
-export function DoughnutsChartMakert({ data }: { data: any[] }) {
-  const cexKeywords = [
-    "binance",
-    "coinbase",
-    "kraken",
-    "bitfinex",
-    "kucoin",
-    "huobi",
-    "gate",
-    "bybit",
-    "okex",
-    "bitstamp",
-    "orangex",
-    "bitget",
-    "coinex",
-    "bingx",
-    "mexc",
-    "CoinW",
-    "CoinEx",
-  ];
+export function DoughnutsChartMakert({ cex, dex }: { cex: any[]; dex: any[] }) {
+  const filteredDex = dex.filter((item) => item.market.name !== "Bilaxy");
+  const filteredCex = dex.filter((item) => item.market.name === "Bilaxy");
+  filteredCex[0].supply = "CEX";
+
+  const addSupplyField = (item: any) => {
+    item.supply = cex.some(
+      (cexItem) => cexItem.market.name === item.market.name
+    )
+      ? "CEX"
+      : "DEX";
+    return item;
+  };
+  const cexWithSupply = cex.map(addSupplyField);
+  const dexWithSupply = filteredDex.map(addSupplyField);
+
+  const mergedArray = [...cexWithSupply, ...dexWithSupply, ...filteredCex];
 
   let cexVolumeTotal = 0;
   let dexVolumeTotal = 0;
 
-  data.forEach((ticker) => {
-    const marketName = ticker.market.name.toLowerCase();
-    if (
-      cexKeywords.some((keyword) => marketName.includes(keyword.toLowerCase()))
-    ) {
+  mergedArray.forEach((ticker) => {
+    const marketName = ticker.supply.toLowerCase();
+
+    if (marketName === "cex") {
       cexVolumeTotal += ticker.volume;
     } else {
       dexVolumeTotal += ticker.volume;
     }
   });
+
   const chartData: { date: string; count: number }[] = [
     { date: "CEX", count: cexVolumeTotal },
     { date: "DEX", count: dexVolumeTotal },
@@ -114,11 +111,12 @@ export function GovernancePage({
       datasets={{
         labels: dataIncome.points.map((value: any) => {
           const pointDate = new Date(value.point);
+          pointDate.setDate(pointDate.getDate() + 1);
           return pointDate.getDate() === 1
             ? pointDate.toLocaleString("default", { day: "2-digit" }) +
                 " " +
                 pointDate.toLocaleString("default", { month: "long" })
-            : String(pointDate.getDate() + 1);
+            : String(pointDate.getDate());
         }),
         datasets: [
           {

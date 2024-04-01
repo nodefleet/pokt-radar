@@ -52,13 +52,16 @@ export default async function Governance({
       if (!isNaN(amount)) {
         return {
           parameters: x.name,
-          amount: amount.toLocaleString(),
+          amount: amount,
         };
       } else {
         return null;
       }
     })
-    .filter((x: any) => x !== null);
+    .filter((x: any) => x !== null)
+    .sort((a: any, b: any) => {
+      return b.amount - a.amount;
+    });
 
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
@@ -76,15 +79,15 @@ export default async function Governance({
             <div className="flex justify-between flex-row gap-3 max-sm:flex-col items-center p-3">
               <div className="flex justify-start flex-col gap-2 items-start w-full">
                 <p className="text-black font-semibold text-xl">Version</p>
-                <p className="font-normal">0.10.4</p>
+                <p className="font-normal">0.11.1</p>
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
                 <p className="text-black font-semibold text-xl">Height</p>
-                <p className="font-normal">102687</p>
+                <p className="font-normal">123081</p>
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
                 <p className="text-black font-semibold text-xl">Date</p>
-                <p className="font-normal">August 1, 2023</p>
+                <p className="font-normal">February 20, 2024</p>
               </div>
             </div>
             <div className="flex flex-col justify-center items-center">
