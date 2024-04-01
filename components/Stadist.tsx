@@ -22,17 +22,32 @@ export default function Stadist({
   useEffect(() => {
     const last7Data = dataChart
       .slice(selectedOption === 1 ? -7 : selectedOption === 2 ? -30 : -7)
-      .map((value) => ({
-        date: new Date(value.date).toLocaleDateString("es-es", {
-          dateStyle:
-            selectedOption === 1
-              ? "medium"
-              : selectedOption === 2
-              ? "short"
-              : "short",
-        }),
-        count: Number(value.count),
-      }));
+      .map((value) => {
+        const d = new Date(value.date);
+        d.setDate(d.getDate() + 1);
+        return {
+          date:
+            d.getDate() === 1
+              ? d.toLocaleDateString("es-es", {
+                  day: "2-digit",
+                }) +
+                " " +
+                d.toLocaleDateString("es-es", {
+                  month: "long",
+                })
+              : d.toLocaleDateString(
+                  "es-es",
+                  selectedOption === 1
+                    ? {
+                        dateStyle: "medium",
+                      }
+                    : {
+                        day: "2-digit",
+                      }
+                ),
+          count: Number(value.count),
+        };
+      });
     const last7DataDought = resultDought.map((value) => ({
       date: value.date,
       count: Number(value.count),
@@ -72,7 +87,7 @@ export default function Stadist({
             Chains Distribution
           </p>
           <div className="w-full h-full max-h-96">
-            <DoughnutsChartHome dataDought={newDataDoought}  />
+            <DoughnutsChartHome dataDought={newDataDoought} />
           </div>
         </div>
       </div>

@@ -2,7 +2,6 @@ import "server-only";
 import { cache } from "react";
 import { prisma, apiUrl, authToken, fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";
-import { count } from "console";
 import { chains } from "./relay";
 import { endDate, startDate } from "./governance";
 
@@ -170,27 +169,32 @@ export const getTransactionStats = cache(async () => {
     dataDought.push({ date: "Others", count: omittedRelaysCount });
   }
 
-  const { GetChainRewardsByUnitBetweenDates: dataRelay } =
-    await fetchData(`query {
-    GetChainRewardsByUnitBetweenDates(input: {
-      start_date: "${startDate}",
-      end_date: "${endDate}",
-      unit_time: week,
-      date_format: "YYYY-MM-DD",
-      timezone: "UTC",
+  const { ListSummaryBetweenDates: dataRelay } = await fetchData(`query {
+      ListSummaryBetweenDates(input: {
+        unit_time: day,
+        interval: 1,
+        start_date: "${startDate}",
+        end_date: "${endDate}",
+        date_format: "YYYY-MM-DD"
     }) {
-      point_format
-      points {
-        point
-        rewards_by_chain{
-          chain
+        point_format
+        points {
+          point
+          start_date
+          end_date
+          first_height
+          last_height
+          total_relays
+          total_minted
+          total_computed_cost
+          __typename
         }
+        __typename
       }
-    }
-  }`);
+    }`);
   const dataRelays = dataRelay.points.map((x: any) => ({
     date: x.point,
-    count: x.rewards_by_chain.length,
+    count: x.total_relays,
   }));
   return {
     dataChartVetical: dataRelays,

@@ -49,11 +49,11 @@ export default async function Address({
               <p className="col-span-2">1,234,123.67 POKT</p>
             </div>
           </div>
+          {nodes && (
+            <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm truncate">
+              {/* <h6 className="font-semibold text-xl">Non-custodial Info</h6> */}
 
-          <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm truncate">
-            {/* <h6 className="font-semibold text-xl">Non-custodial Info</h6> */}
-
-            {/* <div className="grid grid-cols-1 sm:grid-cols-3">
+              {/* <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Total Nodes</p>
               <div className="col-span-2">
                 <div className="bg-white grid grid-cols-4 font-medium rounded-full p-2 divide-x-2 text-center gap-4 rounded-ful border border-neutral-300 w-full">
@@ -87,39 +87,41 @@ export default async function Address({
               </div>
             </div> */}
 
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium text-xl">Node Info</p>
-            </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                <p className="font-medium text-xl">Node Info</p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium">Balance</p>
-              <p className="col-span-2">
-                {nodes.balance.toLocaleString("en-EN")} POKT
-              </p>
-            </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                <p className="font-medium">Balance</p>
+                <p className="col-span-2">
+                  {nodes?.balance && nodes?.balance.toLocaleString("en-EN")}{" "}
+                  POKT
+                </p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium">Jailed</p>
-              <p className="col-span-2 truncate">
-                {nodes.jailed ? "Si" : "No"}
-              </p>
-            </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                <p className="font-medium">Jailed</p>
+                <p className="col-span-2 truncate">
+                  {nodes?.jailed ? "Si" : "No"}
+                </p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium"> Public Key</p>
-              <p className="col-span-2 truncate">{nodes.public_key}</p>
-            </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                <p className="font-medium"> Public Key</p>
+                <p className="col-span-2 truncate">{nodes?.public_key}</p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium"> Service URL</p>
-              <p className="col-span-2 font-bold">{nodes.service_url}</p>
-            </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                <p className="font-medium"> Service URL</p>
+                <p className="col-span-2 font-bold">{nodes?.service_url}</p>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium"> Domain</p>
-              <p className="col-span-2 font-bold">{nodes.service_domain}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                <p className="font-medium"> Domain</p>
+                <p className="col-span-2 font-bold">{nodes?.service_domain}</p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-3xl shadow-lg w-full">

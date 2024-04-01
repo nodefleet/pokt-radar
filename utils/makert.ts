@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const getMarket = [
   {
     exchange: "OrangeX",
@@ -159,28 +161,52 @@ export const getMarket = [
   },
 ];
 
+const getTarget = (data: any[], params: string, target: string) => {
+  const d = data.find((x) => x.target === params);
+  d.base = "WPOKT";
+  d.target = target;
+  return d;
+};
+
 export const getPoktPrice = async () => {
   try {
     const options = {
       method: "GET",
-      headers: { "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91" },
+      url: "https://pro-api.coingecko.com/api/v3/coins/pocket-network",
+      headers: {
+        "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91",
+        "Cache-Control": "no-store",
+      },
     };
 
-    const dataCEX = await fetch(
-      "https://pro-api.coingecko.com/api/v3/coins/pocket-network",
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => response)
-      .catch((err) => console.error(err));
+    const dataCEX = await axios
+      .request(options)
+      .then(function (response) {
+        return response.data;
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
 
-    const dataDEX = await fetch(
-      "https://pro-api.coingecko.com/api/v3/coins/wrapped-pokt?localization=false&tickers=true&market_data=false&community_data=false&developer_data=false&sparkline=false",
-      options
-    )
-      .then((response) => response.json())
-      .then((response) => response)
-      .catch((err) => console.error(err));
+    options.url = "https://pro-api.coingecko.com/api/v3/coins/wrapped-pokt";
+    const dataDEX = await axios
+      .request(options)
+      .then(function (response) {
+        return response.data;
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+    getTarget(
+      dataDEX.tickers,
+      "0XC02AAA39B223FE8D0A0E5C4F27EAD9083C756CC2",
+      "WETH"
+    );
+    getTarget(
+      dataDEX.tickers,
+      "0X6B175474E89094C44DA98B954EEDEAC495271D0F",
+      "DAI"
+    );
     return { cex: dataCEX.tickers, dex: dataDEX.tickers };
   } catch (error) {
     console.error(`Error getting POKT price: ${error}`);

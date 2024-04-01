@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { formatISO } from "date-fns";
 import Link from "next/link";
 
@@ -135,9 +136,9 @@ export function LatestMakerTable({ cex, dex }: { cex: any[]; dex: any[] }) {
   const mergedArray = [...cexWithSupply, ...dexWithSupply, ...filteredCex];
   const groupedData: { [pair: string]: number } = mergedArray.reduce(
     (acc, row) => {
-      const { target, base, volume } = row;
+      const { target, base } = row;
       const pair = base + "/" + target;
-      acc[pair] = (acc[pair] || 0) + volume;
+      acc[pair] = (acc[pair] || 0) + row.converted_volume.usd;
       return acc;
     },
     {}
@@ -193,7 +194,7 @@ export function LatestRelayTable({ data }: { data: any[] }) {
                 <img
                   src={row.logoURL}
                   alt={`logo_${row.logoURL}`}
-                  className="w-10 h-10 rounded-full shadow-xl "
+                  className="max-w-10 max-h-10 rounded-full shadow-xl "
                 />
               </td>
               <td className="border-0 font-bold">{row.chain}</td>
@@ -266,7 +267,7 @@ export function LatestMakerBlockTable({
               </td>
               <td className="border-0 w-16">{row.last}</td>
               <td className="border-0">
-                {row.volume.toLocaleString("en-US", {
+                {row.converted_volume.usd.toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
                 })}

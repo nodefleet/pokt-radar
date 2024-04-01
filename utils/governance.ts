@@ -133,19 +133,38 @@ export const getGobernance = cache(async (limit: number) => {
           }
         }
       }`);
+  const getDaoBalance = fetchData(`
+      query {
+        GetDaoBalanceByBlockBetweenDates(input: {
+          start_date: "${endDate}"
+          end_date:"${endDate}"
+          date_format: "YYYY-MM-DD"
+          timezone: "UTC"
+          exclusive_date:false
+        }) {
+          point
+          amount
+          height
+          block_time
+        }
+      }`);
   const [
     { GetLastBlockPoktParams: params },
     { ListPoktTransaction: dataTransaction },
     { incomes: dataIncome, expenses: dataExpense },
+    { GetDaoBalanceByBlockBetweenDates: daoBalance },
   ] = await Promise.all([
     GetLastBlockPoktParams,
     ListPoktTransaction,
     ListChart,
+    getDaoBalance,
   ]);
+  const sortedArray = daoBalance.sort((a: { height: number; }, b: { height: number; }) => b.height - a.height);
   return {
     params,
     dataTransaction,
     dataIncome,
     dataExpense,
+    daoBalance: sortedArray[0].amount,
   };
 });

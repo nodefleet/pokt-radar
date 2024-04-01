@@ -33,7 +33,7 @@ export default async function Governance({
   const PAGE_SIZE = 10;
   const SKIP = page * PAGE_SIZE;
   const PAGE_LIMIT = 50;
-  const { params, dataTransaction, dataExpense, dataIncome } =
+  const { params, dataTransaction, dataExpense, dataIncome, daoBalance } =
     await getGobernance(SKIP);
 
   const totalAmount = dataExpense.points.reduce(
@@ -180,7 +180,9 @@ export default async function Governance({
                 <p className="text-black font-semibold text-xl">
                   Total Balance
                 </p>
-                <p className="font-normal">$44,569,959.96</p>
+                <p className="font-normal">
+                  {"$" + daoBalance.toLocaleString("en-EN")}
+                </p>
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
                 <p className="text-black font-semibold text-xl">

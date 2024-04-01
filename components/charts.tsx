@@ -37,9 +37,9 @@ export function DoughnutsChartMakert({ cex, dex }: { cex: any[]; dex: any[] }) {
     const marketName = ticker.supply.toLowerCase();
 
     if (marketName === "cex") {
-      cexVolumeTotal += ticker.volume;
+      cexVolumeTotal += ticker.converted_volume.usd;
     } else {
-      dexVolumeTotal += ticker.volume;
+      dexVolumeTotal += ticker.converted_volume.usd;
     }
   });
 
