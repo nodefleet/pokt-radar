@@ -215,7 +215,14 @@ export function LatestMakerBlockTable({
   dex: any[];
   image: any[];
 }) {
-  const headers = ["Exchange", "Pair", "Price", "Daily Volume", "Supply"];
+  const headers = [
+    "Exchange",
+    "Pair",
+    "Price",
+    "Daily Volume",
+    "Supply",
+    "Last Update",
+  ];
   const filteredDex = dex.filter((item) => item.market.name !== "Bilaxy");
   const filteredCex = dex.filter((item) => item.market.name === "Bilaxy");
   filteredCex[0].supply = "CEX";
@@ -254,10 +261,10 @@ export function LatestMakerBlockTable({
                 />
                 <p>{row.market.name}</p>
               </td>
-              <td className="border-0 text-black truncate max-w-16">
+              <td className="border-0 text-black truncate max-w-36">
                 {row.base + "/" + row.target}
               </td>
-              <td className="border-0">{row.last}</td>
+              <td className="border-0 w-16">{row.last}</td>
               <td className="border-0">
                 {row.volume.toLocaleString("en-US", {
                   style: "currency",
@@ -265,6 +272,9 @@ export function LatestMakerBlockTable({
                 })}
               </td>
               <td className="border-0">{row.supply}</td>
+              <td className="border-0">
+                <FromNow datetime={formatISO(new Date(row.timestamp))} />
+              </td>
             </tr>
           );
         })}
