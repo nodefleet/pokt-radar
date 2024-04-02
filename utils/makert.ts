@@ -207,7 +207,11 @@ export const getPoktPrice = async () => {
       "0X6B175474E89094C44DA98B954EEDEAC495271D0F",
       "DAI"
     );
-    return { cex: dataCEX.tickers, dex: dataDEX.tickers };
+    return {
+      cex: dataCEX.tickers,
+      dex: dataDEX.tickers,
+      price: dataCEX.market_data.current_price.usd,
+    };
   } catch (error) {
     console.error(`Error getting POKT price: ${error}`);
     return null;

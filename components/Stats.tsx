@@ -7,8 +7,10 @@ import { formatISO } from "date-fns";
 
 import { getLastBlockHeight } from "@/utils/blocks";
 import { fetchData } from "@/utils/db";
+import { getPoktPrice } from "@/utils/makert";
 
 export default async function Stats() {
+  const { price }: any = await getPoktPrice();
   function getFirstDayOfMonth() {
     const now = new Date();
     const year = now.getUTCFullYear();
@@ -66,7 +68,9 @@ export default async function Stats() {
                 POKT
               </span>
             </p>
-            <p className="text-xl text-black font-normal">$0.177 USD</p>
+            <p className="text-xl text-black font-normal">
+              {"$" + price.toFixed(4)} USD
+            </p>
           </div>
         </div>
         <div className="flex items-center max-sm:items-start max-sm:flex-col gap-4">
