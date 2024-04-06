@@ -45,44 +45,34 @@ export default async function Transaction({
                   : txn.fee}
               </p>
             </div>
-            {txn.from_address && txn.from_address !== "" && (
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium">From</p>
-                <p className="col-span-2 font-bold hover:text-blue_primary truncate">
-                  <Link href={`/address/${txn.from_address}`}>
-                    {txn.from_address}
-                  </Link>
-                </p>
-              </div>
-            )}
-            {txn.to_address && txn.to_address !== "" && (
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium">To</p>
-                <p className="col-span-2 font-bold hover:text-blue_primary truncate">
-                  <Link href={`/address/${txn.to_address}`}>
-                    {txn.to_address}
-                  </Link>
-                </p>
-              </div>
-            )}
-            {stdtx?.msg?.value?.amount && stdtx?.msg?.value?.amount !== "" && (
-              <div className="grid grid-cols-3">
-                <p className="font-medium">Value</p>
-                <p className="col-span-2 truncate">
-                  {stdtx?.msg?.value?.amount}
-                </p>
-              </div>
-            )}
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <p className="font-medium">From</p>
+              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
+                <Link href={`/address/${txn.from_address}`}>
+                  {txn.from_address}
+                </Link>
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <p className="font-medium">To</p>
+              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
+                <Link href={`/address/${txn.to_address}`}>
+                  {txn.to_address}
+                </Link>
+              </p>
+            </div>
+            <div className="grid grid-cols-3">
+              <p className="font-medium">Value</p>
+              <p className="col-span-2 truncate">{stdtx?.msg?.value?.amount}</p>
+            </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Raw Transaction</p>
               <p className="col-span-2 truncate">{txn.tx}</p>
             </div>
-            {stdtx.memo && stdtx.memo !== "" && (
-              <div className="grid grid-cols-3">
-                <p className="font-medium">Memo</p>
-                <p className="col-span-2 break-words truncate">{stdtx.memo}</p>
-              </div>
-            )}
+            <div className="grid grid-cols-3">
+              <p className="font-medium">Memo</p>
+              <p className="col-span-2 break-words truncate">{stdtx.memo}</p>
+            </div>
           </>
         ) : (
           <h5>No transaction found</h5>

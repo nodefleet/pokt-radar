@@ -18,8 +18,7 @@ export default async function Relays() {
     { label: "Nodies", value: "2" },
     { label: "Grove", value: "3" },
   ];
-  const { dataRelay } = await getRelaysByChains();
-  const { resultDought } = await getTransactionStats();
+  const { dataRelay, dataChart } = await getRelaysByChains();
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
       <div className="flex flex-row max-sm:flex-col max-sm:gap-2 gap-4">
@@ -34,7 +33,7 @@ export default async function Relays() {
                   30D
                 </p>
               </div>
-              <RadioButtonGroup data={radio} />
+              {/* <RadioButtonGroup data={radio} /> */}
               <InputSearch
                 name="relaySearch"
                 placeholder="Search..."
@@ -58,12 +57,11 @@ export default async function Relays() {
                   24h
                 </p>
               </div>
-              <RadioButtonGroup data={radio} />
             </div>
             <p className="mb-4 text-black font-semibold text-sm">By Chain</p>
             <hr className="border-gray-bera w-12/12 mx-4 justify-self-center" />
             <div className="w-full h-full max-h-96 p-4">
-              <DoughnutsChartRelay resultDought={resultDought} />
+              <DoughnutsChartRelay resultDought={dataChart} />
             </div>
           </div>
         </div>

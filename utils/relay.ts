@@ -1,59 +1,74 @@
 import { cache } from "react";
 import { fetchData } from "./db";
-import { endDate, startDate } from "./governance";
+import { endDate, endDate24H, startDate, startDate24h } from "./governance";
 
 export const getRelaysByChains = cache(async () => {
-  const { GetChainRewardsByUnitBetweenDates: dataRelay } = await fetchData(`
-    query GetChainRewardsByUnitBetweenDatesExample {
-        GetChainRewardsByUnitBetweenDates(input: {
-          start_date: "${startDate}",
-          end_date: "${endDate}",
-          unit_time: week,
-          date_format: "YYYY-MM-DD",
-          timezone: "UTC",
-        }) {
-          point_format
-          points {
-            point
-            rewards_by_chain{
-              chain
-              total_relays
-              total_rewards
-              staked_nodes_avg
-              rewards_avg
-              first_bin_pokt_avg
-              relays_avg
-            }
-          }
-        }
-      }
-      
-    `);
-  const aggregatedData = dataRelay.points.reduce(
+  const start = new Date(startDate).setDate(new Date(startDate).getDate() - 2);
+  const { GetRelaysByGatewayAndChainBetweenDates: dataRelay } =
+    await fetchData(`query {
+    GetRelaysByGatewayAndChainBetweenDates(input: {
+    start_date: "${new Date(start).toISOString().split("T")[0]}",
+    end_date: "${endDate}",
+    timezone: "UTC",
+    date_format: "YYYY-MM-DD"
+    }) {
+      chain
+      gateway
+      total_relays
+      total_rewards
+      __typename
+    }
+  }`);
+  const { GetRelaysByGatewayAndChainBetweenDates: dataChtw } =
+    await fetchData(`query {
+  GetRelaysByGatewayAndChainBetweenDates(input: {
+  start_date: "${startDate24h}",
+  end_date: "${endDate24H}",
+  timezone: "UTC",
+  date_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+  }) {
+    chain
+    gateway
+    total_relays
+    total_rewards
+    __typename
+  }
+}`);
+  const result = dataRelay.map((chain: any) => ({
+    chain:
+      chains.find((x) => x.id === chain.chain)?.full_name === undefined
+        ? chain.chain
+        : chains.find((x) => x.id === chain.chain)?.full_name,
+    total_relays: chain.total_relays,
+    logoURL: chains.find((x) => x.id === chain.chain)?.logoURL,
+  }));
+  console.log(dataChtw);
+  const results = dataChtw.reduce(
     (
-      acc: { [x: string]: any },
-      curr: { rewards_by_chain: { chain: string; total_relays: number }[] }
+      accumulator: { [x: string]: { gateway: any; total_relays: any } },
+      currentValue: { gateway: any; total_relays: any }
     ) => {
-      curr.rewards_by_chain.forEach(({ chain, total_relays }) => {
-        if (!acc[chain]) {
-          acc[chain] = 0;
-        }
-        acc[chain] += total_relays;
-      });
-      return acc;
+      const { gateway, total_relays } = currentValue;
+      // Verificar si ya existe una entrada para el gateway actual
+      if (accumulator[gateway]) {
+        accumulator[gateway].total_relays += total_relays;
+      } else {
+        accumulator[gateway] = {
+          gateway,
+          total_relays,
+        };
+      }
+      return accumulator;
     },
     {}
   );
-  const result = Object.keys(aggregatedData).map((chain) => ({
-    chain:
-      chains.find((x) => x.id === chain)?.full_name === undefined
-        ? chain
-        : chains.find((x) => x.id === chain)?.full_name,
-    total_relays: aggregatedData[chain],
-    logoURL: chains.find((x) => x.id === chain)?.logoURL,
-  }));
+  const dataChart = Object.values(results);
   return {
     dataRelay: result,
+    dataChart: dataChart.map((row: any) => ({
+      date: row.gateway === 1 ? "Grove" : "Nodies",
+      count: row.total_relays,
+    })),
   };
 });
 
