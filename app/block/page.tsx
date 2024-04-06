@@ -37,9 +37,7 @@ export default async function Blocks({
     "Timestamp",
     "Size (mb)",
     "Relays",
-    "Nodes",
     "Transactions",
-    "Producer",
   ];
 
   return (
@@ -89,11 +87,9 @@ export default async function Blocks({
                   <td className="border-0">
                     {block.tx_total !== null ? block.tx_total.toString() : ""}
                   </td>
-                  <td className="border-0">197</td>
                   <td className="border-0">
                     {block.tx_count !== null ? block.tx_count.toString() : ""}
                   </td>
-                  <td className="border-0 font-bold">www.nodefleet.org</td>
                 </tr>
               ))}
             </DataTable>

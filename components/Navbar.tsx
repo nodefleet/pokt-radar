@@ -70,7 +70,7 @@ export default function Navbar() {
               </Link>
             ))}
             <button className="px-10 py-3 bg-black rounded-full justify-center items-center gap-2 flex flex-row text-white">
-              <div className="text-stone-50 text-base font-bold ">Testnet</div>
+              <div className="text-stone-50 text-base font-bold ">Mainnet </div>
               <i className="fa-solid fa-angle-down translate-y-0.5"></i>
             </button>
           </div>

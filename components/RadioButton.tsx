@@ -7,7 +7,7 @@ export function RadioButtonGroup({
 }: {
   data: { label: string; value: string }[];
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState("1");
   return (
     <div>
       <ul className="w-full flex flex-row divide-x-2 border border-neutral-300 rounded-full shadow-md ">
