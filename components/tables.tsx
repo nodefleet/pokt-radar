@@ -35,7 +35,7 @@ function BaseTable({
 }
 
 export async function LatestBlocksTable() {
-  const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
+  const headers = ["Block", "Date & Time", "Relays", "Nodes"];
   const lastBlockHeightData = getLatestBlocks();
   const [data] = await Promise.all([lastBlockHeightData]);
 
@@ -55,7 +55,7 @@ export async function LatestBlocksTable() {
                 <FromNow datetime={formatISO(new Date(block.time))} />
               )}
             </td>
-            <td className="border-0">{"N/A"}</td>
+            {/* <td className="border-0">{"N/A"}</td> */}
             <td className="border-0">
               {block.tx_total !== null ? block.tx_total.toString() : "N/A"}
             </td>
