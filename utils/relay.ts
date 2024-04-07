@@ -42,7 +42,6 @@ export const getRelaysByChains = cache(async () => {
     total_relays: chain.total_relays,
     logoURL: chains.find((x) => x.id === chain.chain)?.logoURL,
   }));
-  console.log(dataChtw);
   const results = dataChtw.reduce(
     (
       accumulator: { [x: string]: { gateway: any; total_relays: any } },

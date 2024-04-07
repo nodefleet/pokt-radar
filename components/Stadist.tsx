@@ -48,10 +48,7 @@ export default function Stadist({
           count: Number(value.count),
         };
       });
-    const last7DataDought = resultDought.map((value) => ({
-      date: value.date,
-      count: Number(value.count),
-    }));
+    const last7DataDought = resultDought;
     setNewDataDoought(last7DataDought);
     setNewData(last7Data);
   }, [selectedOption, dataChart, resultDought]);

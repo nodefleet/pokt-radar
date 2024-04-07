@@ -1,9 +1,9 @@
 import { cache } from "react";
 import { fetchData } from "./db";
 
-function getLast24HoursRange() {
+const getLast24HoursRange = () => {
   const currentDate = new Date();
-  const last24HoursTime = currentDate.getTime() - 24 * 60 * 60 * 1000;
+  const last24HoursTime = currentDate.getTime() - 24 * 61 * 60 * 1000;
   const last24HoursStartDate = new Date(last24HoursTime);
   const formattedStartDate = last24HoursStartDate.toISOString();
   const formattedEndDate = currentDate.toISOString();
@@ -12,7 +12,7 @@ function getLast24HoursRange() {
     startDate24h: formattedStartDate,
     endDate24H: formattedEndDate,
   };
-}
+};
 export const { endDate24H, startDate24h } = getLast24HoursRange();
 
 const getLastMonthDates = () => {

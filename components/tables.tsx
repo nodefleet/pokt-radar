@@ -3,7 +3,7 @@ import { formatISO } from "date-fns";
 import Link from "next/link";
 
 import FromNow from "./FromNow";
-import { shortHash } from "@/utils";
+import { bytesToMB, shortHash } from "@/utils";
 import React from "react";
 import { getLatestTransactions } from "@/utils/txns";
 import { getLatestBlocks } from "@/utils/blocks";
@@ -35,14 +35,14 @@ function BaseTable({
 }
 
 export async function LatestBlocksTable() {
-  const headers = ["Block", "Date & Time", "Relays", "Nodes"];
+  const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
   const lastBlockHeightData = getLatestBlocks();
   const [data] = await Promise.all([lastBlockHeightData]);
 
   return (
     <BaseTable headers={headers}>
       {data &&
-        data.map((block, index) => (
+        data.map((block: any, index: number) => (
           <tr
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
@@ -55,12 +55,16 @@ export async function LatestBlocksTable() {
                 <FromNow datetime={formatISO(new Date(block.time))} />
               )}
             </td>
-            {/* <td className="border-0">{"N/A"}</td> */}
+            <td className="border-0">{bytesToMB(block.block_size)}</td>
             <td className="border-0">
-              {block.tx_total !== null ? block.tx_total.toString() : "N/A"}
+              {block.total_relays_completed !== null
+                ? block.total_relays_completed.toLocaleString("en-US")
+                : "N/A"}
             </td>
             <td className="border-0">
-              {block.tx_count !== null ? block.tx_count.toString() : "N/A"}
+              {block.total_nodes !== null
+                ? block.total_nodes.toLocaleString("en-US")
+                : "N/A"}
             </td>
           </tr>
         ))}
@@ -144,13 +148,11 @@ export function LatestMakerTable({ cex, dex }: { cex: any[]; dex: any[] }) {
     {}
   );
 
-  // Convertir el objeto agrupado en un array de objetos
   const groupedPairs = Object.keys(groupedData).map((pair) => ({
     pair,
-    totalVolumePercentage: parseFloat(groupedData[pair].toFixed(2)), // Limitar a 2 decimales
+    totalVolumePercentage: parseFloat(groupedData[pair].toFixed(2)),
   }));
 
-  // Ordenar el array por el total de porcentaje de volumen (opcional)
   groupedPairs.sort(
     (a, b) => b.totalVolumePercentage - a.totalVolumePercentage
   );

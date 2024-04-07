@@ -3,7 +3,7 @@ import { cache } from "react";
 import { prisma, apiUrl, authToken, fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";
 import { chains } from "./relay";
-import { endDate, startDate } from "./governance";
+import { endDate, endDate24H, startDate, startDate24h } from "./governance";
 
 interface TransactionData {
   block_id: bigint;
@@ -139,35 +139,19 @@ export const getTransactionsByBlock = cache(async (block: number) => {
 });
 
 export const getTransactionStats = cache(async () => {
-  const resultDoughts = await fetchData(`
-  query {
-      GetRelaysByChainAndGatewayReport{
-      last_updated
-      relays_by_chain{
-        chain
-        relays
-      }
+  console.log({ startDate24h, endDate24H });
+  const { last24h: last24h } = await fetchData(`query {
+    last24h: GetChainsRewardsBetweenDates(input: {
+    start_date: "${startDate24h}",
+    end_date: "${endDate24H}"
+  }) {
+      chain
+      total_relays
+      staked_nodes_avg
+      pokt_avg
+      __typename
     }
-   }
-  `);
-  const dataDought =
-    resultDoughts.GetRelaysByChainAndGatewayReport.relays_by_chain
-      .slice(0, 5)
-      .map((x: any) => ({
-        date:
-          chains.find((j) => j.id === x.chain)?.full_name === undefined
-            ? x.chain
-            : chains.find((j) => j.id === x.chain)?.full_name,
-        count: x.relays,
-      }));
-  const omittedRelaysCount =
-    resultDoughts.GetRelaysByChainAndGatewayReport.relays_by_chain
-      .slice(5)
-      .reduce((total: number, chainData: any) => total + chainData.relays, 0);
-
-  if (omittedRelaysCount > 0) {
-    dataDought.push({ date: "Others", count: omittedRelaysCount });
-  }
+  }`);
 
   const { ListSummaryBetweenDates: dataRelay } = await fetchData(`query {
       ListSummaryBetweenDates(input: {
@@ -196,6 +180,22 @@ export const getTransactionStats = cache(async () => {
     date: x.point,
     count: x.total_relays,
   }));
+  console.log(last24h);
+  const dataDought = last24h.map((x: any) => ({
+    date: chains.find((j) => j.id === x.chain)?.full_name,
+    count: x.total_relays,
+  }));
+  dataDought.sort(
+    (a: { count: number }, b: { count: number }) => b.count - a.count
+  );
+  if (dataDought.length > 5) {
+    const otherCount = dataDought
+      .slice(5)
+      .reduce((acc: any, curr: { count: any }) => acc + curr.count, 0);
+    const otherItem = { date: "Other", count: otherCount };
+    dataDought.splice(5);
+    dataDought.push(otherItem);
+  }
   return {
     dataChartVetical: dataRelays,
     resultDought: dataDought,

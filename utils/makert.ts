@@ -161,13 +161,6 @@ export const getMarket = [
   },
 ];
 
-const getTarget = (data: any[], params: string, target: string) => {
-  const d = data.find((x) => x.target === params);
-  d.base = "WPOKT";
-  d.target = target;
-  return d;
-};
-
 export const getPoktPrice = async () => {
   try {
     const options = {
@@ -198,24 +191,19 @@ export const getPoktPrice = async () => {
         console.error(error);
       });
 
-    // getTarget(
-    //   dataDEX.tickers,
-    //   "0XC02AAA3s9B223FE8D0A0E5C4F27EAD9083C756CC2",
-    //   "WETH"
-    // );
-    // getTarget(
-    //   dataDEX.tickers,
-    //   "0X6B175474E89094C44DA98B954EEDEAC495271D0F",
-    //   "DAI"
-    // );
-    console.log(dataCEX.market_data.current_price.usd);
     return {
       cex: dataCEX.tickers,
       dex: dataDEX.tickers,
       price: dataCEX.market_data.current_price.usd,
+      market: dataCEX.market_data,
     };
   } catch (error) {
     console.error(`Error getting POKT price: ${error}`);
-    return null;
+    return {
+      cex: [],
+      dex: [],
+      price: 0,
+      market: [],
+    };
   }
 };
