@@ -139,7 +139,6 @@ export const getTransactionsByBlock = cache(async (block: number) => {
 });
 
 export const getTransactionStats = cache(async () => {
-  console.log({ startDate24h, endDate24H });
   const { last24h: last24h } = await fetchData(`query {
     last24h: GetChainsRewardsBetweenDates(input: {
     start_date: "${startDate24h}",
@@ -180,7 +179,6 @@ export const getTransactionStats = cache(async () => {
     date: x.point,
     count: x.total_relays,
   }));
-  console.log(last24h);
   const dataDought = last24h.map((x: any) => ({
     date: chains.find((j) => j.id === x.chain)?.full_name,
     count: x.total_relays,

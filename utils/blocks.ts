@@ -48,20 +48,20 @@ export const getLastBlockHeight = cache(async () => {
   };
 });
 
-export const getBlocks = cache(
-  async ({ take, skip }: { take: number; skip: number }) => {
-    const blocks = await prisma.blocks.findMany({
-      take,
-      skip,
-      orderBy: { height: "desc" },
-    });
-    const count = await prisma.blocks.count();
-    return {
-      blocks,
-      count,
-    };
-  }
-);
+// export const getBlocks = cache(
+//   async ({ take, skip }: { take: number; skip: number }) => {
+//     const blocks = await prisma.blocks.findMany({
+//       take,
+//       skip,
+//       orderBy: { height: "desc" },
+//     });
+//     const count = await prisma.blocks.count();
+//     return {
+//       blocks,
+//       count,
+//     };
+//   }
+// );
 
 export const getLatestBlocks = async () => {
   const { ListPoktBlock: dataBlock } = await fetchData(`
@@ -147,23 +147,78 @@ export const getBlock = cache(
     OFFSET ${skip};`;
     const count = await prisma.$queryRaw<any[]>`
      SELECT COUNT(transaction_id) FROM transactions_30_days;`;
-    const result = await prisma.$queryRaw<any[]>`
-    SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
-    FROM blocks AS b
-    LEFT JOIN transactions t ON t.height = b.height
-    WHERE message_type ='pocketcore/claim'
-    AND b.height = ${height} 
-    GROUP BY date
-    ORDER BY date DESC
-    LIMIT 30;`;
     return {
       transactions,
       block: blocks[0],
       count: Number(count[0].count),
-      chartData: result,
     };
   }
 );
+
+export const getBlocks = cache(async ({ limit }: { limit: number }) => {
+  const { ListPoktBlock: dataBlock } = await fetchData(`
+  query {
+    ListPoktBlock(pagination: {
+    sort: [
+      {
+        property: "_id",
+       direction: -1
+      }
+    ],
+   limit: ${limit},
+    filter: {
+      operator: AND,
+      properties: [
+        {
+          property: "time",
+          operator: GTE,
+          type: STRING,
+          value: "${startDate24h}"
+        },
+        {
+          property: "time",
+          operator: LTE,
+          type: STRING,
+          value: "${endDate24H}"
+        }
+      ]
+    }
+  }) {
+      pageInfo {
+        has_next
+        has_previous
+        next
+        previous
+        totalCount
+        __typename
+      }
+      items {
+        _id
+        height
+        took
+        time
+        producer
+        producer_service_url
+        total_txs
+        total_nodes
+        total_relays_completed
+        total_size
+        nodes_jailed_staked
+        nodes_unjailed_staked
+        nodes_unjailed_unstaking
+        apps_staked
+        apps_unstaking
+        block_size
+        state_size
+        __typename
+      }
+      __typename
+    }
+  }`);
+  return {
+    blocks: dataBlock.items,
+  };
+});
 
 export const getBlockStats = cache(async () => {
   const result = await prisma.$queryRaw<any[]>`

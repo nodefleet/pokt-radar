@@ -18,17 +18,11 @@ export default async function Block({
 
   const PAGE_SIZE = 10;
   const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
-  let { block, count, transactions, chartData } = await getBlock({
+  let { block, count, transactions } = await getBlock({
     height: queryBlock,
     skip: SKIP,
     take: PAGE_SIZE,
   });
-  const last7Data = chartData.map((value) => ({
-    date: new Date(value.date).toLocaleDateString("es-es", {
-      dateStyle: "short",
-    }),
-    count: Number(value.count),
-  }));
 
   return (
     <div className="grow mx-4 md:mx-16 my-6">
@@ -147,7 +141,7 @@ export default async function Block({
             )}
           </div>
         </div>
-        <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 bg-white rounded-3xl shadow-lg w-full  relative">
+        {/* <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 bg-white rounded-3xl shadow-lg w-full  relative">
           <div className="mt-8 md:mt-0 max-sm:mt-0">
             <div className="p-4 flex justify-between">
               <p className="text-black font-semibold text-xl">
@@ -158,7 +152,7 @@ export default async function Block({
               <TransactionsChart data={last7Data} />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       {block && (
         <div className="mt-5 mb-4 ">
