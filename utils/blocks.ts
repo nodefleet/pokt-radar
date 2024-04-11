@@ -1,9 +1,9 @@
 import "server-only";
 import { cache } from "react";
 import { fetchData, prisma } from "./db";
-import { endDate24H, startDate24h } from "./governance";
+import { updateLast24HoursRange } from "./governance";
 
-export const getLastBlockHeight = cache(async () => {
+export const getLastBlockHeight = async () => {
   const { GetLatestBlock: lastBlock } = await fetchData(`
   query {
     GetLatestBlock {
@@ -42,11 +42,10 @@ export const getLastBlockHeight = cache(async () => {
       __typename
     }
   }`);
-
   return {
     lastBlock: lastBlock.block,
   };
-});
+};
 
 // export const getBlocks = cache(
 //   async ({ take, skip }: { take: number; skip: number }) => {
@@ -64,6 +63,7 @@ export const getLastBlockHeight = cache(async () => {
 // );
 
 export const getLatestBlocks = async () => {
+  const { endDate24H, startDate24H } = await updateLast24HoursRange();
   const { ListPoktBlock: dataBlock } = await fetchData(`
   query {
     ListPoktBlock(pagination: {
@@ -81,7 +81,7 @@ export const getLatestBlocks = async () => {
           property: "time",
           operator: GTE,
           type: STRING,
-          value: "${startDate24h}"
+          value: "${startDate24H}"
         },
         {
           property: "time",
@@ -156,6 +156,7 @@ export const getBlock = cache(
 );
 
 export const getBlocks = cache(async ({ limit }: { limit: number }) => {
+  const { startDate24H, endDate24H } = await updateLast24HoursRange();
   const { ListPoktBlock: dataBlock } = await fetchData(`
   query {
     ListPoktBlock(pagination: {
@@ -173,7 +174,7 @@ export const getBlocks = cache(async ({ limit }: { limit: number }) => {
           property: "time",
           operator: GTE,
           type: STRING,
-          value: "${startDate24h}"
+          value: "${startDate24H}"
         },
         {
           property: "time",

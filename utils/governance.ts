@@ -1,35 +1,60 @@
 import { cache } from "react";
 import { fetchData } from "./db";
 
-const getLast24HoursRange = () => {
-  const currentDate = new Date();
-  const last24HoursTime = currentDate.getTime() - 24 * 61 * 60 * 1000;
-  const last24HoursStartDate = new Date(last24HoursTime);
-  const formattedStartDate = last24HoursStartDate.toISOString();
-  const formattedEndDate = currentDate.toISOString();
-
-  return {
-    startDate24h: formattedStartDate,
-    endDate24H: formattedEndDate,
-  };
-};
-export const { endDate24H, startDate24h } = getLast24HoursRange();
-
-const getLastMonthDates = () => {
-  const today = new Date();
-  const startDate = new Date();
-  const endDate = today;
-
-  startDate.setDate(startDate.getDate() - 29);
-
-  return {
-    startDate: startDate.toISOString().split("T")[0],
-    endDate: endDate.toISOString().split("T")[0],
-  };
+const getStatusPokscan = async () => {
+  try {
+    const { GetPoktscanStatus: status } = await fetchData(`
+      query {
+        GetPoktscanStatus {
+          poktscan_height
+          network_height
+          is_sync
+          is_syncing
+          blocks_behind
+          time
+          __typename
+        }
+      } 
+    `);
+    return { status };
+  } catch (error) {
+    console.error("Error fetching Pokscan status:", error);
+    throw error;
+  }
 };
 
-export const { startDate, endDate } = getLastMonthDates();
+export const updateLast24HoursRange = async () => {
+  try {
+    const { status } = await getStatusPokscan();
+
+    const currentDate = new Date(status.time);
+    const last24HoursTime = currentDate.getTime() - 24 * 60 * 60 * 1000;
+    const last24HoursStartDate = new Date(last24HoursTime);
+    const formattedStartDate = last24HoursStartDate.toISOString();
+    const formattedEndDate = currentDate.toISOString();
+
+    return { startDate24H: formattedStartDate, endDate24H: formattedEndDate };
+  } catch (error) {
+    console.error("Error updating last 24 hours range:", error);
+    throw error;
+  }
+};
+
+export const updateLastMonthDates = async () => {
+  const { status } = await getStatusPokscan();
+  const today = new Date(status.time);
+  const startDateObj = new Date(status.time);
+  const endDateObj = today;
+
+  startDateObj.setDate(startDateObj.getDate() - 29);
+  return {
+    startDate: startDateObj.toISOString().split("T")[0],
+    endDate: endDateObj.toISOString().split("T")[0],
+  };
+};
+
 export const getGobernance = cache(async (limit: number) => {
+  const { endDate, startDate } = await updateLastMonthDates();
   const GetLastBlockPoktParams = fetchData(`
     query {
       GetLastBlockPoktParams {

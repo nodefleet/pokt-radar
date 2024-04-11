@@ -3,7 +3,7 @@ import { cache } from "react";
 import { prisma, apiUrl, authToken, fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";
 import { chains } from "./relay";
-import { endDate, endDate24H, startDate, startDate24h } from "./governance";
+import { updateLast24HoursRange, updateLastMonthDates } from "./governance";
 
 interface TransactionData {
   block_id: bigint;
@@ -116,18 +116,66 @@ export const getTransaction = cache(async (hash: string) => {
 });
 
 export const getTransactionsByAddress = cache(
-  async (address: string, take: number, skip: number) => {
-    const count = await prisma.transactions.count({
-      where: { OR: [{ from_address: address }, { to_address: address }] },
-    });
-    const transactions = await prisma.transactions.findMany({
-      where: { OR: [{ from_address: address }, { to_address: address }] },
-      orderBy: { height: "desc" },
-      take: take,
-      skip: skip,
-    });
+  async (address: string, limit: number) => {
+    const { ListPoktTransactionForSelection: transactions } = await fetchData(`
+  query {
+    ListPoktTransactionForSelection(input: {
+      node_selection: {
+        addresses:"${address}"
+      },
+      pagination: {
+        limit: ${limit},
+        sort: [
+          {
+           property:"block_time",
+            direction: -1
+          }
+        ],
+        filter: {
+         operator:AND,
+         properties: [],
+         filters: []
+        }
+      },
+     only_staked: false
+    }) {
+      pageInfo {
+        has_next
+        has_previous
+        next
+        previous
+        totalCount
+        __typename
+      }
+      items {
+        _id
+        hash
+        height
+        amount
+        block_time
+        from_address
+        index
+        memo
+        parse_time
+        result_code
+        to_address
+        total_fee
+        total_proof
+        total_pokt
+        type
+        chain
+        app_public_key
+        claim_tx_hash
+        expiration_height
+        session_height
+        pending
+        __typename
+      }
+      __typename
+    }
+  } `);
 
-    return { transactions: transactions, count: count };
+    return { transactions: transactions.items };
   }
 );
 
@@ -138,10 +186,12 @@ export const getTransactionsByBlock = cache(async (block: number) => {
   });
 });
 
-export const getTransactionStats = cache(async () => {
+export const getTransactionStats = async () => {
+  const { endDate24H, startDate24H } = await updateLast24HoursRange();
+  const { endDate, startDate } = await updateLastMonthDates();
   const { last24h: last24h } = await fetchData(`query {
     last24h: GetChainsRewardsBetweenDates(input: {
-    start_date: "${startDate24h}",
+    start_date: "${startDate24H}",
     end_date: "${endDate24H}"
   }) {
       chain
@@ -198,7 +248,7 @@ export const getTransactionStats = cache(async () => {
     dataChartVetical: dataRelays,
     resultDought: dataDought,
   };
-});
+};
 
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */
 

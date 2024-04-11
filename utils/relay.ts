@@ -1,8 +1,9 @@
-import { cache } from "react";
 import { fetchData } from "./db";
-import { endDate, endDate24H, startDate, startDate24h } from "./governance";
+import { updateLast24HoursRange, updateLastMonthDates } from "./governance";
 
-export const getRelaysByChains = cache(async () => {
+export const getRelaysByChains = async () => {
+  const { endDate24H, startDate24H } = await updateLast24HoursRange();
+  const { endDate, startDate } = await updateLastMonthDates();
   const start = new Date(startDate).setDate(new Date(startDate).getDate() - 2);
   const { GetRelaysByGatewayAndChainBetweenDates: dataRelay } =
     await fetchData(`query {
@@ -22,7 +23,7 @@ export const getRelaysByChains = cache(async () => {
   const { GetRelaysByGatewayAndChainBetweenDates: dataChtw } =
     await fetchData(`query {
   GetRelaysByGatewayAndChainBetweenDates(input: {
-  start_date: "${startDate24h}",
+  start_date: "${startDate24H}",
   end_date: "${endDate24H}",
   timezone: "UTC",
   date_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
@@ -48,7 +49,6 @@ export const getRelaysByChains = cache(async () => {
       currentValue: { gateway: any; total_relays: any }
     ) => {
       const { gateway, total_relays } = currentValue;
-      // Verificar si ya existe una entrada para el gateway actual
       if (accumulator[gateway]) {
         accumulator[gateway].total_relays += total_relays;
       } else {
@@ -69,7 +69,7 @@ export const getRelaysByChains = cache(async () => {
       count: row.total_relays,
     })),
   };
-});
+};
 
 export const chains = [
   {
