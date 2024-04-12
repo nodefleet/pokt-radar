@@ -1,8 +1,7 @@
-import { cache } from "react";
-import { fetchData, prisma } from "./db";
+import { fetchData } from "./db";
 import { endDate24H, startDate24h } from "./governance";
 
-export const getLastBlockHeight = cache(async () => {
+export const getLastBlockHeight = async () => {
   const { GetLatestBlock: lastBlock } = await fetchData(`
   query {
     GetLatestBlock {
@@ -45,7 +44,7 @@ export const getLastBlockHeight = cache(async () => {
   return {
     lastBlock: lastBlock.block,
   };
-});
+};
 
 // export const getBlocks = cache(
 //   async ({ take, skip }: { take: number; skip: number }) => {
@@ -125,36 +124,34 @@ export const getLatestBlocks = async () => {
   return dataBlock.items;
 };
 
-export const getBlock = cache(
-  async ({
-    take,
-    skip,
-    height,
-  }: {
-    take: number;
-    skip: number;
-    height: number | undefined;
-  }) => {
-    const blocks = await prisma.blocks.findMany({
-      where: { height: height },
-    });
-    const transactions = await prisma.$queryRaw<any[]>`
-    SELECT *,transaction_hash as hash
-    FROM transactions_30_days
-    ORDER BY block_id DESC
-    LIMIT ${take}
-    OFFSET ${skip};`;
-    const count = await prisma.$queryRaw<any[]>`
-     SELECT COUNT(transaction_id) FROM transactions_30_days;`;
-    return {
-      transactions,
-      block: blocks[0],
-      count: Number(count[0].count),
-    };
-  }
-);
+// export const getBlock = async ({
+//   take,
+//   skip,
+//   height,
+// }: {
+//   take: number;
+//   skip: number;
+//   height: number | undefined;
+// }) => {
+//   const blocks = await prisma.blocks.findMany({
+//     where: { height: height },
+//   });
+//   const transactions = await prisma.$queryRaw<any[]>`
+//     SELECT *,transaction_hash as hash
+//     FROM transactions_30_days
+//     ORDER BY block_id DESC
+//     LIMIT ${take}
+//     OFFSET ${skip};`;
+//   const count = await prisma.$queryRaw<any[]>`
+//      SELECT COUNT(transaction_id) FROM transactions_30_days;`;
+//   return {
+//     transactions,
+//     block: blocks[0],
+//     count: Number(count[0].count),
+//   };
+// };
 
-export const getBlocks = cache(async ({ limit }: { limit: number }) => {
+export const getBlocks = async ({ limit }: { limit: number }) => {
   const { ListPoktBlock: dataBlock } = await fetchData(`
   query {
     ListPoktBlock(pagination: {
@@ -217,4 +214,4 @@ export const getBlocks = cache(async ({ limit }: { limit: number }) => {
   return {
     blocks: dataBlock.items,
   };
-});
+};

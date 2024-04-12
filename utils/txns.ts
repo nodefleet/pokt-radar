@@ -1,6 +1,5 @@
 // import "server-only";
-import { cache } from "react";
-import { prisma, apiUrl, authToken, fetchData } from "./db";
+import { fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";
 import { chains } from "./relay";
 import { endDate, endDate24H, startDate, startDate24h } from "./governance";
@@ -60,85 +59,81 @@ interface TransactionData {
   tx_count: bigint;
 }
 
-export const getTotalTransactions = cache(async () => {
-  return await prisma.transactions.count({});
-});
+// export const getTransactions = async ({
+//   take,
+//   skip,
+//   block,
+// }: {
+//   take: number;
+//   skip: number;
+//   block: number | undefined;
+// }) => {
+//   // const transactions = await prisma.transactions.findMany({
+//   //   where: { height: block },
+//   //   take,
+//   //   skip,
+//   //   orderBy: { height: "desc" },
+//   // });
+//   const transactions = await prisma.$queryRaw<any[]>`
+//     SELECT *
+//     FROM transactions_30_days
+//     WHERE transaction_id IS NOT NULL AND message_type ='pocketcore/claim'
+//     ORDER BY block_time DESC
+//     LIMIT ${take}
+//     OFFSET ${skip};`;
+//   const count = await prisma.$queryRaw<any[]>`
+//     SELECT COUNT(*)
+//     FROM transactions_30_days
+//     WHERE transaction_id IS NOT NULL`;
+//   return {
+//     transactions,
+//     count: Number(count[0].count),
+//   };
+// };
 
-export const getTransactions = cache(
-  async ({
-    take,
-    skip,
-    block,
-  }: {
-    take: number;
-    skip: number;
-    block: number | undefined;
-  }) => {
-    // const transactions = await prisma.transactions.findMany({
-    //   where: { height: block },
-    //   take,
-    //   skip,
-    //   orderBy: { height: "desc" },
-    // });
-    const transactions = await prisma.$queryRaw<any[]>`
-    SELECT * 
-    FROM transactions_30_days
-    WHERE transaction_id IS NOT NULL AND message_type ='pocketcore/claim'
-    ORDER BY block_time DESC
-    LIMIT ${take}
-    OFFSET ${skip};`;
-    const count = await prisma.$queryRaw<any[]>`
-    SELECT COUNT(*)
-    FROM transactions_30_days
-    WHERE transaction_id IS NOT NULL`;
-    return {
-      transactions,
-      count: Number(count[0].count),
-    };
-  }
-);
+// export const getLatestTransactions = async () => {
+//   const result = await prisma.$queryRaw<any[]>`
+//      SELECT * FROM transactions_30_days WHERE transaction_id IS NOT NULL ORDER BY block_id DESC LIMIT 10;`;
+//   return result;
+// };
 
-export const getLatestTransactions = cache(async () => {
-  const result = await prisma.$queryRaw<any[]>`
-     SELECT * FROM transactions_30_days WHERE transaction_id IS NOT NULL ORDER BY block_id DESC LIMIT 10;`;
-  return result;
-});
+// export const getTransaction = async (hash: string) => {
+//   const result = await prisma.$queryRaw<TransactionData[]>`
+//   SELECT *
+//   FROM transactions_30_days AS t
+//   LEFT JOIN blocks AS b ON t.height = b.height
+//   WHERE t.transaction_hash = ${hash};`;
+//   return {
+//     transation: result[0],
+//   };
+// };
 
-export const getTransaction = cache(async (hash: string) => {
-  const result = await prisma.$queryRaw<TransactionData[]>`
-  SELECT *
-  FROM transactions_30_days AS t
-  LEFT JOIN blocks AS b ON t.height = b.height
-  WHERE t.transaction_hash = ${hash};`;
-  return {
-    transation: result[0],
-  };
-});
+// export const getTransactionsByAddress = async (
+//   address: string,
+//   take: number,
+//   skip: number
+// ) => {
+//   const count = await prisma.transactions.count({
+//     where: { OR: [{ from_address: address }, { to_address: address }] },
+//   });
+//   const transactions = await prisma.transactions.findMany({
+//     where: { OR: [{ from_address: address }, { to_address: address }] },
+//     orderBy: { height: "desc" },
+//     take: take,
+//     skip: skip,
+//   });
 
-export const getTransactionsByAddress = cache(
-  async (address: string, take: number, skip: number) => {
-    const count = await prisma.transactions.count({
-      where: { OR: [{ from_address: address }, { to_address: address }] },
-    });
-    const transactions = await prisma.transactions.findMany({
-      where: { OR: [{ from_address: address }, { to_address: address }] },
-      orderBy: { height: "desc" },
-      take: take,
-      skip: skip,
-    });
+//   return { transactions: transactions, count: count };
+// };
 
-    return { transactions: transactions, count: count };
-  }
-);
+// export const getTransactionsByBlock = async (block: number) => {
+//   return await prisma.transactions.findMany({
+//     where: { height: block },
+//     orderBy: { height: "desc" },
+//   });
+// };
 
-export const getTransactionsByBlock = cache(async (block: number) => {
-  return await prisma.transactions.findMany({
-    where: { height: block },
-    orderBy: { height: "desc" },
-  });
-});
-
-export const getTransactionStats = cache(async () => {
+export const getTransactionStats = async () => {
   const { last24h: last24h } = await fetchData(`query {
     last24h: GetChainsRewardsBetweenDates(input: {
     start_date: "${startDate24h}",
@@ -198,7 +193,7 @@ export const getTransactionStats = cache(async () => {
     dataChartVetical: dataRelays,
     resultDought: dataDought,
   };
-});
+};
 
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */
 

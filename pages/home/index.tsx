@@ -9,24 +9,52 @@ import { getTransactionStats } from "@/utils/txns";
 import Link from "next/link";
 
 export default function Home() {
-  const [state, setState] = useState<{
-    chartVertical: { date: string; count: number }[];
-    resultDought: { date: string; count: number }[];
-  }>({ chartVertical: [], resultDought: [] });
+  const [state, setState] = useState({
+    dataChartVetical: [],
+    resultDought: [],
+    loading: true,
+    error: "",
+  });
+
   useEffect(() => {
     async function fetchTransactions() {
-      const { dataChartVetical, resultDought } = await getTransactionStats();
-      setState({ chartVertical: dataChartVetical, resultDought: resultDought });
+      try {
+        const { dataChartVetical, resultDought } = await getTransactionStats();
+        console.log(dataChartVetical);
+        setState({
+          dataChartVetical,
+          resultDought,
+          loading: false,
+          error: "",
+        });
+      } catch (error) {
+        console.error("Error fetching transaction stats:", error);
+        setState({
+          dataChartVetical: [],
+          resultDought: [],
+          loading: false,
+          error: "Error fetching transaction stats",
+        });
+      }
     }
     fetchTransactions();
   }, []);
+
+  if (state.loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (state.error) {
+    return <div>Error: {state.error}</div>;
+  }
+
   return (
     <main className="flex flex-col py-11 px-10 max-sm:p-4 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
         {/* @ts-expect-error Async Server Component */}
         <Stats />
         <Stadist
-          dataChart={state.chartVertical}
+          dataChart={state.dataChartVetical}
           resultDought={state.resultDought}
         />
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">

@@ -1,4 +1,3 @@
-import { cache } from "react";
 import { fetchData } from "./db";
 
 const getLast24HoursRange = () => {
@@ -29,7 +28,7 @@ const getLastMonthDates = () => {
 };
 
 export const { startDate, endDate } = getLastMonthDates();
-export const getGobernance = cache(async (limit: number) => {
+export const getGobernance = async (limit: number) => {
   const GetLastBlockPoktParams = fetchData(`
     query {
       GetLastBlockPoktParams {
@@ -183,4 +182,4 @@ export const getGobernance = cache(async (limit: number) => {
     dataExpense,
     daoBalance: sortedArray[0].amount,
   };
-});
+};

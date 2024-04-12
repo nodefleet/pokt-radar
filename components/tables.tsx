@@ -5,11 +5,9 @@ import Link from "next/link";
 import FromNow from "./FromNow";
 import { bytesToMB, shortHash } from "@/utils";
 import React from "react";
-import { getLatestTransactions } from "@/utils/txns";
 import { getLatestBlocks } from "@/utils/blocks";
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
-import Image from "next/image";
 
 function BaseTable({
   children,
@@ -72,9 +70,12 @@ export async function LatestBlocksTable() {
   );
 }
 
-export async function LatestTransactionsTable() {
+export async function LatestTransactionsTable({ data }: { data: any[] }) {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
-  const data = await getLatestTransactions();
+  // const data = await getLatestTransactions();
+  if (data.length > 0) {
+    return;
+  }
   return (
     <BaseTable headers={headers}>
       {data &&
