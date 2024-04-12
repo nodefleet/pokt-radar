@@ -1,37 +1,29 @@
-
 "use client";
 
-import { parseISO, intervalToDuration, formatDuration } from "date-fns";
-
 export default function FromNow({ datetime }: { datetime: string }) {
-  const duration = intervalToDuration({
-    start: parseISO(datetime),
-    end: new Date(),
-  });
+  const parsedDatetime = new Date(datetime);
+  const now = new Date();
+  const elapsedMilliseconds = now.getTime() - parsedDatetime.getTime();
+
+  const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+  const elapsedHours = Math.floor(elapsedMinutes / 60);
+  const elapsedDays = Math.floor(elapsedHours / 24);
+  const elapsedMonths = Math.floor(elapsedDays / 30);
 
   let displayDuration;
-  if (
-    duration.minutes &&
-    duration.minutes >= 2 &&
-    !(duration.hours || duration.days)
-  ) {
-    displayDuration = formatDuration(duration, {
-      format: ["minutes"],
-    });
-  } else if (duration.hours && !duration.days) {
-    displayDuration = formatDuration(duration, {
-      format: ["hours", "minutes"],
-    });
-  } else if (duration.days && !duration.months) {
-    displayDuration = formatDuration(duration, {
-      format: ["days", "hours"],
-    });
-  } else if (duration.months) {
-    displayDuration = formatDuration(duration, {
-      format: ["months", "days"],
-    });
+
+  if (elapsedMinutes >= 2 && !elapsedHours && !elapsedDays) {
+    displayDuration = `${elapsedMinutes} minutes`;
+  } else if (elapsedHours && !elapsedDays) {
+    displayDuration = `${elapsedHours} hours, ${elapsedMinutes % 60} minutes`;
+  } else if (elapsedDays && !elapsedMonths) {
+    displayDuration = `${elapsedDays} days, ${elapsedHours % 24} hours`;
+  } else if (elapsedMonths) {
+    displayDuration = `${elapsedMonths} months, ${elapsedDays % 30} days`;
   } else {
-    displayDuration = formatDuration(duration);
+    displayDuration = "a few seconds";
   }
+
   return <>{displayDuration} ago</>;
 }

@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { formatISO, format } from "date-fns";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import { getTransaction } from "@/utils/txns";
+import { formatISO } from "@/utils";
 
 export default async function Transaction({
   params,

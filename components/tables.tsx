@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import { formatISO } from "date-fns";
 import Link from "next/link";
 
 import FromNow from "./FromNow";
-import { bytesToMB, shortHash } from "@/utils";
+import { bytesToMB, formatISO, shortHash } from "@/utils";
 import React from "react";
 import { getLatestTransactions } from "@/utils/txns";
 import { getLatestBlocks } from "@/utils/blocks";

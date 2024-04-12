@@ -4,6 +4,10 @@ export function shortHash(hash: string) {
 }
 
 export function bytesToMB(sizeInBytes: number) {
-  const bytesInMB = sizeInBytes / (1024 * 1024); // 1 MB = 1024 * 1024 bytes
-  return Math.round(bytesInMB * 10) / 10 + " MB"; // Redondear a un decimal
+  const bytesInMB = sizeInBytes / (1024 * 1024);
+  return Math.round(bytesInMB * 10) / 10 + " MB";
+}
+
+export function formatISO(date: Date) {
+  return date.toISOString();
 }

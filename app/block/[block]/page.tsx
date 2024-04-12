@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { formatISO, format } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
 import { getBlock } from "@/utils/blocks";
+import { formatISO } from "@/utils";
 
 export default async function Block({
   params,
@@ -23,6 +23,36 @@ export default async function Block({
     skip: SKIP,
     take: PAGE_SIZE,
   });
+  function customFormat(date: Date) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const month = months[date.getMonth()];
+    const day = date.getDate().toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    const timeZoneOffset = date.getTimezoneOffset();
+    const sign = timeZoneOffset > 0 ? "-" : "+";
+    const absOffset = Math.abs(timeZoneOffset);
+    const hoursOffset = String(Math.floor(absOffset / 60)).padStart(2, "0");
+    const minutesOffset = String(absOffset % 60).padStart(2, "0");
+
+    return `${month} ${day} ${year}, ${hours}:${minutes}:${seconds} ${sign}${hoursOffset}:${minutesOffset}`;
+  }
 
   return (
     <div className="grow mx-4 md:mx-16 my-6">
@@ -84,9 +114,7 @@ export default async function Block({
                   <p className="font-medium">Time</p>
                   <p className="col-span-2 truncate">
                     {block.time && <FromNow datetime={formatISO(block.time)} />}{" "}
-                    (
-                    {block.time && format(block.time, "MMM dd yyyy, H:mm:ss O")}
-                    )
+                    ({block.time && customFormat(block.time)})
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">

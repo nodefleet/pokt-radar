@@ -1,10 +1,9 @@
-import { formatISO } from "date-fns";
 import Link from "next/link";
 import DataTable from "@/components/DataTable";
 import Pagination from "@/components/Pagination";
 import FromNow from "@/components/FromNow";
 import { getBlocks } from "@/utils/blocks";
-import { bytesToMB } from "@/utils";
+import { bytesToMB, formatISO } from "@/utils";
 import TransactionsChart from "@/components/TransactionsChart";
 
 export default async function Blocks({
