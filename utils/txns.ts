@@ -1,4 +1,4 @@
-import "server-only";
+// import "server-only";
 import { cache } from "react";
 import { prisma, apiUrl, authToken, fetchData } from "./db";
 import { Decimal } from "@prisma/client/runtime";

@@ -23,7 +23,6 @@ export default async function Blocks({
   const { blocks } = await getBlocks({
     limit: SKIP,
   });
-  console.log(blocks);
   const dataChart = blocks.map(
     (row: {
       height: string;

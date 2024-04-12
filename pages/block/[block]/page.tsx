@@ -105,7 +105,7 @@ export default async function Block({
                         },
                       }}
                     >
-                      {block.tx_total !== null ? Number(block.tx_count) : ""}
+                      {block.tx_count !== null ? Number(block.tx_count) : ""}
                     </Link>{" "}
                     transactions
                   </p>

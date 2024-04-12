@@ -32,8 +32,9 @@ export default async function AddressTransactions({
   return (
     <div className="flex flex-col">
       <DataTable headers={tableHeaders}>
-        {data.map((txn, index: number) => {
-          if (txn.transaction_id) {
+        {data
+          .filter((txn) => txn.transaction_id)
+          .map((txn, index: number) => {
             return (
               <tr key={index} className="border-y border-gray-bera">
                 <td className="border-0 text-black font-bold hover:text-blue_primary">
@@ -69,8 +70,7 @@ export default async function AddressTransactions({
                 </td>
               </tr>
             );
-          }
-        })}
+          })}
       </DataTable>
       <div className="flex mt-4 justify-end">
         <Pagination

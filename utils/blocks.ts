@@ -1,4 +1,3 @@
-import "server-only";
 import { cache } from "react";
 import { fetchData, prisma } from "./db";
 import { endDate24H, startDate24h } from "./governance";
@@ -218,14 +217,4 @@ export const getBlocks = cache(async ({ limit }: { limit: number }) => {
   return {
     blocks: dataBlock.items,
   };
-});
-
-export const getBlockStats = cache(async () => {
-  const result = await prisma.$queryRaw<any[]>`
-    SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
-    FROM blocks AS b
-    GROUP BY date
-    ORDER BY date DESC
-    LIMIT 7`;
-  return result;
 });

@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import Stadist from "@/components/Stadist";
 import Stats from "@/components/Stats";
 import {
@@ -7,14 +8,27 @@ import {
 import { getTransactionStats } from "@/utils/txns";
 import Link from "next/link";
 
-export default async function Home() {
-  const { dataChartVetical, resultDought } = await getTransactionStats();
+export default function Home() {
+  const [state, setState] = useState<{
+    chartVertical: { date: string; count: number }[];
+    resultDought: { date: string; count: number }[];
+  }>({ chartVertical: [], resultDought: [] });
+  useEffect(() => {
+    async function fetchTransactions() {
+      const { dataChartVetical, resultDought } = await getTransactionStats();
+      setState({ chartVertical: dataChartVetical, resultDought: resultDought });
+    }
+    fetchTransactions();
+  }, []);
   return (
     <main className="flex flex-col py-11 px-10 max-sm:p-4 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
         {/* @ts-expect-error Async Server Component */}
         <Stats />
-        <Stadist dataChart={dataChartVetical} resultDought={resultDought} />
+        <Stadist
+          dataChart={state.chartVertical}
+          resultDought={state.resultDought}
+        />
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
           <div className="w-full overflow-x-auto">
             <h6 className="ml-3 mb-2 text-xl text-black">Latest Blocks</h6>
