@@ -175,9 +175,11 @@ export const getPoktPrice = async () => {
     const dataCEX = await axios
       .request(options)
       .then(function (response) {
+        console.log(response);
         return response.data;
       })
       .catch(function (error) {
+        console.log(error);
         console.error(error);
       });
 
