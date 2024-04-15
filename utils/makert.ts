@@ -161,13 +161,15 @@ export const getMarket = [
   },
 ];
 
+const apiGEKO = "https://pro-api.coingecko.com/api/v3/coins";
+
 export const getPoktPrice = async () => {
   try {
     const options = {
       method: "GET",
-      url: (process.env.API_MARKET || "") + "/pocket-network",
+      url: apiGEKO + "/pocket-network",
       headers: {
-        "x-cg-pro-api-key": process.env.TOKEN_MARKET || "",
+        "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91",
         "Cache-Control": "no-store",
       },
     };
@@ -181,7 +183,7 @@ export const getPoktPrice = async () => {
         console.error(error);
       });
 
-    options.url = (process.env.API_MARKET || "") + "/wrapped-pokt";
+    options.url = apiGEKO + "/wrapped-pokt";
     const dataDEX = await axios
       .request(options)
       .then(function (response) {
@@ -191,6 +193,7 @@ export const getPoktPrice = async () => {
         console.error(error);
       });
 
+    console.log();
     return {
       cex: dataCEX.tickers,
       dex: dataDEX.tickers,
