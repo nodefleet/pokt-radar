@@ -12,7 +12,7 @@ export const authToken = process.env.TOKEN_POKT || "";
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: ["query", "error", "info"],
+    log: ["query", "error"],
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
