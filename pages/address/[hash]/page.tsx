@@ -1,17 +1,16 @@
 import AddressTransactions from "@/components/AddressTransactions";
-import TransactionsChart from "@/components/TransactionsChart";
 import { getAccount } from "@/utils/accounts";
 import { getTransactionsByAddress } from "@/utils/txns";
 
 export default async function Address({
-  params: { hash: address, page: page },
+  params: { hash: address, pages: pages },
 }: {
-  params: { hash: string; page: string | undefined };
+  params: { hash: string; pages: string | undefined };
 }) {
-  const pages = (page && !isNaN(parseInt(page)) && parseInt(page)) || 1;
-
+  const page = (pages && !isNaN(parseInt(pages)) && parseInt(pages)) || 1;
   const PAGE_SIZE = 10;
-  const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
+  const SKIP = page * PAGE_SIZE;
+  const PAGE_LIMIT = 50;
   const { account, nodes } = await getAccount(address);
   const { transactions } = await getTransactionsByAddress(address, SKIP);
 
@@ -157,9 +156,9 @@ export default async function Address({
             path={`/address/${address}`}
             data={transactions}
             PAGE_SIZE={PAGE_SIZE}
-            page={pages}
+            page={Number(pages)}
             address={{ address: address }}
-            txtrow={count}
+            txtrow={PAGE_LIMIT}
           />
         </div>
       </div>
