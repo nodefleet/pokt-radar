@@ -7,7 +7,7 @@ const globalForPrisma = global as unknown as {
 };
 
 export const apiUrl = process.env.API_POKT || "";
-export const authToken = process.env.TOKEN_POKT;
+export const authToken = process.env.TOKEN_POKT || "";
 
 export const prisma =
   globalForPrisma.prisma ??
