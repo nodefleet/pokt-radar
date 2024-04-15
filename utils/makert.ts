@@ -165,9 +165,9 @@ export const getPoktPrice = async () => {
   try {
     const options = {
       method: "GET",
-      url: "https://pro-api.coingecko.com/api/v3/coins/pocket-network",
+      url: (process.env.API_MARKET || "") + "/pocket-network",
       headers: {
-        "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91",
+        "x-cg-pro-api-key": process.env.TOKEN_MARKET || "",
         "Cache-Control": "no-store",
       },
     };
@@ -181,7 +181,7 @@ export const getPoktPrice = async () => {
         console.error(error);
       });
 
-    options.url = "https://pro-api.coingecko.com/api/v3/coins/wrapped-pokt";
+    options.url = (process.env.API_MARKET || "") + "/wrapped-pokt";
     const dataDEX = await axios
       .request(options)
       .then(function (response) {
