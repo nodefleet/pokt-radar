@@ -4,24 +4,43 @@ import {
   LatestBlocksTable,
   LatestTransactionsTable,
 } from "@/components/tables";
-import { getTransactionStats } from "@/utils/txns";
+import { getLastBlockHeight, getLatestBlocks } from "@/utils/blocks";
+import { getPoktPrice } from "@/utils/makert";
+import { getLatestTransactions, getTransactionStats } from "@/utils/txns";
 import Link from "next/link";
 
 export default async function Home() {
-  const { dataChartVetical, resultDought } = await getTransactionStats();
+  const getChart = getTransactionStats();
+  const lastBlockHeightData = getLatestBlocks();
+  const lastTransationData = getLatestTransactions();
+  const dataMakert = getPoktPrice();
+  const lastHeightData = getLastBlockHeight();
+
+  const [
+    { dataChartVetical, resultDought },
+    dataBlock,
+    dataTrasaction,
+    { lastBlock },
+    { price, market },
+  ] = await Promise.all([
+    getChart,
+    lastBlockHeightData,
+    lastTransationData,
+    lastHeightData,
+    dataMakert,
+  ]);
+
   return (
     <main className="flex flex-col py-11 px-10 max-sm:p-4 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
-        {/* @ts-expect-error Async Server Component */}
-        <Stats />
+        <Stats lastBlock={lastBlock} price={price} market={market} />
         <Stadist dataChart={dataChartVetical} resultDought={resultDought} />
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
           <div className="w-full overflow-x-auto">
             <h6 className="ml-3 mb-2 text-xl text-black">Latest Blocks</h6>
             <hr />
             <div className="overflow-x-auto">
-              {/* @ts-expect-error Async Server Component */}
-              <LatestBlocksTable />
+              <LatestBlocksTable data={dataBlock} />
             </div>
           </div>
           <Link
@@ -38,8 +57,7 @@ export default async function Home() {
             </h6>
             <hr />
             <div className="overflow-x-auto">
-              {/* @ts-expect-error Async Server Component */}
-              <LatestTransactionsTable />
+              <LatestTransactionsTable data={dataTrasaction} />
             </div>
           </div>
           <Link

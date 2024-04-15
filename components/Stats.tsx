@@ -1,19 +1,26 @@
 import Image from "next/image";
 import BeraIcon from "../public/img/poker_logo.png";
 
-import { getLastBlockHeight } from "@/utils/blocks";
-import { getPoktPrice } from "@/utils/makert";
 import FromNow from "./FromNow";
 
-export default async function Stats() {
-  const dataMakert = getPoktPrice();
-
-  const lastBlockHeightData = getLastBlockHeight();
-
-  const [{ lastBlock }, { price, market }] = await Promise.all([
-    lastBlockHeightData,
-    dataMakert,
-  ]);
+export default function Stats({
+  lastBlock,
+  price,
+  market,
+}: {
+  lastBlock: {
+    height: number;
+    time: string;
+    total_apps: number;
+    supported_block_chains: { length: number };
+  };
+  price: number;
+  market: {
+    market_cap: { usd: number };
+    total_supply: number;
+    circulating_supply: number;
+  };
+}) {
   return (
     <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg col-span-2">
       <div className="flex flex-col gap-8">

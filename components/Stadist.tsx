@@ -1,4 +1,5 @@
 "use client";
+import { updateLast24HoursRange } from "@/utils/governance";
 import { useEffect, useState } from "react";
 import { DoughnutsChartHome, TransationChartHome } from "./charts";
 

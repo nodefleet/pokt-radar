@@ -33,10 +33,8 @@ function BaseTable({
   );
 }
 
-export async function LatestBlocksTable() {
+export function LatestBlocksTable({ data }: { data: any[] }) {
   const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
-  const lastBlockHeightData = getLatestBlocks();
-  const [data] = await Promise.all([lastBlockHeightData]);
 
   return (
     <BaseTable headers={headers}>
@@ -71,50 +69,62 @@ export async function LatestBlocksTable() {
   );
 }
 
-export async function LatestTransactionsTable() {
+export function LatestTransactionsTable({ data }: { data: any }) {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
-  const data = await getLatestTransactions();
+
   return (
     <BaseTable headers={headers}>
       {data &&
-        data.map((txn, index) => (
-          <tr
-            key={index}
-            className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
-          >
-            <td className="border-0 text-black truncate hover:text-blue_primary">
-              <Link
-                href={
-                  txn.transaction_hash
-                    ? `/transaction/${txn.transaction_hash}`
-                    : "/"
-                }
-              >
-                {txn.transaction_hash ? shortHash(txn.transaction_hash) : "N/A"}
-              </Link>
-            </td>
-            <td className="border-0 w-6">
-              <p className="font-normal uppercase text-sm rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4">
-                Transfer
-              </p>
-            </td>
-            <td className="border-0 text-black hover:text-blue_primary">
-              <Link href={`/block/${txn.height}`}>
-                {txn.height !== null ? txn.height.toString() : "N/A"}
-              </Link>
-            </td>
-            <td className="border-0 xl:pr-0 text-black hover:text-blue_primary">
-              <Link href={`/address/${txn.from_address}`}>
-                {txn.from_address ? shortHash(txn.from_address) : "N/A"}
-              </Link>
-            </td>
-            <td className="border-0 text-black hover:text-blue_primary">
-              <Link href={`/address/${txn.to_address}`}>
-                {txn.to_address ? shortHash(txn.to_address) : "N/A"}
-              </Link>
-            </td>
-          </tr>
-        ))}
+        data.map(
+          (
+            txn: {
+              transaction_hash: string;
+              height: number;
+              from_address: string;
+              to_address: string;
+            },
+            index: React.Key | null | undefined
+          ) => (
+            <tr
+              key={index}
+              className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
+            >
+              <td className="border-0 text-black truncate hover:text-blue_primary">
+                <Link
+                  href={
+                    txn.transaction_hash
+                      ? `/transaction/${txn.transaction_hash}`
+                      : "/"
+                  }
+                >
+                  {txn.transaction_hash
+                    ? shortHash(txn.transaction_hash)
+                    : "N/A"}
+                </Link>
+              </td>
+              <td className="border-0 w-6">
+                <p className="font-normal uppercase text-sm rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4">
+                  Transfer
+                </p>
+              </td>
+              <td className="border-0 text-black hover:text-blue_primary">
+                <Link href={`/block/${txn.height}`}>
+                  {txn.height !== null ? txn.height.toString() : "N/A"}
+                </Link>
+              </td>
+              <td className="border-0 xl:pr-0 text-black hover:text-blue_primary">
+                <Link href={`/address/${txn.from_address}`}>
+                  {txn.from_address ? shortHash(txn.from_address) : "N/A"}
+                </Link>
+              </td>
+              <td className="border-0 text-black hover:text-blue_primary">
+                <Link href={`/address/${txn.to_address}`}>
+                  {txn.to_address ? shortHash(txn.to_address) : "N/A"}
+                </Link>
+              </td>
+            </tr>
+          )
+        )}
     </BaseTable>
   );
 }
