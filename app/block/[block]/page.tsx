@@ -3,8 +3,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
-import { getBlock } from "@/utils/blocks";
 import { formatISO } from "@/utils";
+import { getBlock } from "@/utils/prisma";
 
 export default async function Block({
   params,

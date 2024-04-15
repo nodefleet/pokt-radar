@@ -1,6 +1,6 @@
 import TransactionsChart from "@/components/TransactionsChart";
-import { getTransactions } from "@/utils/txns";
 import TableClient from "@/components/TableClient";
+import { getTransactions } from "@/utils/prisma";
 
 export default async function Transactions({
   searchParams,
