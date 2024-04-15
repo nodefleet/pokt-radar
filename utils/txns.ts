@@ -195,6 +195,70 @@ export const getTransactionStats = async () => {
   };
 };
 
+export const getTransactionsByAddress = async (
+  address: string,
+  limit: number
+) => {
+  const { ListPoktTransactionForSelection: transactions } = await fetchData(`
+  query {
+    ListPoktTransactionForSelection(input: {
+      node_selection: {
+        addresses:"${address}"
+      },
+      pagination: {
+        limit: ${limit},
+        sort: [
+          {
+           property:"block_time",
+            direction: -1
+          }
+        ],
+        filter: {
+         operator:AND,
+         properties: [],
+         filters: []
+        }
+      },
+     only_staked: false
+    }) {
+      pageInfo {
+        has_next
+        has_previous
+        next
+        previous
+        totalCount
+        __typename
+      }
+      items {
+        _id
+        hash
+        height
+        amount
+        block_time
+        from_address
+        index
+        memo
+        parse_time
+        result_code
+        to_address
+        total_fee
+        total_proof
+        total_pokt
+        type
+        chain
+        app_public_key
+        claim_tx_hash
+        expiration_height
+        session_height
+        pending
+        __typename
+      }
+      __typename
+    }
+  } `);
+
+  return { transactions: transactions.items };
+};
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */
 
 /* SELECT date_trunc('day', b.time) AS date, COUNT(t.height) AS count FROM blocks AS b LEFT JOIN transactions t ON t.height = b.height WHERE b.time >= NOW() - INTERVAL '30 days' OR b.time IS NULL GROUP BY date */

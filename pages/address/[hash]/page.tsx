@@ -13,11 +13,7 @@ export default async function Address({
   const PAGE_SIZE = 10;
   const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
   const { account, nodes } = await getAccount(address);
-  const { transactions, count } = await getTransactionsByAddress(
-    address,
-    PAGE_SIZE,
-    SKIP
-  );
+  const { transactions } = await getTransactionsByAddress(address, SKIP);
 
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
