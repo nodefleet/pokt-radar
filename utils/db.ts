@@ -1,14 +1,13 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
-import { cache } from "react";
 import axios from "axios";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const apiUrl = "https://api.poktscan.com/poktscan/api/graphql";
-export const authToken = "461fc459-6254-443c-939a-a84da4f495fb";
+export const apiUrl = process.env.API_POKT || "";
+export const authToken = process.env.TOKEN_POKT;
 
 export const prisma =
   globalForPrisma.prisma ??
