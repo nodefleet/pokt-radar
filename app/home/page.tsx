@@ -4,22 +4,19 @@ import {
   LatestBlocksTable,
   LatestTransactionsTable,
 } from "@/components/tables";
-import { getLastBlockHeight, getLatestBlocks } from "@/utils/blocks";
-import { getPoktPrice } from "@/utils/makert";
-import { getLatestTransactions, getTransactionStats } from "@/utils/txns";
+import { getHome } from "@/utils/accounts";
 import Link from "next/link";
 
 export default async function Home() {
-  const getChart = getTransactionStats();
-  const lastBlockHeightData = getLatestBlocks();
-  const lastTransationData = getLatestTransactions();
-
-  const [{ dataChartVetical, resultDought }, dataBlock, dataTrasaction] =
-    await Promise.all([getChart, lastBlockHeightData, lastTransationData]);
-  const [{ lastBlock }, { price, market }] = await Promise.all([
-    getLastBlockHeight(),
-    getPoktPrice(),
-  ]);
+  const {
+    dataBlock,
+    dataChartVetical,
+    dataTrasaction,
+    lastBlock,
+    market,
+    price,
+    resultDought,
+  } = await getHome();
 
   return (
     <main className="flex flex-col py-11 px-10 max-sm:p-4 ">

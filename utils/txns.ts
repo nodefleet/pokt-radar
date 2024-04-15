@@ -187,9 +187,9 @@ export const getTransactionsByBlock = cache(async (block: number) => {
 });
 
 export const getTransactionStats = async () => {
-  const { endDate24H, startDate24H } = await updateLast24HoursRange();
-  const { endDate, startDate } = await updateLastMonthDates();
-  const { last24h: last24h } = await fetchData(`query {
+  const [{ endDate24H, startDate24H }, { endDate, startDate }] =
+    await Promise.all([updateLast24HoursRange(), updateLastMonthDates()]);
+  const GetChainsRewardsBetweenDates = fetchData(`query {
     last24h: GetChainsRewardsBetweenDates(input: {
     start_date: "${startDate24H}",
     end_date: "${endDate24H}"
@@ -201,8 +201,7 @@ export const getTransactionStats = async () => {
       __typename
     }
   }`);
-
-  const { ListSummaryBetweenDates: dataRelay } = await fetchData(`query {
+  const ListSummaryBetweenDates = fetchData(`query {
       ListSummaryBetweenDates(input: {
         unit_time: day,
         interval: 1,
@@ -225,6 +224,8 @@ export const getTransactionStats = async () => {
         __typename
       }
     }`);
+  const [{ last24h: last24h }, { ListSummaryBetweenDates: dataRelay }] =
+    await Promise.all([GetChainsRewardsBetweenDates, ListSummaryBetweenDates]);
   const dataRelays = dataRelay.points.map((x: any) => ({
     date: x.point,
     count: x.total_relays,

@@ -27,12 +27,14 @@ export default function Stats({
         <div className="flex items-center">
           <Image src={BeraIcon} alt="Pocket icon" />
           <div className="ml-7  max-sm:ml-4">
-            <p className="text-black text-3xl max-sm:text-2xl font-semibold">
-              POCKET NETWORK{" "}
+            <div className="flex justify-between">
+              <p className="text-black text-3xl max-sm:text-2xl font-semibold">
+                POCKET NETWORK{" "}
+              </p>
               <span className="text-white bg-neutral-300 font-medium text-xl max-sm:hidden rounded-full py-1 px-5 ml-4 relative -top-0.5">
                 POKT
               </span>
-            </p>
+            </div>
             <p className="text-xl text-black font-normal">
               {"$" + price.toFixed(4)} USD
             </p>
@@ -41,24 +43,26 @@ export default function Stats({
         <div className="flex items-center max-sm:items-start max-sm:flex-col gap-4">
           <div className="ml-7 flex flex-row max-sm:flex-col max-sm:ml-4">
             <p className="text-black text-xl font-normal">Block Height</p>
-            <p className="font-bold text-xl rounded-full ml-5 max-sm:ml-0">
-              {lastBlock && lastBlock.height !== null
-                ? lastBlock.height.toString()
-                : ""}
+            <div className="flex justify-between">
+              <p className="font-bold text-xl rounded-full ml-5 max-sm:ml-0">
+                {lastBlock && lastBlock.height !== null
+                  ? lastBlock.height.toString()
+                  : ""}
+              </p>
               <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
                 Last 10s
               </span>
-            </p>
+            </div>
           </div>
 
           <div className="ml-7 flex flex-row max-sm:flex-col max-sm:ml-4">
             <p className="text-black text-xl font-normal">Avg Block Time</p>
-            <p className="font-medium text-xl rounded-full ml-5 max-sm:ml-0">
+            <div className="flex justify-between font-medium text-xl rounded-full ml-5 max-sm:ml-0">
               <FromNow datetime={lastBlock.time} />
               <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
                 Last 24h
               </span>
-            </p>
+            </div>
           </div>
         </div>
         <hr className="border-gray-bera w-12/12 mx-4 justify-self-center" />

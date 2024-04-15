@@ -1,6 +1,9 @@
 import "server-only";
 import { cache } from "react";
 import { prisma, apiUrl, authToken } from "./db";
+import { getLastBlockHeight, getLatestBlocks } from "./blocks";
+import { getPoktPrice } from "./makert";
+import { getLatestTransactions, getTransactionStats } from "./txns";
 
 export const getAccount = cache(async (address: string) => {
   const account = await getAccountPocker(address);
@@ -111,3 +114,26 @@ export const getPoktNode = cache(async (address: string) => {
     throw error;
   }
 });
+
+export const getHome = async () => {
+  const getChart = getTransactionStats();
+  const lastBlockHeightData = getLatestBlocks();
+  const lastTransationData = getLatestTransactions();
+
+  const [{ dataChartVetical, resultDought }, dataBlock, dataTrasaction] =
+    await Promise.all([getChart, lastBlockHeightData, lastTransationData]);
+  const [{ lastBlock }, { price, market }] = await Promise.all([
+    getLastBlockHeight(),
+    getPoktPrice(),
+  ]);
+
+  return {
+    dataChartVetical,
+    resultDought,
+    dataBlock,
+    dataTrasaction,
+    lastBlock,
+    price,
+    market,
+  };
+};
