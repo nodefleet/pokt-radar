@@ -4,15 +4,16 @@ import { getMarket, getPoktPrice } from "@/utils/makert";
 import { useEffect, useState } from "react";
 
 export default function Market() {
-  const [data, setData] = useState<{ cex: any[]; dex: any[] }>({
+  const [data, setData] = useState<{ cex: any[]; dex: any[]; price: number }>({
     cex: [],
     dex: [],
+    price: 0,
   });
-  const { cex, dex } = data;
+  const { cex, dex, price } = data;
   useEffect(() => {
     const fetchData = async () => {
-      const { cex, dex } = await getPoktPrice();
-      setData({ cex, dex });
+      const { cex, dex, price } = await getPoktPrice();
+      setData({ cex, dex, price });
     };
 
     fetchData();
@@ -24,7 +25,7 @@ export default function Market() {
           <div className="mt-8 md:mt-0 max-sm:mt-0">
             <div className="flex justify-start flex-row items-start">
               <p className="mb-4 text-black font-semibold text-xl">
-                Volume Trading
+                Volume Trading {price}
               </p>
               <p className="font-medium text-base rounded-full max-sm:ml-3 ml-5 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-4">
                 24h
