@@ -4,7 +4,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
-import { getBlock } from "@/utils/blocks";
 
 export default async function Block({
   params,
@@ -18,17 +17,17 @@ export default async function Block({
 
   const PAGE_SIZE = 10;
   const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
-  let { block, count, transactions } = await getBlock({
-    height: queryBlock,
-    skip: SKIP,
-    take: PAGE_SIZE,
-  });
+  // let { block, count, transactions } = await getBlock({
+  //   height: queryBlock,
+  //   skip: SKIP,
+  //   take: PAGE_SIZE,
+  // });
 
   return (
     <div className="grow mx-4 md:mx-16 my-6">
       <div className="grid grid-cols-2 gap-4">
         <div className="flex flex-col items-center justify-between gap-2">
-          <div className="bg-white p-6 text-black rounded-3xl shadow-lg flex flex-row w-full items-center justify-between">
+          {/* <div className="bg-white p-6 text-black rounded-3xl shadow-lg flex flex-row w-full items-center justify-between">
             <h1 className="mb-3 lg:mb-0 text-xl font-semibold">
               {block && `Block ID`}
             </h1>
@@ -139,7 +138,7 @@ export default async function Block({
             ) : (
               <h5 className="font-medium">No block found</h5>
             )}
-          </div>
+          </div> */}
         </div>
         {/* <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 bg-white rounded-3xl shadow-lg w-full  relative">
           <div className="mt-8 md:mt-0 max-sm:mt-0">
@@ -154,24 +153,25 @@ export default async function Block({
           </div>
         </div> */}
       </div>
-      {block && (
-        <div className="mt-5 mb-4 ">
-          <div className="bg-white px-5 py-4 rounded-3xl shadow-lg overflow-x-auto">
-            <a className="px-4 py-1 font-semibold text-xl">
-              Latest Transactions
-            </a>
-            {/* @ts-expect-error Async Server Component */}
-            <AddressTransactions
-              path={`/block/${queryBlock}`}
-              data={transactions}
-              PAGE_SIZE={PAGE_SIZE}
-              page={pages}
-              block={{ block: queryBlock }}
-              txtrow={count}
-            />
+      {/* <div>
+        {block && (
+          <div className="mt-5 mb-4 ">
+            <div className="bg-white px-5 py-4 rounded-3xl shadow-lg overflow-x-auto">
+              <a className="px-4 py-1 font-semibold text-xl">
+                Latest Transactions
+              </a>
+              <AddressTransactions
+                path={`/block/${queryBlock}`}
+                data={transactions}
+                PAGE_SIZE={PAGE_SIZE}
+                page={pages}
+                block={{ block: queryBlock }}
+                txtrow={count}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div> */}
     </div>
   );
 }

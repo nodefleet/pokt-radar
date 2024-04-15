@@ -2,20 +2,20 @@ import Link from "next/link";
 import { formatISO, format } from "date-fns";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
-import { getTransaction } from "@/utils/txns";
+// import { getTransaction } from "@/utils/txns";
 
 export default async function Transaction({
   params,
 }: {
   params: { hash: string };
 }) {
-  const { transation } = await getTransaction(params.hash);
-  const txn = transation;
+  // const { transation } = await getTransaction(params.hash);
+  // const txn = transation;
   type JsonObject = { [key: string]: any };
-  const stdtx = txn?.stdtx as JsonObject;
+  // const stdtx = txn?.stdtx as JsonObject;
   return (
     <div className="mx-4 md:mx-24 my-8">
-      <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
+      {/* <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
         {txn ? (
           <>
             <h5 className="font-semibold text-xl">Overview</h5>
@@ -77,7 +77,7 @@ export default async function Transaction({
         ) : (
           <h5>No transaction found</h5>
         )}
-      </div>
+      </div> */}
     </div>
   );
 }

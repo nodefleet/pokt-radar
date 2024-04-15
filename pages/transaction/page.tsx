@@ -1,5 +1,5 @@
 import TransactionsChart from "@/components/TransactionsChart";
-import { getTransactions } from "@/utils/txns";
+// import { getTransactions } from "@/utils/txns";
 import TableClient from "@/components/TableClient";
 
 export default async function Transactions({
@@ -21,11 +21,11 @@ export default async function Transactions({
 
   const PAGE_SIZE = 10;
   const SKIP = (page >= 1 ? page - 1 : page) * PAGE_SIZE;
-  const { transactions, count: totalTxns } = await getTransactions({
-    take: PAGE_SIZE,
-    skip: SKIP,
-    block: filterByBlock,
-  });
+  // const { transactions, count: totalTxns } = await getTransactions({
+  //   take: PAGE_SIZE,
+  //   skip: SKIP,
+  //   block: filterByBlock,
+  // });
 
   const currentDate = new Date();
   const weeksArray = Array.from({ length: 10 }, (_, i) => {
@@ -73,13 +73,13 @@ export default async function Transactions({
           </div>
         </div> */}
 
-        <TableClient
+        {/* <TableClient
           transactions={transactions}
           PAGE_SIZE={PAGE_SIZE}
           page={page}
           block={filterByBlock}
           totalTxns={totalTxns}
-        />
+        /> */}
       </div>
     </div>
   );
