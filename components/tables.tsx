@@ -71,14 +71,13 @@ export function LatestBlocksTable({ data }: { data: any[] }) {
 
 export function LatestTransactionsTable({ data }: { data: any }) {
   const headers = ["Transaction ID", "Method", "Block", "From", "To"];
-
   return (
     <BaseTable headers={headers}>
       {data &&
         data.map(
           (
             txn: {
-              transaction_hash: string;
+              tx_hash: string;
               height: number;
               from_address: string;
               to_address: string;
@@ -90,16 +89,8 @@ export function LatestTransactionsTable({ data }: { data: any }) {
               className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
             >
               <td className="border-0 text-black truncate hover:text-blue_primary">
-                <Link
-                  href={
-                    txn.transaction_hash
-                      ? `/transaction/${txn.transaction_hash}`
-                      : "/"
-                  }
-                >
-                  {txn.transaction_hash
-                    ? shortHash(txn.transaction_hash)
-                    : "N/A"}
+                <Link href={txn.tx_hash ? `/transaction/${txn.tx_hash}` : "/"}>
+                  {txn.tx_hash ? shortHash(txn.tx_hash) : "N/A"}
                 </Link>
               </td>
               <td className="border-0 w-6">
