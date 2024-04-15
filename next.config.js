@@ -2,17 +2,19 @@
 const nextConfig = {
   compress: false,
   swcMinify: false,
-  headers: () => [
-    {
-      source: "/",
-      headers: [
-        {
-          key: "Cache-Control",
-          value: "no-store",
-        },
-      ],
-    },
-  ],
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
