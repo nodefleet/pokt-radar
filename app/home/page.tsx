@@ -13,21 +13,12 @@ export default async function Home() {
   const getChart = getTransactionStats();
   const lastBlockHeightData = getLatestBlocks();
   const lastTransationData = getLatestTransactions();
-  const dataMakert = getPoktPrice();
-  const lastHeightData = getLastBlockHeight();
 
-  const [
-    { dataChartVetical, resultDought },
-    dataBlock,
-    dataTrasaction,
-    { lastBlock },
-    { price, market },
-  ] = await Promise.all([
-    getChart,
-    lastBlockHeightData,
-    lastTransationData,
-    lastHeightData,
-    dataMakert,
+  const [{ dataChartVetical, resultDought }, dataBlock, dataTrasaction] =
+    await Promise.all([getChart, lastBlockHeightData, lastTransationData]);
+  const [{ lastBlock }, { price, market }] = await Promise.all([
+    getLastBlockHeight(),
+    getPoktPrice(),
   ]);
 
   return (
