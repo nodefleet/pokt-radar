@@ -1,12 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
+  // ...
+  /**
+   * @param {import('webpack').Configuration} webpackConfig
+   * @returns {import('webpack').Configuration}
+   */
+  webpack(webpackConfig) {
+    return {
+      ...webpackConfig,
+      optimization: {
+        minimize: false,
+      },
+    };
   },
-  optimization: {
-    minimize: false,
-  },
-  swcMinify: false,
 };
 
 module.exports = nextConfig;
