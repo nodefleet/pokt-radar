@@ -1,18 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ...
-  /**
-   * @param {import('webpack').Configuration} webpackConfig
-   * @returns {import('webpack').Configuration}
-   */
-  webpack(webpackConfig) {
-    return {
-      ...webpackConfig,
-      optimization: {
-        minimize: false,
-      },
-    };
-  },
+  compress: false,
+  swcMinify: false,
+  headers: () => [
+    {
+      source: "/",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "no-store",
+        },
+      ],
+    },
+  ],
 };
 
 module.exports = nextConfig;
