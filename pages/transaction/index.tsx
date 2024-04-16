@@ -58,9 +58,9 @@ export async function getServerSideProps(context: { query: { page: any } }) {
     const PAGE_SIZE = 10;
     const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
 
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.get(
-      "http://localhost:3000/api/transaction" +
-        `?PAGE_SIZE=${PAGE_SIZE}&SKIP=${SKIP}`
+      `${apiUrl}/api/transaction` + `?PAGE_SIZE=${PAGE_SIZE}&SKIP=${SKIP}`
     );
 
     return {

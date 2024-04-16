@@ -85,9 +85,8 @@ export async function getServerSideProps(context: {
 }) {
   const { hash } = context.params;
   try {
-    const response = await axios.get(
-      `http://localhost:3000/api/transaction?hash=${hash}`
-    );
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await axios.get(`${apiUrl}/api/transaction?hash=${hash}`);
 
     return {
       props: {
