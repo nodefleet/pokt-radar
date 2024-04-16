@@ -35,7 +35,7 @@ export default function Market() {
     return <Loading />;
   }
 
-  const { cex, dex, price } = data;
+  const { cex, dex } = data;
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
       <div className="flex flex-row max-sm:flex-col max-sm:gap-2 gap-4">
@@ -43,7 +43,7 @@ export default function Market() {
           <div className="mt-8 md:mt-0 max-sm:mt-0">
             <div className="flex justify-start flex-row items-start">
               <p className="mb-4 text-black font-semibold text-xl">
-                Volume Trading {price}
+                Volume Trading
               </p>
               <p className="font-medium text-base rounded-full max-sm:ml-3 ml-5 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-4">
                 24h
