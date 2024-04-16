@@ -1,17 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  compress: false,
   swcMinify: false,
-  async headers() {
+  async redirects() {
     return [
       {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "no-store",
-          },
-        ],
+        source: "/",
+        destination: "/home",
+        permanent: true,
       },
     ];
   },

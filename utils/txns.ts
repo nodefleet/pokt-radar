@@ -1,123 +1,12 @@
-import "server-only";
-import { cache } from "react";
-import { prisma, apiUrl, authToken, fetchData } from "./db";
-import { Decimal } from "@prisma/client/runtime";
+import { fetchData } from "./db";
 import { chains } from "./relay";
 import { updateLast24HoursRange, updateLastMonthDates } from "./governance";
 
-interface TransactionData {
-  block_id: bigint;
-  block_hash: string;
-  block_height: bigint;
-  block_time: Date;
-  block_proposer_address: string;
-  block_tx_count: bigint;
-  block_tx_total: bigint;
-  transaction_id: bigint;
-  transaction_hash: string;
-  from_address: string;
-  to_address: string;
-  app_pub_key: string;
-  blockchains: string;
-  message_type: string;
-  height: bigint;
-  index: bigint;
-  stdtx: {
-    fee: { denom: string; amount: string }[];
-    msg: {
-      type: string;
-      value: {
-        amount: string;
-        to_address: string;
-        from_address: string;
-      };
-    };
-    memo: string;
-    entropy: bigint;
-    signature: { pub_key: string; signature: string };
-  };
-  tx_result: {
-    log: string;
-    code: number;
-    data: string;
-    info: string;
-    events: string;
-    signer: string;
-    codespace: string;
-    recipient: string;
-    message_type: string;
-  };
-  tx: string;
-  entropy: bigint;
-  fee: bigint;
-  fee_denomination: string;
-  amount: Decimal;
-  id: bigint;
-  hash: string;
-  time: Date;
-  proposer_address: string;
-  tx_total: bigint;
-  tx_count: bigint;
-}
-
-export const getTotalTransactions = cache(async () => {
-  return await prisma.transactions.count({});
-});
-
-export const getTransactions = cache(
-  async ({
-    take,
-    skip,
-    block,
-  }: {
-    take: number;
-    skip: number;
-    block: number | undefined;
-  }) => {
-    // const transactions = await prisma.transactions.findMany({
-    //   where: { height: block },
-    //   take,
-    //   skip,
-    //   orderBy: { height: "desc" },
-    // });
-    const transactions = await prisma.$queryRaw<any[]>`
-    SELECT * 
-    FROM transactions_30_days
-    WHERE transaction_id IS NOT NULL AND message_type ='pocketcore/claim'
-    ORDER BY block_time DESC
-    LIMIT ${take}
-    OFFSET ${skip};`;
-    const count = await prisma.$queryRaw<any[]>`
-    SELECT COUNT(*)
-    FROM transactions_30_days
-    WHERE transaction_id IS NOT NULL`;
-    return {
-      transactions,
-      count: Number(count[0].count),
-    };
-  }
-);
-
-export const getLatestTransactions = cache(async () => {
-  const result = await prisma.$queryRaw<any[]>`
-     SELECT * FROM transactions_30_days WHERE transaction_id IS NOT NULL ORDER BY block_id DESC LIMIT 10;`;
-  return result;
-});
-
-export const getTransaction = cache(async (hash: string) => {
-  const result = await prisma.$queryRaw<TransactionData[]>`
-  SELECT *
-  FROM transactions_30_days AS t
-  LEFT JOIN blocks AS b ON t.height = b.height
-  WHERE t.transaction_hash = ${hash};`;
-  return {
-    transation: result[0],
-  };
-});
-
-export const getTransactionsByAddress = cache(
-  async (address: string, limit: number) => {
-    const { ListPoktTransactionForSelection: transactions } = await fetchData(`
+export const getTransactionsByAddress = async (
+  address: string,
+  limit: number
+) => {
+  const { ListPoktTransactionForSelection: transactions } = await fetchData(`
   query {
     ListPoktTransactionForSelection(input: {
       node_selection: {
@@ -175,16 +64,8 @@ export const getTransactionsByAddress = cache(
     }
   } `);
 
-    return { transactions: transactions.items };
-  }
-);
-
-export const getTransactionsByBlock = cache(async (block: number) => {
-  return await prisma.transactions.findMany({
-    where: { height: block },
-    orderBy: { height: "desc" },
-  });
-});
+  return { transactions: transactions.items };
+};
 
 export const getTransactionStats = async () => {
   const [{ endDate24H, startDate24H }, { endDate, startDate }] =
@@ -249,6 +130,39 @@ export const getTransactionStats = async () => {
     dataChartVetical: dataRelays,
     resultDought: dataDought,
   };
+};
+
+export const getLatestTransactions = async () => {
+  const { ListPoktTransfer } = await fetchData(`
+  query {
+    ListPoktTransfer(pagination: {
+      limit: 10,
+      sort: [
+        {
+          property: "block_time",
+          direction: -1
+        }
+      ]
+    }) {
+      items {
+       tx_hash
+        height
+        amount
+        block_time
+        from_address
+        memo
+        parse_time
+        tx_result_code
+        to_address
+        fee
+        pending
+        flow
+      }
+      __typename
+    }
+  }
+  `);
+  return ListPoktTransfer.items;
 };
 
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */

@@ -1,11 +1,9 @@
-import "server-only";
-import { cache } from "react";
-import { prisma, apiUrl, authToken } from "./db";
+import { apiUrl, authToken } from "./db";
 import { getLastBlockHeight, getLatestBlocks } from "./blocks";
 import { getPoktPrice } from "./makert";
 import { getLatestTransactions, getTransactionStats } from "./txns";
 
-export const getAccount = cache(async (address: string) => {
+export const getAccount = async (address: string) => {
   const account = await getAccountPocker(address);
   const nodes = await getPoktNode(address);
   //   const nodes = await prisma.$queryRaw<any[]>`
@@ -16,8 +14,8 @@ export const getAccount = cache(async (address: string) => {
   //   LIMIT 1;
   // `;
   return { account, nodes };
-});
-export const getAccountPocker = cache(async (address: string) => {
+};
+export const getAccountPocker = async (address: string) => {
   const query = `
     query {
       GetAccount(address: "${address}") {
@@ -53,9 +51,9 @@ export const getAccountPocker = cache(async (address: string) => {
     console.error("There was a problem with your fetch operation:", error);
     throw error;
   }
-});
+};
 
-export const getPoktNode = cache(async (address: string) => {
+export const getPoktNode = async (address: string) => {
   const query = `
   query {
     GetPoktNode(property: "address", value: "${address}") {
@@ -113,7 +111,7 @@ export const getPoktNode = cache(async (address: string) => {
     console.error("There was a problem with your fetch operation:", error);
     throw error;
   }
-});
+};
 
 export const getHome = async () => {
   const getChart = getTransactionStats();

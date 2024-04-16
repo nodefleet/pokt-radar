@@ -25,27 +25,23 @@ export default function Pagination({
   const pages: number[] = Array.from({ length: totalPages }, (_, i) => i + 1);
   const lastPage: number = pages[pages.length - 1];
 
-  const DIPLAY_PAGES = 5;
-  let displayPagesList;
-  if (currentPage < DIPLAY_PAGES) {
-    displayPagesList = pages.slice(0, DIPLAY_PAGES);
-  } else if (currentPage > lastPage - (DIPLAY_PAGES - 1)) {
-    displayPagesList = pages.slice(DIPLAY_PAGES * -1);
+  const DISPLAY_PAGES = 5;
+  let displayPagesList: number[];
+  if (currentPage < DISPLAY_PAGES) {
+    displayPagesList = pages.slice(0, DISPLAY_PAGES);
+  } else if (currentPage > lastPage - (DISPLAY_PAGES - 1)) {
+    displayPagesList = pages.slice(-DISPLAY_PAGES);
   } else {
     displayPagesList = pages.slice(
-      currentPage - (DIPLAY_PAGES - 1),
+      currentPage - (DISPLAY_PAGES - 1),
       currentPage + 1
     );
   }
+
   return (
     <div className="flex items-center text-black space-x-2.5">
-      <div className="p-2 bg-gray-10 rounded cursor-pointer">
-        <Link
-          href={{
-            pathname: path,
-            query: { page: 1, ...searchParams },
-          }}
-        >
+      <div className="p-2 bg-gray-100 rounded cursor-pointer">
+        <Link href={{ pathname: path, query: { page: 1, ...searchParams } }}>
           <ChevronDoubleLeftIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
         </Link>
       </div>
@@ -57,32 +53,25 @@ export default function Pagination({
             ...searchParams,
           },
         }}
+        className="p-2 bg-gray-100 rounded cursor-pointer"
       >
-        <div className="p-2 bg-gray-10 rounded cursor-pointer">
-          <ChevronLeftIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
-        </div>
+        <ChevronLeftIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
       </Link>
-      <div className="btn-group bg-gray-10">
+      <div className="btn-group bg-gray-100">
         {displayPagesList.map((pageNumber) => (
           <Link
             key={pageNumber}
             href={{
               pathname: path,
-              query: {
-                page: pageNumber,
-                ...searchParams,
-              },
+              query: { page: pageNumber, ...searchParams },
             }}
+            className={`btn btn-sm border-0 hover:text-blue_primary ${
+              pageNumber === currentPage
+                ? "font-bold text-blue_primary"
+                : "font-normal"
+            }`}
           >
-            <button
-              className={`btn btn-sm border-0 hover:text-blue_primary ${
-                pageNumber === currentPage
-                  ? "font-bold text-blue_primary"
-                  : "font-normal"
-              }`}
-            >
-              {pageNumber}
-            </button>
+            {pageNumber}
           </Link>
         ))}
       </div>
@@ -94,20 +83,15 @@ export default function Pagination({
             ...searchParams,
           },
         }}
+        className="p-2 bg-gray-100 rounded cursor-pointer"
       >
-        <div className="p-2 bg-gray-10 rounded cursor-pointer">
-          <ChevronRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
-        </div>
+        <ChevronRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
       </Link>
       <Link
-        href={{
-          pathname: path,
-          query: { page: lastPage, ...searchParams },
-        }}
+        href={{ pathname: path, query: { page: lastPage, ...searchParams } }}
+        className="p-2 bg-gray-100 rounded cursor-pointer"
       >
-        <div className="p-2 bg-gray-10 rounded cursor-pointer">
-          <ChevronDoubleRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
-        </div>
+        <ChevronDoubleRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
       </Link>
     </div>
   );

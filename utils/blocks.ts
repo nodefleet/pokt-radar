@@ -1,6 +1,4 @@
-import "server-only";
-import { cache } from "react";
-import { fetchData, prisma } from "./db";
+import { fetchData } from "./db";
 import { updateLast24HoursRange } from "./governance";
 
 export const getLastBlockHeight = async () => {
@@ -126,36 +124,7 @@ export const getLatestBlocks = async () => {
   return dataBlock.items;
 };
 
-export const getBlock = cache(
-  async ({
-    take,
-    skip,
-    height,
-  }: {
-    take: number;
-    skip: number;
-    height: number | undefined;
-  }) => {
-    const blocks = await prisma.blocks.findMany({
-      where: { height: height },
-    });
-    const transactions = await prisma.$queryRaw<any[]>`
-    SELECT *,transaction_hash as hash
-    FROM transactions_30_days
-    ORDER BY block_id DESC
-    LIMIT ${take}
-    OFFSET ${skip};`;
-    const count = await prisma.$queryRaw<any[]>`
-     SELECT COUNT(transaction_id) FROM transactions_30_days;`;
-    return {
-      transactions,
-      block: blocks[0],
-      count: Number(count[0].count),
-    };
-  }
-);
-
-export const getBlocks = cache(async ({ limit }: { limit: number }) => {
+export const getBlocks = async ({ limit }: { limit: number }) => {
   const { startDate24H, endDate24H } = await updateLast24HoursRange();
   const { ListPoktBlock: dataBlock } = await fetchData(`
   query {
@@ -219,14 +188,4 @@ export const getBlocks = cache(async ({ limit }: { limit: number }) => {
   return {
     blocks: dataBlock.items,
   };
-});
-
-export const getBlockStats = cache(async () => {
-  const result = await prisma.$queryRaw<any[]>`
-    SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
-    FROM blocks AS b
-    GROUP BY date
-    ORDER BY date DESC
-    LIMIT 7`;
-  return result;
-});
+};

@@ -1,16 +1,12 @@
 import Link from "next/link";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
-import { getTransaction } from "@/utils/txns";
 import { formatISO } from "@/utils";
+import axios from "axios";
 
-export default async function Transaction({
-  params,
-}: {
-  params: { hash: string };
-}) {
-  const { transation } = await getTransaction(params.hash);
-  const txn = transation;
+export default function Transaction({ txn }: { txn: any }) {
+  if (!txn) {
+    return <h5>No transaction found</h5>;
+  }
   type JsonObject = { [key: string]: any };
   const stdtx = txn?.stdtx as JsonObject;
   return (
@@ -34,7 +30,9 @@ export default async function Transaction({
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Block Time</p>
               <p className="col-span-2 truncate">
-                {txn.time && <FromNow datetime={formatISO(txn.time)} />}
+                {txn.time && (
+                  <FromNow datetime={formatISO(new Date(txn.time))} />
+                )}
               </p>
             </div>
             <div className="grid grid-cols-3">
@@ -80,4 +78,27 @@ export default async function Transaction({
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context: {
+  params: { hash: string };
+}) {
+  const { hash } = context.params;
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await axios.get(`${apiUrl}/api/transaction?hash=${hash}`);
+
+    return {
+      props: {
+        txn: response.data.transation,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        txn: [],
+      },
+    };
+  }
 }

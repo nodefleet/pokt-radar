@@ -1,4 +1,3 @@
-import { cache } from "react";
 import { fetchData } from "./db";
 
 const getStatusPokscan = async () => {
@@ -53,7 +52,7 @@ export const updateLastMonthDates = async () => {
   };
 };
 
-export const getGobernance = cache(async (limit: number) => {
+export const getGobernance = async (limit: number) => {
   const { endDate, startDate } = await updateLastMonthDates();
   const GetLastBlockPoktParams = fetchData(`
     query {
@@ -208,4 +207,4 @@ export const getGobernance = cache(async (limit: number) => {
     dataExpense,
     daoBalance: sortedArray[0].amount,
   };
-});
+};
