@@ -5,13 +5,11 @@ import Pagination from "./Pagination";
 
 export default function TableClient({
   transactions,
-  block,
   PAGE_SIZE,
   totalTxns,
   page,
 }: {
   transactions: any[];
-  block: number | undefined;
   PAGE_SIZE: number;
   page: number;
   totalTxns: number;
@@ -55,7 +53,6 @@ export default function TableClient({
                 </td>
                 <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
                   <Link href={`/address/${txn.from_address}`}>
-                    {" "}
                     {txn.from_address ? shortHash(txn.from_address) : "N/A"}
                   </Link>
                 </td>
@@ -76,7 +73,6 @@ export default function TableClient({
       <div className="flex mt-4 justify-end max-sm:justify-center">
         <Pagination
           path="/transaction"
-          searchParams={{ block: block }}
           currentPage={page}
           size={PAGE_SIZE}
           total={totalTxns}

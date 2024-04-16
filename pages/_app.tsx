@@ -3,6 +3,7 @@ import "../app/globals.css";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { AppProps } from "next/app";
+import dynamic from "next/dynamic";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -14,4 +15,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default dynamic(() => Promise.resolve(MyApp), {
+  ssr: false,
+});

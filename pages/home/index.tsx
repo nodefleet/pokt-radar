@@ -1,34 +1,63 @@
+import Loading from "@/components/Loading";
 import Stadist from "@/components/Stadist";
 import Stats from "@/components/Stats";
 import {
   LatestBlocksTable,
   LatestTransactionsTable,
 } from "@/components/tables";
-import { getHome } from "@/utils/accounts";
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default async function Home() {
-  const {
-    dataBlock,
-    dataChartVetical,
-    dataTrasaction,
-    lastBlock,
-    market,
-    price,
-    resultDought,
-  } = await getHome();
+export default function Home() {
+  const [homeData, setHomeData] = useState<{
+    dataBlock: any;
+    dataChartVetical: any;
+    dataTrasaction: any;
+    lastBlock: any;
+    market: any;
+    price: any;
+    resultDought: any;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const response = await axios.get("/api/home");
+        setHomeData(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+      }
+    };
+
+    fetchHomeData();
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
-    <main className="flex flex-col py-11 px-10 max-sm:p-4 ">
+    <main className="flex flex-col py-11 px-10 max-sm:p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
-        <Stats lastBlock={lastBlock} price={price} market={market} />
-        <Stadist dataChart={dataChartVetical} resultDought={resultDought} />
+        <Stats
+          lastBlock={homeData?.lastBlock}
+          price={homeData?.price}
+          market={homeData?.market}
+        />
+        <Stadist
+          dataChart={homeData?.dataChartVetical}
+          resultDought={homeData?.resultDought}
+        />
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
           <div className="w-full overflow-x-auto">
             <h6 className="ml-3 mb-2 text-xl text-black">Latest Blocks</h6>
             <hr />
             <div className="overflow-x-auto">
-              <LatestBlocksTable data={dataBlock} />
+              <LatestBlocksTable data={homeData?.dataBlock} />
             </div>
           </div>
           <Link
@@ -45,7 +74,7 @@ export default async function Home() {
             </h6>
             <hr />
             <div className="overflow-x-auto">
-              <LatestTransactionsTable data={dataTrasaction} />
+              <LatestTransactionsTable data={homeData?.dataTrasaction} />
             </div>
           </div>
           <Link
