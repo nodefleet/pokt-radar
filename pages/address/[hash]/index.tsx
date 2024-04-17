@@ -1,18 +1,19 @@
-import AddressTransactions from "@/components/AddressTransactions";
-import { getAccount } from "@/utils/accounts";
-import { getTransactionsByAddress } from "@/utils/txns";
+import { AddressTransactionsDetail } from "@/components/tables";
+import axios from "axios";
 
-export default async function Address({
-  params: { hash: address, pages: pages },
+export default function Address({
+  PAGE_SIZE,
+  SKIP,
+  page,
+  data,
 }: {
-  params: { hash: string; pages: string | undefined };
+  PAGE_SIZE: number;
+  SKIP: number;
+  page: number;
+  data: { nodes: any; account: any; transactions: any; address: string };
 }) {
-  const page = (pages && !isNaN(parseInt(pages)) && parseInt(pages)) || 1;
-  const PAGE_SIZE = 10;
-  const SKIP = page * PAGE_SIZE;
+  const { nodes, account, transactions, address } = data;
   const PAGE_LIMIT = 50;
-  const { account, nodes } = await getAccount(address);
-  const { transactions } = await getTransactionsByAddress(address, SKIP);
 
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
@@ -151,12 +152,11 @@ export default async function Address({
           <a className="px-4 py-1 bg-white rounded-t-xl ">Transactions</a>
         </div>
         <div className="bg-white px-5 py-4 rounded-r-xl rounded-bl-xl shadow-lg overflow-x-auto">
-          {/* @ts-expect-error Async Server Component */}
-          <AddressTransactions
+          <AddressTransactionsDetail
             path={`/address/${address}`}
-            data={transactions}
+            data={[...transactions].slice(SKIP - 10, SKIP)}
             PAGE_SIZE={PAGE_SIZE}
-            page={Number(pages)}
+            page={Number(page)}
             address={{ address: address }}
             txtrow={PAGE_LIMIT}
           />
@@ -164,4 +164,42 @@ export default async function Address({
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(context: {
+  params: { hash: string };
+  query: { page: string };
+}) {
+  const { page } = context.query;
+  const { hash } = context.params;
+
+  try {
+    const pages = (page && !isNaN(parseInt(page)) && parseInt(page)) || 1;
+
+    const PAGE_SIZE = 10;
+    const SKIP = pages * PAGE_SIZE;
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await axios.get(
+      `${apiUrl}/api/address?address=${hash}&SKIP=${SKIP}`
+    );
+    return {
+      props: {
+        data: { ...response.data, address: hash },
+        page: page ? Number(page) : 1,
+        SKIP,
+        PAGE_SIZE,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        data: [],
+        page: 1,
+        SKIP: 0,
+        PAGE_SIZE: 10,
+      },
+    };
+  }
 }

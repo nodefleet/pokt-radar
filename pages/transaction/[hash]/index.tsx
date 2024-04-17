@@ -7,8 +7,8 @@ export default function Transaction({ txn }: { txn: any }) {
   if (!txn) {
     return <h5>No transaction found</h5>;
   }
-  type JsonObject = { [key: string]: any };
-  const stdtx = txn?.stdtx as JsonObject;
+  // type JsonObject = { [key: string]: any };
+  // const stdtx = txn?.stdtx as JsonObject;
   return (
     <div className="mx-4 md:mx-24 my-8">
       <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
@@ -17,7 +17,7 @@ export default function Transaction({ txn }: { txn: any }) {
             <h5 className="font-semibold text-xl">Overview</h5>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Transaction ID</p>
-              <p className="col-span-2 truncate">{txn.transaction_hash}</p>
+              <p className="col-span-2 truncate">{txn.tx_hash}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Block</p>
@@ -30,18 +30,14 @@ export default function Transaction({ txn }: { txn: any }) {
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Block Time</p>
               <p className="col-span-2 truncate">
-                {txn.time && (
-                  <FromNow datetime={formatISO(new Date(txn.time))} />
+                {txn.block_time && (
+                  <FromNow datetime={formatISO(new Date(txn.block_time))} />
                 )}
               </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Fee</p>
-              <p className="col-span-2 truncate uppercase">
-                {txn.fee !== null
-                  ? txn.fee.toString() + " " + txn.fee_denomination
-                  : txn.fee}
-              </p>
+              <p className="col-span-2 truncate uppercase">{txn.fee}</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">From</p>
@@ -61,15 +57,15 @@ export default function Transaction({ txn }: { txn: any }) {
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Value</p>
-              <p className="col-span-2 truncate">{stdtx?.msg?.value?.amount}</p>
+              <p className="col-span-2 truncate">{txn.amount}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Raw Transaction</p>
-              <p className="col-span-2 truncate">{txn.tx}</p>
+              <p className="col-span-2 truncate">{txn?.tx_result_code}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Memo</p>
-              <p className="col-span-2 break-words truncate">{stdtx.memo}</p>
+              <p className="col-span-2 break-words truncate">{txn.memo}</p>
             </div>
           </>
         ) : (

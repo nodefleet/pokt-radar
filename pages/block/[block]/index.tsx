@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
-import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
 import { formatISO } from "@/utils";
 import axios from "axios";
+import { AddressTransactionsDetail } from "@/components/tables";
 
 export default function Block({
   PAGE_SIZE,
@@ -186,7 +186,7 @@ export default function Block({
             <a className="px-4 py-1 font-semibold text-xl">
               Latest Transactions
             </a>
-            <AddressTransactions
+            <AddressTransactionsDetail
               path={`/block/${Number(block?.height)}`}
               data={transactions}
               PAGE_SIZE={PAGE_SIZE}

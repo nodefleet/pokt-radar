@@ -8,18 +8,27 @@ import {
   GovernanceTable2,
   GovernanceTableTransaction,
 } from "@/components/tables";
-import { getGobernance } from "@/utils/governance";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-export default async function Governance({
-  searchParams,
+export default function Governance({
+  SKIP,
+  PAGE_SIZE,
+  page,
+  data,
 }: {
-  searchParams: { page: string | undefined };
+  SKIP: number;
+  PAGE_SIZE: number;
+  page: number;
+  data: {
+    params: any;
+    dataTransaction: any;
+    dataExpense: any;
+    dataIncome: any;
+    daoBalance: number;
+  };
 }) {
-  const page =
-    (searchParams.page &&
-      !isNaN(parseInt(searchParams.page)) &&
-      parseInt(searchParams.page)) ||
-    1;
+  const { params, dataTransaction, dataExpense, dataIncome, daoBalance } = data;
   const block = [
     { block: "RewardDelegators", status: "Activated", height: 123083 },
     { block: "BLOCK", status: "Activated", height: 102698 },
@@ -30,21 +39,7 @@ export default async function Governance({
     { block: "MREL", status: "Activated", height: 69232 },
     { block: "REDUP", status: "Activated", height: 57620 },
   ];
-  const PAGE_SIZE = 10;
-  const SKIP = page * PAGE_SIZE;
   const PAGE_LIMIT = 50;
-  const { params, dataTransaction, dataExpense, dataIncome, daoBalance } =
-    await getGobernance(SKIP);
-
-  const totalAmount = dataExpense.points.reduce(
-    (total: any, value: { amount: any }) => total + value.amount,
-    0
-  );
-  const totalRewards = dataIncome.points.reduce(
-    (total: any, value: { total_dao_rewards: any }) =>
-      total + value.total_dao_rewards,
-    0
-  );
 
   const parametr = params.parameters
     .map((x: any) => {
@@ -62,6 +57,60 @@ export default async function Governance({
     .sort((a: any, b: any) => {
       return b.amount - a.amount;
     });
+
+  const [selectedOption, setSelectedOption] = useState(1);
+  const [newData, setNewData] = useState<{ dataIncome: any; dataExpense: any }>(
+    {
+      dataIncome: dataIncome,
+      dataExpense: dataExpense,
+    }
+  );
+
+  const handleSelectChange = (e: any) => {
+    setSelectedOption(parseInt(e.target.value));
+  };
+
+  useEffect(() => {
+    if (selectedOption !== 1) {
+      const last7DaysIncome = dataIncome.points.slice(-7);
+      const last7DaysExpense = dataExpense.points.slice(-7);
+      setNewData({
+        dataIncome: {
+          point_format: dataIncome.point_format,
+          points: last7DaysIncome,
+        },
+        dataExpense: {
+          point_format: dataExpense.point_format,
+          points: last7DaysExpense,
+        },
+      });
+    } else {
+      setNewData({
+        dataExpense: dataExpense,
+        dataIncome: dataIncome,
+      });
+    }
+  }, [selectedOption, dataIncome, dataExpense]);
+
+  const totalAmount = newData.dataExpense.points.reduce(
+    (total: any, value: { amount: any }) => total + value.amount,
+    0
+  );
+  const totalRewards = newData.dataIncome.points.reduce(
+    (total: any, value: { total_dao_rewards: any }) =>
+      total + value.total_dao_rewards,
+    0
+  );
+  const totalRewardsLast24Hours = newData.dataIncome.points
+    .slice(-2)
+    .reduce(
+      (total: any, value: { total_dao_rewards: any }) =>
+        total + value.total_dao_rewards,
+      0
+    );
+  const totalAmountLast24Hours = newData.dataExpense.points
+    .slice(-2)
+    .reduce((total: any, value: { amount: any }) => total + value.amount, 0);
 
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
@@ -153,8 +202,8 @@ export default async function Governance({
               <div className="w-full h-full max-h-96 p-4">
                 <DoughnutsChartGoubernance
                   resultDought={[
-                    { date: "Income", count: totalRewards },
-                    { date: "Expenses", count: totalAmount },
+                    { date: "Income", count: totalRewardsLast24Hours },
+                    { date: "Expenses", count: totalAmountLast24Hours },
                   ]}
                 />
               </div>
@@ -170,7 +219,7 @@ export default async function Governance({
                   DAO Treasury
                 </p>
                 <p className="font-medium text-base rounded-full max-sm:ml-3 ml-5 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-4 -translate-y-2">
-                  30D
+                  {selectedOption === 1 ? 30 : 7}D
                 </p>
               </div>
             </div>
@@ -186,7 +235,7 @@ export default async function Governance({
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
                 <p className="text-black font-semibold text-xl">
-                  Income Last 30 days
+                  Income Last {selectedOption === 1 ? 30 : 7} days
                 </p>
                 <p className="font-normal">
                   {"$" + totalRewards.toLocaleString("en-EN")}
@@ -194,7 +243,7 @@ export default async function Governance({
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
                 <p className="text-black font-semibold text-xl">
-                  Expenses Last 30 Days
+                  Expenses Last {selectedOption === 1 ? 30 : 7} Days
                 </p>
                 <p className="font-normal">
                   {"$" + totalAmount.toLocaleString("en-EN")}
@@ -207,7 +256,7 @@ export default async function Governance({
                   Treasury Accounting
                 </p>
                 <p className="font-medium text-base rounded-full max-sm:ml-3 ml-5 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-4 -translate-y-1">
-                  30D
+                  {selectedOption === 1 ? 30 : 7}D
                 </p>
               </div>
               <div className="relative w-28">
@@ -217,16 +266,17 @@ export default async function Governance({
                 <select
                   className="border border-black py-3 text-base px-4 outline-none rounded-full appearance-none w-full cursor-pointer relative z-10 bg-transparent"
                   id="selectMo"
+                  onChange={handleSelectChange}
                 >
-                  <option value={1}>All</option>
-                  <option value={2}>Monthly</option>
+                  <option value={1}>Month</option>
+                  <option value={2}>Week</option>
                 </select>
               </div>
             </div>
             <div className="w-full h-full max-h-96 overflow-x-auto">
               <GovernancePage
-                dataIncome={dataIncome}
-                dataExpense={dataExpense}
+                dataIncome={newData.dataIncome}
+                dataExpense={newData.dataExpense}
               />
             </div>
           </div>
@@ -240,4 +290,39 @@ export default async function Governance({
       />
     </div>
   );
+}
+
+export async function getServerSideProps(context: { query: { page: any } }) {
+  const { page } = context.query;
+
+  try {
+    const pages = (page && !isNaN(parseInt(page)) && parseInt(page)) || 1;
+
+    const PAGE_SIZE = 10;
+    const SKIP = pages * PAGE_SIZE;
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await axios.get(
+      `${apiUrl}/api/governace` + `?limit=${SKIP}`
+    );
+
+    return {
+      props: {
+        data: response.data,
+        page: page ? Number(page) : 1,
+        SKIP,
+        PAGE_SIZE,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        data: [],
+        page: 1,
+        SKIP: 0,
+        PAGE_SIZE: 10,
+      },
+    };
+  }
 }
