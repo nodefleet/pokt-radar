@@ -151,7 +151,6 @@ export default async function Address({
           <a className="px-4 py-1 bg-white rounded-t-xl ">Transactions</a>
         </div>
         <div className="bg-white px-5 py-4 rounded-r-xl rounded-bl-xl shadow-lg overflow-x-auto">
-          {/* @ts-expect-error Async Server Component */}
           <AddressTransactions
             path={`/address/${address}`}
             data={transactions}
