@@ -1,21 +1,11 @@
 import "server-only";
 import { getTransaction, getTransactions } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { convertBigIntsToNumbers } from "@/utils";
 
 type ResponseData = {
   message: string;
 };
-
-function convertBigIntsToNumbers(obj: any): any {
-  if (typeof obj === "bigint") {
-    return Number(obj);
-  } else if (typeof obj === "object" && obj !== null) {
-    for (const key in obj) {
-      obj[key] = convertBigIntsToNumbers(obj[key]);
-    }
-  }
-  return obj;
-}
 
 export default async function handler(
   req: NextApiRequest,

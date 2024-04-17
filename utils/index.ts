@@ -11,3 +11,14 @@ export function bytesToMB(sizeInBytes: number) {
 export function formatISO(date: Date) {
   return date.toISOString();
 }
+
+export function convertBigIntsToNumbers(obj: any): any {
+  if (typeof obj === "bigint") {
+    return Number(obj);
+  } else if (typeof obj === "object" && obj !== null) {
+    for (const key in obj) {
+      obj[key] = convertBigIntsToNumbers(obj[key]);
+    }
+  }
+  return obj;
+}

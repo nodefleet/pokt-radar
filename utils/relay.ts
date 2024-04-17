@@ -42,6 +42,7 @@ export const getRelaysByChains = async () => {
         : chains.find((x) => x.id === chain.chain)?.full_name,
     total_relays: chain.total_relays,
     logoURL: chains.find((x) => x.id === chain.chain)?.logoURL,
+    gateway: chain.gateway,
   }));
   const results = dataChtw.reduce(
     (

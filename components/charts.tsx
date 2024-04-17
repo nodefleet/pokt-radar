@@ -59,12 +59,17 @@ export function DoughnutsChartMakert({ cex, dex }: { cex: any[]; dex: any[] }) {
   );
 }
 
-export function DoughnutsChartRelay({ resultDought }: { resultDought: any[] }) {
+export function DoughnutsChartRelay({
+  resultDought,
+}: {
+  resultDought: { date: string; count: number }[];
+}) {
+  const isMobile = window.innerWidth <= 600;
   return (
     <DoughnutsChart
       data={resultDought}
-      position="right"
-      align="start"
+      position={isMobile ? "bottom" : "right"}
+      align={isMobile ? "center" : "start"}
       roundedOption={false}
       labelfom="rectRounded"
     />

@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import Link from "next/link";
@@ -23,13 +24,11 @@ export default function Navbar() {
   }, [pathname, paths]);
 
   return (
-    <header className={`bg-white px-3 py-1 sticky top-0 z-50`}>
+    <header className={`bg-white px-3 py-5 sticky top-0 z-50`}>
       <div className="flex-rows justify-between items-center w-full h-full flex gap-2">
         <Link href="/home">
-          <Image
-            src={"/img/logo.svg"}
-            width="100"
-            height="100"
+          <img
+            src={"/img/logo_p.png"}
             className="w-56 h-full"
             alt="Berachain logo"
           />

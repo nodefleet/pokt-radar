@@ -180,8 +180,19 @@ export function LatestMakerTable({ cex, dex }: { cex: any[]; dex: any[] }) {
   );
 }
 
-export function LatestRelayTable({ data }: { data: any[] }) {
+export function LatestRelayTable({
+  data,
+}: {
+  data: { chain: string; total_relays: number; logoURL: string }[];
+}) {
   const headers = ["#", "Chain", "Relay"];
+  if (data.length === 0) {
+    return (
+      <div className="flex justify-center items-center p-4 text-2xl">
+        <h2 className="font-medium">Relay not found</h2>
+      </div>
+    );
+  }
   return (
     <BaseTable headers={headers}>
       {data &&

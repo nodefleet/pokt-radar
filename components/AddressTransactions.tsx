@@ -3,7 +3,7 @@ import DataTable from "./DataTable";
 import { shortHash } from "@/utils";
 import Pagination from "./Pagination";
 
-export default async function AddressTransactions({
+export default function AddressTransactions({
   data,
   PAGE_SIZE,
   block,
@@ -29,6 +29,17 @@ export default async function AddressTransactions({
     "Value",
     "Memo",
   ];
+
+  if (data.length === 0) {
+    return (
+      <div className="flex justify-center items-center w-full p-4">
+        <h2 className="font-medium text-xl">
+          Currently, there are no transactions.
+        </h2>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col">
       <DataTable headers={tableHeaders}>
