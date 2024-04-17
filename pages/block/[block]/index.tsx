@@ -52,9 +52,9 @@ export default function Block({
 
   return (
     <div className="grow mx-4 md:mx-16 my-6">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4">
         <div className="flex flex-col items-center justify-between gap-2">
-          <div className="bg-white p-6 text-black rounded-3xl shadow-lg flex flex-row w-full items-center justify-between">
+          <div className="bg-white p-6 text-black rounded-3xl shadow-lg flex flex-row max-sm:flex-col max-sm:gap-4 w-full items-center justify-between">
             <h1 className="mb-3 lg:mb-0 text-xl font-semibold">
               {block && `Block ID`}
             </h1>
