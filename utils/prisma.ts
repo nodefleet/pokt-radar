@@ -1,5 +1,6 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
+import { fetchData } from "./db";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
@@ -85,14 +86,39 @@ export const getTransactions = async ({
   };
 };
 
+// export const getTransaction = async (hash: string) => {
+//   const result = await prisma.$queryRaw<any[]>`
+//     SELECT *
+//     FROM transactions_30_days AS t
+//     LEFT JOIN blocks AS b ON t.height = b.height
+//     WHERE t.transaction_hash = ${hash};`;
+//   return {
+//     transation: result[0],
+//   };
+// };
+
 export const getTransaction = async (hash: string) => {
-  const result = await prisma.$queryRaw<any[]>`
-    SELECT *
-    FROM transactions_30_days AS t
-    LEFT JOIN blocks AS b ON t.height = b.height
-    WHERE t.transaction_hash = ${hash};`;
+  const { GetPoktTransfer: transation } = await fetchData(`
+  query {
+    GetPoktTransfer(tx_hash:"${hash}"){
+      tx_hash
+      to_address
+      tx_result_code
+      height
+      amount
+      block_time
+      memo
+      parse_time
+      fee
+      flow
+      pending
+      from_address
+      amount
+    }
+  }
+  `);
   return {
-    transation: result[0],
+    transation: transation,
   };
 };
 

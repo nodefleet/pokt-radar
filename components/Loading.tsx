@@ -1,6 +1,4 @@
 "use client";
-import Image from "next/image";
-import BeraIcon from "../public/img/poker_logo.png";
 
 export default function Loading() {
   return (
@@ -9,12 +7,11 @@ export default function Loading() {
         <div className="flex flex-col p-5 h-full gap-2 items-center justify-center bg-white rounded-xl shadow-lg col-span-2 ">
           <div className="flex flex-col justify-center items-center gap-8">
             <div className="flex items-center">
-              <Image src={BeraIcon} alt="Pocket icon" />
-              <div className="ml-7  max-sm:ml-4">
-                <p className="text-black text-3xl max-sm:text-2xl font-semibold">
-                  POCKET RADAR
-                </p>
-              </div>
+              <img
+                src={"/img/logo_p.png"}
+                className="w-56 h-full"
+                alt="Berachain logo"
+              />
             </div>
             <div>
               <i className="fa-solid fa-spinner animate-spin fa-4x"></i>

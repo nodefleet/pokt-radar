@@ -126,6 +126,7 @@ export function GovernancePage({
             data: dataIncome.points.map(
               (value: any) => value.total_dao_rewards
             ),
+            label: "Income",
             borderColor: "#698DFF",
             backgroundColor: "rgba(104, 148, 255, 0.1)",
             fill: true,

@@ -6,11 +6,13 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import InputSearch from "./InputSearch";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
   const [paths, setPaths] = useState("/");
   const [active, setActive] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
   const Menu = [
     { name: "Home", path: "/home" },
     { name: "Transactions", path: "/transaction" },
@@ -20,8 +22,16 @@ export default function Navbar() {
     { name: "Governance", path: "/governance" },
   ];
   useEffect(() => {
-    setTimeout(() => setActive(false), 1000);
-  }, [pathname, paths]);
+    const handleComplete = () => setActive(false);
+
+    router.events.on("routeChangeComplete", handleComplete);
+    router.events.on("routeChangeError", handleComplete);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleComplete);
+      router.events.off("routeChangeError", handleComplete);
+    };
+  }, [router]);
 
   return (
     <header className={`bg-white px-3 py-5 sticky top-0 z-50`}>
@@ -46,6 +56,7 @@ export default function Navbar() {
               className="max-sm:w-0 max-sm:focus:w-full max-sm:focus:translate-x-2 transition-all"
               classIconName="max-sm:right-0 max-sm:absolute max-sm:left-4 max-sm:opacity-50 max-sm:w-0"
               placeholder="Search by Address, Txn Hash, Block Height"
+              search
             />
             {Menu.map(({ name, path }, index) => (
               <Link
