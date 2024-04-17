@@ -26,7 +26,7 @@ export default function Stats({
       <div className="flex flex-col gap-8">
         <div className="flex items-center">
           <Image src={BeraIcon} alt="Pocket icon" />
-          <div className="ml-7  max-sm:ml-4">
+          <div className="ml-4  max-sm:ml-4">
             <div className="flex justify-between">
               <p className="text-black text-3xl max-sm:text-2xl font-semibold">
                 POCKET NETWORK{" "}

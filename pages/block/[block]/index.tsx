@@ -4,25 +4,21 @@ import FromNow from "@/components/FromNow";
 import AddressTransactions from "@/components/AddressTransactions";
 import TransactionsChart from "@/components/TransactionsChart";
 import { formatISO } from "@/utils";
-import { getBlock } from "@/utils/prisma";
+import axios from "axios";
 
-export default async function Block({
-  params,
+export default function Block({
+  PAGE_SIZE,
+  transactions,
+  count,
+  pages,
+  block,
 }: {
-  params: { block: string; page: string | undefined };
+  block: any;
+  pages: string | undefined;
+  count: number;
+  transactions: any[];
+  PAGE_SIZE: number;
 }) {
-  const queryBlock = parseInt(params.block);
-  const pages =
-    (params.page && !isNaN(parseInt(params.page)) && parseInt(params.page)) ||
-    1;
-
-  const PAGE_SIZE = 10;
-  const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
-  let { block, count, transactions } = await getBlock({
-    height: queryBlock,
-    skip: SKIP,
-    take: PAGE_SIZE,
-  });
   function customFormat(date: Date) {
     const months = [
       "Jan",
@@ -113,8 +109,10 @@ export default async function Block({
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Time</p>
                   <p className="col-span-2 truncate">
-                    {block.time && <FromNow datetime={formatISO(block.time)} />}{" "}
-                    ({block.time && customFormat(block.time)})
+                    {block.time && (
+                      <FromNow datetime={formatISO(new Date(block.time))} />
+                    )}{" "}
+                    ({block.time && customFormat(new Date(block.time))})
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -188,13 +186,11 @@ export default async function Block({
             <a className="px-4 py-1 font-semibold text-xl">
               Latest Transactions
             </a>
-            {/* @ts-expect-error Async Server Component */}
             <AddressTransactions
-              path={`/block/${queryBlock}`}
+              path={`/block/${Number(block?.height)}`}
               data={transactions}
               PAGE_SIZE={PAGE_SIZE}
-              page={pages}
-              block={{ block: queryBlock }}
+              page={Number(pages)}
               txtrow={count}
             />
           </div>
@@ -202,4 +198,32 @@ export default async function Block({
       )}
     </div>
   );
+}
+
+export async function getServerSideProps(context: {
+  params: { block: string };
+  query: { page: string };
+}) {
+  const { block } = context.params;
+  const { page } = context.query;
+  const pages = (page && !isNaN(parseInt(page)) && parseInt(page)) || 1;
+  const PAGE_SIZE = 10;
+  const SKIP = (pages >= 1 ? pages - 1 : pages) * PAGE_SIZE;
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await axios.get(
+      `${apiUrl}/api/block?height=${Number(
+        block
+      )}&skip=${SKIP}&take=${PAGE_SIZE}`
+    );
+    const { block: blocks, count, transactions } = response.data;
+    return {
+      props: { block: blocks, count, transactions, PAGE_SIZE, pages: pages },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: { block: {}, count: 0, transactions: [], PAGE_SIZE: 0, pages: 0 },
+    };
+  }
 }

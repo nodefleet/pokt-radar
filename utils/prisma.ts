@@ -28,6 +28,7 @@ export const getBlock = async ({
   const transactions = await prisma.$queryRaw<any[]>`
       SELECT *,transaction_hash as hash
       FROM transactions_30_days
+      WHERE block_id = ${height}
       ORDER BY block_id DESC
       LIMIT ${take}
       OFFSET ${skip};`;
