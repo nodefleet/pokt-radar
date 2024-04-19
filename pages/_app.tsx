@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <div className="bg-neutral-100 flex flex-col h-screen relative">
+    <div className="bg-neutral-100 flex flex-col h-full min-h-screen relative">
       <Navbar />
       <Component {...pageProps} />
       <Footer />

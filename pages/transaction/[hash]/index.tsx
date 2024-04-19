@@ -2,15 +2,26 @@ import Link from "next/link";
 import FromNow from "@/components/FromNow";
 import { formatISO } from "@/utils";
 import axios from "axios";
+import JSONPretty from "react-json-pretty";
+import "react-json-pretty/themes/monikai.css";
 
-export default function Transaction({ txn }: { txn: any }) {
+export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
+  const customTheme = {
+    main: "background: #1e1e1e; color: #d4d4d4; border-radius: 14px;",
+    error: "color: #ff0000;",
+    key: "color: #ff5fff;",
+    string: "color: #5fff5f;",
+    value: "color: #5f5fff;",
+    boolean: "color: #ffaf5f;",
+  };
+
   if (!txn) {
     return <h5>No transaction found</h5>;
   }
   // type JsonObject = { [key: string]: any };
   // const stdtx = txn?.stdtx as JsonObject;
   return (
-    <div className="mx-4 md:mx-24 my-8">
+    <div className="mx-4 md:mx-24 my-8 flex flex-col gap-4">
       <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
         {txn ? (
           <>
@@ -72,6 +83,10 @@ export default function Transaction({ txn }: { txn: any }) {
           <h5>No transaction found</h5>
         )}
       </div>
+      <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
+        <h5 className="font-semibold text-xl">Raw resurt</h5>
+        <JSONPretty data={raw} theme={customTheme} mainStyle="padding: 1rem;" />
+      </div>
     </div>
   );
 }
@@ -83,10 +98,17 @@ export async function getServerSideProps(context: {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.get(`${apiUrl}/api/transaction?hash=${hash}`);
+    const resRaw = await axios.post(
+      "https://pocket-indexer.nodefleet.org/V1/query/tx ",
+      {
+        hash: hash,
+      }
+    );
 
     return {
       props: {
         txn: response.data.transation,
+        raw: resRaw.data,
       },
     };
   } catch (error) {
@@ -94,6 +116,7 @@ export async function getServerSideProps(context: {
     return {
       props: {
         txn: [],
+        raw: [],
       },
     };
   }
