@@ -62,7 +62,7 @@ export default function Blocks({
               </select>
             </div>
           </div>
-          <div className="w-full h-full max-h-96">
+          <div className="w-full h-full min-h-96 max-h-96">
             <TransactionsChart data={[...dataChart].slice(SKIP - 10, SKIP)} />
           </div>
         </div>

@@ -103,15 +103,8 @@ export default function Relays({ dataRelay, dataChart }: RelaysProps) {
   );
 }
 
-export async function getServerSideProps(context: { query: { page: any } }) {
-  const { page } = context.query;
-
+export async function getServerSideProps() {
   try {
-    const pages = (page && !isNaN(parseInt(page)) && parseInt(page)) || 1;
-
-    const PAGE_SIZE = 10;
-    const SKIP = pages * PAGE_SIZE;
-
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.get(`${apiUrl}/api/relay`);
 
