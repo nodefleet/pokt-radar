@@ -1,4 +1,5 @@
 import axios from "axios";
+import { TOKEN_MARKET, apiGEKO } from "./db";
 
 export const getMarket = [
   {
@@ -161,15 +162,14 @@ export const getMarket = [
   },
 ];
 
-const apiGEKO = "https://pro-api.coingecko.com/api/v3/coins";
-
 export const getPoktPrice = async () => {
+  console.log(apiGEKO);
   try {
     const options = {
       method: "GET",
       url: apiGEKO + "/pocket-network",
       headers: {
-        "x-cg-pro-api-key": "CG-U24GaoHMKbX1GmQYZWN1fo91",
+        "x-cg-pro-api-key": TOKEN_MARKET,
         "Cache-Control": "no-store",
       },
     };
