@@ -117,12 +117,14 @@ export const getHome = async () => {
   const getChart = getTransactionStats();
   const lastBlockHeightData = getLatestBlocks();
   const lastTransationData = getLatestTransactions();
+  const apiGEKO = process.env.API_MARKET || "";
+  const TOKEN_MARKET = process.env.TOKEN_MARKET || "";
 
   const [{ dataChartVetical, resultDought }, dataBlock, dataTrasaction] =
     await Promise.all([getChart, lastBlockHeightData, lastTransationData]);
   const [{ lastBlock }, { price, market }] = await Promise.all([
     getLastBlockHeight(),
-    getPoktPrice(),
+    getPoktPrice(apiGEKO, TOKEN_MARKET),
   ]);
 
   return {

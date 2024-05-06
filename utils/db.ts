@@ -2,8 +2,6 @@ import axios from "axios";
 
 export const apiUrl = process.env.API_POKT || "";
 export const authToken = process.env.TOKEN_POKT || "";
-export const apiGEKO = process.env.API_MARKET || "";
-export const TOKEN_MARKET = process.env.TOKEN_MARKET || "";
 
 export const fetchData = async (query: string) => {
   const requestOptions = {

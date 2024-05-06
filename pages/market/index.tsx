@@ -1,41 +1,15 @@
 import { DoughnutsChartMakert } from "@/components/charts";
-import Loading from "@/components/Loading";
 import { LatestMakerBlockTable, LatestMakerTable } from "@/components/tables";
 import { getMarket, getPoktPrice } from "@/utils/makert";
-import { useEffect, useState } from "react";
 
-export default function Market() {
-  const [data, setData] = useState<{
-    cex: any[];
-    dex: any[];
-    price: number;
-  }>({
-    cex: [],
-    dex: [],
-    price: 0,
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { cex, dex, price } = await getPoktPrice();
-        setData({ cex, dex, price });
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  const { cex, dex } = data;
+export default function Market({
+  cex,
+  dex,
+}: {
+  cex: any[];
+  dex: any[];
+  price: number;
+}) {
   return (
     <div className="grow p-6 max-sm:p-4 max-sm:py-4 flex flex-col gap-8">
       <div className="flex flex-row max-sm:flex-col max-sm:gap-2 gap-4">
@@ -94,4 +68,27 @@ export default function Market() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps() {
+  try {
+    const apiGEKO = process.env.API_MARKET || "";
+    const TOKEN_MARKET = process.env.TOKEN_MARKET || "";
+    const { cex, dex } = await getPoktPrice(apiGEKO, TOKEN_MARKET);
+
+    return {
+      props: {
+        cex,
+        dex,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      props: {
+        dataChart: [],
+        dataRelay: [],
+      },
+    };
+  }
 }

@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   swcMinify: false,
   async redirects() {
@@ -12,4 +11,7 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = () => {
+  require("dotenv").config();
+  return nextConfig;
+};

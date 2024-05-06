@@ -1,5 +1,4 @@
 import axios from "axios";
-import { TOKEN_MARKET, apiGEKO } from "./db";
 
 export const getMarket = [
   {
@@ -162,8 +161,7 @@ export const getMarket = [
   },
 ];
 
-export const getPoktPrice = async () => {
-  console.log(apiGEKO);
+export const getPoktPrice = async (apiGEKO: string, TOKEN_MARKET: string) => {
   try {
     const options = {
       method: "GET",
