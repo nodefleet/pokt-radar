@@ -1,6 +1,11 @@
 import { fetchData } from "./db";
 import { chains } from "./relay";
-import { updateLast24HoursRange, updateLastMonthDates } from "./governance";
+import {
+  getCurrentWeekDates,
+  updateLast24HoursRange,
+  updateLastMonthDates,
+} from "./governance";
+import { PointWithTransactionsTotal } from "./interface";
 
 export const getTransactionsByAddress = async (
   address: string,
@@ -163,6 +168,32 @@ export const getLatestTransactions = async () => {
   }
   `);
   return ListPoktTransfer.items;
+};
+
+export const getDataChart = async (): Promise<PointWithTransactionsTotal[]> => {
+  const { start_date, end_date } = await getCurrentWeekDates();
+  const { ListTotalOfTransactionBetweenDates } = await fetchData(`query {
+    ListTotalOfTransactionBetweenDates(
+    input: {
+      unit_time: day,
+      interval: 1,
+      types: [],
+      start_date: "${start_date}",
+      end_date: "${end_date}",
+      date_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+    }
+  ) {
+      points {
+        end_date
+        start_date
+        total_good_txs
+        total_bad_txs
+        total_txs
+        point
+      }
+    }
+  }`);
+  return ListTotalOfTransactionBetweenDates.points as PointWithTransactionsTotal[];
 };
 
 /*  SELECT b.*, t.* FROM (SELECT * FROM blocks WHERE time >= NOW() - INTERVAL '30 days') AS b LEFT JOIN transactions t ON t.height = b.height; select transation */
