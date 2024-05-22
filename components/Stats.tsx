@@ -91,7 +91,9 @@ export default function Stats({
             <p className="font-normal text-xl">
               {" "}
               {producer
-                ? producer.producer.twenty_fours_hs_less_pokt_avg.toLocaleString()
+                ? (producer.producer.twenty_fours_hs_less_pokt_avg / 10 ** 6)
+                    .toFixed(1)
+                    .toLocaleString()
                 : 0}
             </p>
           </div>
