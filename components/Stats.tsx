@@ -148,7 +148,7 @@ export default function Stats({
               Total Staked $POKT
             </p>
             <p className="font-normal text-xl">
-              {staking && staking.ms.toLocaleString()} POKT
+              {staking && (staking.ms / 10 ** 6).toLocaleString()} POKT
             </p>
           </div>
 
