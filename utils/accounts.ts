@@ -4,16 +4,15 @@ import { getPoktPrice } from "./makert";
 import { getLatestTransactions, getTransactionStats } from "./txns";
 
 export const getAccount = async (address: string) => {
+  const apiGEKO = process.env.API_MARKET || "";
+  const TOKEN_MARKET = process.env.TOKEN_MARKET || "";
   const account = await getAccountPocker(address);
-  const nodes = await getPoktNode(address);
-  //   const nodes = await prisma.$queryRaw<any[]>`
-  //   SELECT *
-  //   FROM nodes
-  //   WHERE address = ${address}
-  //   ORDER BY height DESC
-  //   LIMIT 1;
-  // `;
-  return { account, nodes };
+  const [{ price }, nodes] = await Promise.all([
+    getPoktPrice(apiGEKO, TOKEN_MARKET),
+    getPoktNode(address),
+  ]);
+
+  return { account, nodes, price };
 };
 export const getAccountPocker = async (address: string) => {
   const query = `
