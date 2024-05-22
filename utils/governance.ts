@@ -52,6 +52,24 @@ export const updateLastMonthDates = async () => {
   };
 };
 
+export const getCurrentWeekDates = async () => {
+  const { status } = await getStatusPokscan();
+  const today = new Date(status.time);
+  const dayOfWeek = today.getDay();
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - dayOfWeek - 3);
+  startOfWeek.setUTCHours(0, 0, 0, 0);
+
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  endOfWeek.setUTCHours(23, 59, 59, 999);
+
+  return {
+    start_date: startOfWeek.toISOString(),
+    end_date: endOfWeek.toISOString(),
+  };
+};
+
 export const getGobernance = async (limit: number) => {
   const { endDate, startDate } = await updateLastMonthDates();
   const GetLastBlockPoktParams = fetchData(`
