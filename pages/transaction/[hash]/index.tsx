@@ -5,7 +5,28 @@ import axios from "axios";
 import JSONPretty from "react-json-pretty";
 import "react-json-pretty/themes/monikai.css";
 
-export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
+interface Transaction {
+  tx_hash: string;
+  to_address: string;
+  tx_result_code: number;
+  height: number;
+  amount: number;
+  block_time: string;
+  memo: string;
+  parse_time: string;
+  fee: number;
+  flow: null | string;
+  pending: boolean;
+  from_address: string;
+}
+
+export default function Transaction({
+  txn,
+  raw,
+}: {
+  txn: Transaction;
+  raw: any;
+}) {
   const customTheme = {
     main: "background: #1e1e1e; color: #d4d4d4; border-radius: 14px;",
     error: "color: #ff0000;",
@@ -34,7 +55,7 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
               <p className="font-medium">Block</p>
               <p className="col-span-2 font-bold hover:text-blue_primary truncate">
                 <Link href={`/block/${txn.height}`}>
-                  {txn.height !== null && txn.height.toString()}
+                  {txn.height !== null && txn.height}
                 </Link>
               </p>
             </div>
@@ -83,10 +104,10 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
           <h5>No transaction found</h5>
         )}
       </div>
-      <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
+      {/* <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
         <h5 className="font-semibold text-xl">Raw resurt</h5>
         <JSONPretty data={raw} theme={customTheme} mainStyle="padding: 1rem;" />
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -98,17 +119,18 @@ export async function getServerSideProps(context: {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.get(`${apiUrl}/api/transaction?hash=${hash}`);
-    const resRaw = await axios.post(
-      "https://pocket-indexer.nodefleet.org/V1/query/tx ",
-      {
-        hash: hash,
-      }
-    );
 
+    // const resRaw = await axios.post(
+    //   "https://pocket-indexer.nodefleet.org/V1/query/tx",
+    //   {
+    //     hash: hash,
+    //   }
+    // );
+    // console.log(resRaw.data);
     return {
       props: {
         txn: response.data.transation,
-        raw: resRaw.data,
+        raw: [],
       },
     };
   } catch (error) {

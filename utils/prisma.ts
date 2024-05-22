@@ -1,6 +1,7 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
 import { fetchData } from "./db";
+import { Transaction } from "./interface";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
@@ -57,34 +58,33 @@ export const getTotalTransactions = async () => {
 };
 
 export const getTransactions = async ({
-  take,
-  skip,
+  limit,
 }: {
-  take: number;
-  skip: number;
-}) => {
-  // const transactions = await prisma.transactions.findMany({
-  //   where: { height: block },
-  //   take,
-  //   skip,
-  //   orderBy: { height: "desc" },
-  // });
-  const transactions = await prisma.$queryRaw<any[]>`
-  
-      SELECT * 
-      FROM transactions_30_days
-      WHERE transaction_id IS NOT NULL AND message_type ='pocketcore/claim'
-      ORDER BY block_time DESC
-      LIMIT ${take}
-      OFFSET ${skip};`;
-  const count = await prisma.$queryRaw<any[]>`
-      SELECT COUNT(*)
-      FROM transactions_30_days
-      WHERE transaction_id IS NOT NULL`;
-  return {
-    transactions,
-    count: Number(count[0].count),
-  };
+  limit: number;
+}): Promise<Transaction[]> => {
+  const { ListPoktTransfer } = await fetchData(`query {
+    ListPoktTransfer(
+      pagination: { limit: ${limit}, sort: [{ property: "block_time", direction: -1 }] }
+    ) {
+      items {
+        tx_hash
+        to_address
+        tx_result_code
+        height
+        amount
+        block_time
+        memo
+        parse_time
+        fee
+        flow
+        pending
+        from_address
+        amount
+      }
+    }
+  }
+  `);
+  return ListPoktTransfer.items;
 };
 
 // export const getTransaction = async (hash: string) => {

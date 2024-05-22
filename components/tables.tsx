@@ -4,11 +4,8 @@ import Link from "next/link";
 import FromNow from "./FromNow";
 import { bytesToMB, formatISO, shortHash } from "@/utils";
 import React from "react";
-import { getLatestTransactions } from "@/utils/txns";
-import { getLatestBlocks } from "@/utils/blocks";
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
-import Image from "next/image";
 
 function BaseTable({
   children,

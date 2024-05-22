@@ -60,13 +60,17 @@ export async function getServerSideProps(context: { query: { page: any } }) {
 
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.get(
-      `${apiUrl}/api/transaction` + `?PAGE_SIZE=${PAGE_SIZE}&SKIP=${SKIP}`
+      `${apiUrl}/api/transaction` +
+        `?PAGE_SIZE=${SKIP === 0 ? PAGE_SIZE : SKIP * 2}`
     );
 
     return {
       props: {
-        transactions: response.data.transactions,
-        totalTxns: response.data.count,
+        transactions:
+          SKIP === 0
+            ? response.data.transactions
+            : response.data.transactions.slice(SKIP - 10, SKIP),
+        totalTxns: SKIP === 0 ? PAGE_SIZE * 10 : SKIP * 10,
         page: Number(page),
       },
     };

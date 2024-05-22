@@ -2,6 +2,7 @@ import Link from "next/link";
 import DataTable from "./DataTable";
 import { shortHash } from "@/utils";
 import Pagination from "./Pagination";
+import { Transaction } from "@/utils/interface";
 
 export default function TableClient({
   transactions,
@@ -9,7 +10,7 @@ export default function TableClient({
   totalTxns,
   page,
 }: {
-  transactions: any[];
+  transactions: Transaction[];
   PAGE_SIZE: number;
   page: number;
   totalTxns: number;
@@ -30,13 +31,11 @@ export default function TableClient({
       <div className="overflow-x-auto">
         <DataTable headers={tableHeaders}>
           {transactions.map((txn, index: number) => {
-            type JsonObject = { [key: string]: any };
-            const stdtx = txn.stdtx as JsonObject;
             return (
               <tr key={index} className="border-y border-gray-bera">
                 <td className="border-0 text-black font-bold hover:text-blue_primary">
-                  <Link href={`/transaction/${txn.transaction_hash}`}>
-                    {txn.transaction_hash && shortHash(txn.transaction_hash)}
+                  <Link href={`/transaction/${txn.tx_hash}`}>
+                    {txn.tx_hash && shortHash(txn.tx_hash)}
                   </Link>
                 </td>
                 <td className="border-0 w-6">
@@ -62,9 +61,9 @@ export default function TableClient({
                   </Link>
                 </td>
                 <td className="border-0 text-black">
-                  {stdtx?.msg?.value?.amount || "N/A"}
+                  {txn.amount.toLocaleString() || "N/A"}
                 </td>
-                <td className="border-0 text-black">{stdtx?.memo || "N/A"}</td>
+                <td className="border-0 text-black">{txn.memo || "N/A"}</td>
               </tr>
             );
           })}
