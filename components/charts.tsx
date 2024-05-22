@@ -1,4 +1,5 @@
 // import { getTransactionStats } from "@/utils/txns";
+import { PointWithTransactionsTotal } from "@/utils/interface";
 import DoughnutsChart from "./Doughnut";
 import TransactionsChart from "./TransactionsChart";
 
@@ -100,6 +101,51 @@ export function TransationChartHome({
   data: { date: string; count: number }[];
 }) {
   return <TransactionsChart numberConver data={data} />;
+}
+
+export function ChartTransaction({
+  data,
+}: {
+  data: PointWithTransactionsTotal[];
+}) {
+  return (
+    <TransactionsChart
+      numberConver
+      datasets={{
+        labels: data.map((value: any) => {
+          const pointDate = new Date(value.point);
+          pointDate.setDate(pointDate.getDate() + 1);
+          return pointDate.getDate() === 1
+            ? pointDate.toLocaleString("default", { day: "2-digit" }) +
+                " " +
+                pointDate.toLocaleString("default", { month: "long" })
+            : String(pointDate.getDate());
+        }),
+        datasets: [
+          {
+            data: data.map(
+              (value: PointWithTransactionsTotal) => value.total_good_txs
+            ),
+            label: "Good Transaction",
+            borderColor: "#698DFF",
+            backgroundColor: "rgba(104, 148, 255, 0.1)",
+            fill: true,
+            pointRadius: 4,
+          },
+          {
+            data: data.map(
+              (value: PointWithTransactionsTotal) => value.total_bad_txs
+            ),
+            label: "Bad Transaction",
+            borderColor: "#FEA16C",
+            backgroundColor: "rgba(254, 161, 108, 0.1)",
+            fill: true,
+            pointRadius: 4,
+          },
+        ],
+      }}
+    />
+  );
 }
 
 export function GovernancePage({

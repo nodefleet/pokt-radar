@@ -1,4 +1,3 @@
-
 export interface Transaction {
   tx_hash: string;
   to_address: string;
@@ -12,4 +11,13 @@ export interface Transaction {
   flow: null | string;
   pending: boolean;
   from_address: string;
+}
+
+export interface PointWithTransactionsTotal {
+  end_date: string;
+  start_date: string;
+  total_good_txs: number;
+  total_bad_txs: number;
+  total_txs: number;
+  point: string;
 }
