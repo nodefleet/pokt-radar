@@ -10,17 +10,16 @@ export default function Address({
   PAGE_SIZE: number;
   SKIP: number;
   page: number;
-  data: { nodes: any; account: any; transactions: any; address: string };
+  data: {
+    nodes: any;
+    account: any;
+    transactions: any;
+    address: string;
+    price: number;
+  };
 }) {
   const { nodes, account, transactions, address } = data;
   const PAGE_LIMIT = 50;
-
-  const currentDate = new Date();
-  const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-  const weeksArray = Array.from({ length: 5 }, (_, i) => ({
-    date: `${(i + 1).toString().padStart(2, "0")}/${currentMonth}`,
-    count: i === 2 ? 300 : 100 * i,
-  }));
 
   return (
     <div className="grow mx-4 md:mx-24 my-6">
@@ -36,7 +35,10 @@ export default function Address({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Pokt Value</p>
-              <p className="col-span-2">761,106.39 USD (@ $0.21/POKT)</p>
+              <p className="col-span-2">
+                {(account.amount / data.price).toLocaleString()} (@ $
+                {data.price.toFixed(2)}/POKT)
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Staked (Non-custodial)</p>

@@ -16,7 +16,7 @@ export default async function handler(
   if (req.method === "GET") {
     const { address, SKIP } = req.query;
     try {
-      const { account, nodes } = await getAccount(address as string);
+      const { account, nodes, price } = await getAccount(address as string);
       const { transactions } = await getTransactionsByAddress(
         address as string,
         SKIP ? Number(SKIP) : 10
@@ -29,7 +29,7 @@ export default async function handler(
 
       return res
         .status(200)
-        .json({ transactions: serializedTransactions, account, nodes });
+        .json({ transactions: serializedTransactions, account, nodes, price });
     } catch (error) {
       console.error("Error fetching home data:", error);
       res.status(500).json({ message: "Internal Server Error" });

@@ -21,3 +21,17 @@ export interface PointWithTransactionsTotal {
   total_txs: number;
   point: string;
 }
+
+export interface Producer {
+  servicer: {
+    twenty_fours_hs_less_relays_avg: number;
+  };
+  producer: {
+    twenty_fours_hs_less_pokt_avg: number;
+  };
+}
+
+export interface Stakin {
+  point: string;
+  ms: number;
+}
