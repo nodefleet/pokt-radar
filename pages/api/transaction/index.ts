@@ -12,7 +12,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const { PAGE_SIZE, SKIP, hash } = req.query;
+    const { PAGE_SIZE, hash } = req.query;
     try {
       if (hash) {
         const { transation } = await getTransaction(hash as string);
@@ -21,9 +21,8 @@ export default async function handler(
           .json({ transation: convertBigIntsToNumbers(transation) });
       }
 
-      const { transactions, count: totalTxns } = await getTransactions({
-        take: PAGE_SIZE ? Number(PAGE_SIZE) : 10,
-        skip: SKIP ? Number(SKIP) : 0,
+      const transactions = await getTransactions({
+        limit: PAGE_SIZE ? Number(PAGE_SIZE) : 10,
       });
 
       const serializedTransactions = transactions.map((transaction) => {
@@ -31,9 +30,7 @@ export default async function handler(
         return serializedTransaction;
       });
 
-      return res
-        .status(200)
-        .json({ transactions: serializedTransactions, count: totalTxns });
+      return res.status(200).json({ transactions: serializedTransactions });
     } catch (error) {
       console.error("Error fetching home data:", error);
       res.status(500).json({ message: "Internal Server Error" });
