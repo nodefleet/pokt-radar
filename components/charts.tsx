@@ -99,7 +99,7 @@ export function TransationChartHome({
 }: {
   data: { date: string; count: number }[];
 }) {
-  return <TransactionsChart data={data} />;
+  return <TransactionsChart numberConver data={data} />;
 }
 
 export function GovernancePage({
@@ -111,6 +111,7 @@ export function GovernancePage({
 }) {
   return (
     <TransactionsChart
+      numberConver
       datasets={{
         labels: dataIncome.points.map((value: any) => {
           const pointDate = new Date(value.point);

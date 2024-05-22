@@ -9,6 +9,7 @@ import {
   LineElement,
   ChartOptions,
 } from "chart.js";
+import { formatNumber } from "@/utils";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Filler);
 
@@ -17,11 +18,13 @@ export default function TransactionsChart({
   option,
   tension,
   datasets,
+  numberConver,
 }: {
   data?: { date: string; count: number }[];
   option?: ChartOptions<"line">;
   tension?: number;
   datasets?: { datasets: any[]; labels: any[] };
+  numberConver?: boolean;
 }) {
   const chartData = datasets || {
     labels: data?.map((value) => value.date),
@@ -69,25 +72,12 @@ export default function TransactionsChart({
           font: {
             weight: 600,
           },
-          callback: function (value, index, values) {
-            const numericValue = Number(value);
-            if (!isNaN(numericValue)) {
-              const suffixes = ["", "K", "M", "K", "T"];
-              const suffixNum = Math.floor(("" + numericValue).length / 3);
-              let shortValue = parseFloat(
-                (suffixNum != 0
-                  ? numericValue / Math.pow(1000, suffixNum)
-                  : numericValue
-                ).toPrecision(2)
-              );
-              if (shortValue % 1 != 0) {
-                shortValue = parseFloat(shortValue.toFixed(1));
+          callback: numberConver
+            ? function (value, index, values) {
+                const numericValue = Number(value);
+                return formatNumber(numericValue);
               }
-              return shortValue + suffixes[suffixNum];
-            } else {
-              return value;
-            }
-          },
+            : undefined,
         },
         border: {
           dash: [10, 10],

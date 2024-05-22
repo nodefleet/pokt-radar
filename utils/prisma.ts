@@ -70,6 +70,7 @@ export const getTransactions = async ({
   //   orderBy: { height: "desc" },
   // });
   const transactions = await prisma.$queryRaw<any[]>`
+  
       SELECT * 
       FROM transactions_30_days
       WHERE transaction_id IS NOT NULL AND message_type ='pocketcore/claim'

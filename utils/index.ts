@@ -22,3 +22,20 @@ export function convertBigIntsToNumbers(obj: any): any {
   }
   return obj;
 }
+
+export function formatNumber(number: number) {
+  const abs = Math.abs(number);
+  const billion = 1000000000;
+  const million = 1000000;
+  const thousand = 1000;
+
+  if (abs >= billion) {
+    return (number / billion).toFixed(0) + "B";
+  } else if (abs >= million) {
+    return (number / million).toFixed(0) + "M";
+  } else if (abs >= thousand) {
+    return (number / thousand).toFixed(0) + "K";
+  } else {
+    return number;
+  }
+}

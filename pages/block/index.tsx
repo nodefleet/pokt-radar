@@ -63,7 +63,10 @@ export default function Blocks({
             </div>
           </div>
           <div className="w-full h-full min-h-96 max-h-96">
-            <TransactionsChart data={[...dataChart].slice(SKIP - 10, SKIP)} />
+            <TransactionsChart
+              numberConver
+              data={[...dataChart].slice(SKIP - 10, SKIP)}
+            />
           </div>
         </div>
 
