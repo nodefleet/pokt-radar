@@ -91,7 +91,9 @@ export default function Stats({
             <p className="font-normal text-xl">
               {" "}
               {producer
-                ? producer.producer.twenty_fours_hs_less_pokt_avg.toLocaleString()
+                ? (producer.producer.twenty_fours_hs_less_pokt_avg / 10 ** 6)
+                    .toFixed(1)
+                    .toLocaleString()
                 : 0}
             </p>
           </div>
@@ -148,7 +150,7 @@ export default function Stats({
               Total Staked $POKT
             </p>
             <p className="font-normal text-xl">
-              {staking && staking.ms.toLocaleString()} POKT
+              {staking && (staking.ms / 10 ** 6).toLocaleString()} POKT
             </p>
           </div>
 
