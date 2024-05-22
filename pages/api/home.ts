@@ -1,4 +1,5 @@
 import { getHome } from "@/utils/accounts";
+import { getProducer, getStakinPOKT } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = {
@@ -20,6 +21,8 @@ export default async function handler(
         price,
         resultDought,
       } = await getHome();
+      const produce = await getProducer();
+      const staking = await getStakinPOKT();
 
       res.status(200).json({
         dataBlock,
@@ -29,6 +32,8 @@ export default async function handler(
         market,
         price,
         resultDought,
+        produce,
+        staking,
       });
     } catch (error) {
       console.error("Error fetching home data:", error);

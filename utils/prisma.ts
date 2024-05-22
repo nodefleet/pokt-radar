@@ -1,7 +1,8 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
 import { fetchData } from "./db";
-import { Transaction } from "./interface";
+import { Producer, Stakin, Transaction } from "./interface";
+import { getCurrentWeekDates } from "./governance";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
@@ -55,6 +56,20 @@ export const getBlockStats = async () => {
 
 export const getTotalTransactions = async () => {
   return await prisma.transactions.count({});
+};
+
+export const getProducer = async (): Promise<Producer> => {
+  const { GetNetworkEarnPerformanceReport } = await fetchData(`query {
+    GetNetworkEarnPerformanceReport {
+      servicer {
+        twenty_fours_hs_less_relays_avg
+      }
+      producer {
+        twenty_fours_hs_less_pokt_avg
+      }
+    }
+  }`);
+  return GetNetworkEarnPerformanceReport;
 };
 
 export const getTransactions = async ({
@@ -128,4 +143,23 @@ export const getTransactionsByBlock = async (block: number) => {
     where: { height: block },
     orderBy: { height: "desc" },
   });
+};
+
+export const getStakinPOKT = async (): Promise<Stakin> => {
+  const { start_date, end_date } = await getCurrentWeekDates();
+  const { chartPoints } = await fetchData(`query {
+    chartPoints: ListSummaryBetweenDates(input: {
+      unit_time: day,
+      interval: 1,
+      start_date: "${start_date}",
+      end_date: "${end_date}",
+      date_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+    }) {
+      points {
+        point
+        ms
+      }
+    }
+  }`);
+  return [...chartPoints.points].reverse()[0];
 };

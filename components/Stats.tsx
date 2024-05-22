@@ -2,11 +2,14 @@ import Image from "next/image";
 import BeraIcon from "../public/img/poker_logo.png";
 
 import FromNow from "./FromNow";
+import { Producer, Stakin } from "../utils/interface";
 
 export default function Stats({
   lastBlock,
   price,
   market,
+  producer,
+  staking,
 }: {
   lastBlock: {
     height: number;
@@ -20,6 +23,8 @@ export default function Stats({
     total_supply: number;
     circulating_supply: number;
   };
+  producer: Producer | undefined;
+  staking: Stakin | undefined;
 }) {
   return (
     <div className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg col-span-2">
@@ -72,14 +77,23 @@ export default function Stats({
             <p className="text-black text-xl font-medium leading-10">
               Total Servicers
             </p>
-            <p className="font-normal text-xl">712,323</p>
+            <p className="font-normal text-xl">
+              {producer
+                ? producer.servicer.twenty_fours_hs_less_relays_avg.toLocaleString()
+                : 0}
+            </p>
           </div>
 
           <div>
             <p className="text-black text-xl font-medium leading-10">
               Total Validators
             </p>
-            <p className="font-normal text-xl">12,467</p>
+            <p className="font-normal text-xl">
+              {" "}
+              {producer
+                ? producer.producer.twenty_fours_hs_less_pokt_avg.toLocaleString()
+                : 0}
+            </p>
           </div>
 
           <div>
@@ -133,7 +147,9 @@ export default function Stats({
             <p className="text-black text-xl font-medium leading-10">
               Total Staked $POKT
             </p>
-            <p className="font-normal text-xl">293,424,135.24 POKT</p>
+            <p className="font-normal text-xl">
+              {staking && staking.ms.toLocaleString()} POKT
+            </p>
           </div>
 
           <div>
