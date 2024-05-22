@@ -5,6 +5,7 @@ import {
   LatestBlocksTable,
   LatestTransactionsTable,
 } from "@/components/tables";
+import { Producer, Stakin } from "@/utils/interface";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -18,6 +19,8 @@ export default function Home() {
     market: any;
     price: any;
     resultDought: any;
+    produce: Producer;
+    staking: Stakin;
   } | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,6 +50,8 @@ export default function Home() {
           lastBlock={homeData?.lastBlock}
           price={homeData?.price}
           market={homeData?.market}
+          producer={homeData?.produce}
+          staking={homeData?.staking}
         />
         <Stadist
           dataChart={homeData?.dataChartVetical}
