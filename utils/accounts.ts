@@ -1,4 +1,4 @@
-import { apiUrl, authToken } from "./db";
+import { apiUrl, authToken, fetchData } from "./db";
 import { getLastBlockHeight, getLatestBlocks } from "./blocks";
 import { getPoktPrice } from "./makert";
 import { getLatestTransactions, getTransactionStats } from "./txns";
@@ -7,12 +7,26 @@ export const getAccount = async (address: string) => {
   const apiGEKO = process.env.API_MARKET || "";
   const TOKEN_MARKET = process.env.TOKEN_MARKET || "";
   const account = await getAccountPocker(address);
+
   const [{ price }, nodes] = await Promise.all([
     getPoktPrice(apiGEKO, TOKEN_MARKET),
     getPoktNode(address),
   ]);
-
-  return { account, nodes, price };
+  const { GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs: stake } =
+    await fetchData(`query {
+    GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs(
+      input: {
+        node_selection: {
+          output_address: "dea8c4c687e96df0dacc80adfac089aa5600cc63"
+        }
+      }
+    ) {
+      total_staked
+      total_relays
+    }
+  }
+  `);
+  return { account, nodes, price, stake };
 };
 export const getAccountPocker = async (address: string) => {
   const query = `

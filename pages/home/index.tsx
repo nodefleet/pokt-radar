@@ -5,7 +5,7 @@ import {
   LatestBlocksTable,
   LatestTransactionsTable,
 } from "@/components/tables";
-import { Producer, Stakin } from "@/utils/interface";
+import { Stakin } from "@/utils/interface";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export default function Home() {
     market: any;
     price: any;
     resultDought: any;
-    produce: Producer;
+    produce: number;
     staking: Stakin;
   } | null>(null);
   const [loading, setLoading] = useState(true);

@@ -35,3 +35,8 @@ export interface Stakin {
   point: string;
   ms: number;
 }
+
+export interface Stake {
+  total_staked: number;
+  total_relays: number;
+}
