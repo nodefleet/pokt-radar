@@ -17,7 +17,7 @@ export const getAccount = async (address: string) => {
     GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs(
       input: {
         node_selection: {
-          output_address: "dea8c4c687e96df0dacc80adfac089aa5600cc63"
+          output_address: "${address}"
         }
       }
     ) {
