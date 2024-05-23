@@ -23,7 +23,7 @@ export default function Stats({
     total_supply: number;
     circulating_supply: number;
   };
-  producer: Producer | undefined;
+  producer: number | undefined;
   staking: Stakin | undefined;
 }) {
   return (
@@ -78,23 +78,7 @@ export default function Stats({
               Total Servicers
             </p>
             <p className="font-normal text-xl">
-              {producer
-                ? producer.servicer.twenty_fours_hs_less_relays_avg.toLocaleString()
-                : 0}
-            </p>
-          </div>
-
-          <div>
-            <p className="text-black text-xl font-medium leading-10">
-              Total Validators
-            </p>
-            <p className="font-normal text-xl">
-              {" "}
-              {producer
-                ? (producer.producer.twenty_fours_hs_less_pokt_avg / 10 ** 6)
-                    .toFixed(1)
-                    .toLocaleString()
-                : 0}
+              {producer ? producer.toLocaleString() : 0}
             </p>
           </div>
 

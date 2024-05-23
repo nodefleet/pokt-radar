@@ -1,4 +1,5 @@
 import { AddressTransactionsDetail } from "@/components/tables";
+import { Stake } from "@/utils/interface";
 import axios from "axios";
 
 export default function Address({
@@ -16,6 +17,7 @@ export default function Address({
     transactions: any;
     address: string;
     price: number;
+    stake: Stake;
   };
 }) {
   const { nodes, account, transactions, address } = data;
@@ -30,19 +32,32 @@ export default function Address({
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Balance</p>
               <p className="col-span-2">
-                {account.amount.toLocaleString("en-EN")} POKT
+                {account &&
+                  parseFloat(
+                    (account.amount / 10 ** 6).toFixed(2)
+                  ).toLocaleString()}{" "}
+                POKT
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Pokt Value</p>
               <p className="col-span-2">
-                {(account.amount / data.price).toLocaleString()} (@ $
-                {data.price.toFixed(2)}/POKT)
+                {data &&
+                  account &&
+                  parseFloat(
+                    ((account.amount / 10 ** 6) * data.price).toFixed(2)
+                  ).toLocaleString()}{" "}
+                (@ ${data.price.toFixed(2)}/POKT)
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Staked (Non-custodial)</p>
-              <p className="col-span-2">1,234,123.67 POKT</p>
+              <p className="col-span-2">
+                {parseFloat(
+                  (data.stake.total_staked / 10 ** 6).toFixed(2)
+                ).toLocaleString()}{" "}
+                POKT
+              </p>
             </div>
           </div>
           {nodes && (

@@ -2,7 +2,7 @@ import "server-only";
 import { PrismaClient } from "@prisma/client";
 import { fetchData } from "./db";
 import { Producer, Stakin, Transaction } from "./interface";
-import { getCurrentWeekDates } from "./governance";
+import { getCurrentWeekDates, updateLast24HoursRange } from "./governance";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
@@ -58,18 +58,34 @@ export const getTotalTransactions = async () => {
   return await prisma.transactions.count({});
 };
 
-export const getProducer = async (): Promise<Producer> => {
-  const { GetNetworkEarnPerformanceReport } = await fetchData(`query {
-    GetNetworkEarnPerformanceReport {
-      servicer {
-        twenty_fours_hs_less_relays_avg
-      }
-      producer {
-        twenty_fours_hs_less_pokt_avg
+export const getProducer = async () => {
+  const { endDate24H, startDate24H } = await updateLast24HoursRange();
+  try {
+    const { rewards } = await fetchData(`query  {
+    rewards: GetRewardsByStakeWeightBetweenDates(input: {
+    start_date: "${startDate24H}",
+    end_date: "${endDate24H}"
+  }) {
+      last_block_weight_summary {
+        staked_nodes
       }
     }
   }`);
-  return GetNetworkEarnPerformanceReport;
+    const totalStakedNodes = rewards.reduce(
+      (
+        accumulator: any,
+        currentValue: { last_block_weight_summary: { staked_nodes: any } }
+      ) => {
+        return (
+          accumulator + currentValue.last_block_weight_summary.staked_nodes
+        );
+      },
+      0
+    );
+    return totalStakedNodes;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getTransactions = async ({
