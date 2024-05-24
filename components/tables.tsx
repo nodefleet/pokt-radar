@@ -352,7 +352,9 @@ export function GovernanceTable2({ data }: GovernanceTable2) {
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
             <td className="border-0 text-black">{row?.parameters}</td>
-            <td className="border-0">{row?.amount}</td>
+            <td className="border-0">
+              {parseFloat((row?.amount / 10 ** 6).toFixed(2)).toLocaleString()}
+            </td>
           </tr>
         ))}
     </BaseTable>
@@ -503,7 +505,7 @@ export function AddressTransactionsDetail({
                 <td className="border-0 w-8">
                   <p
                     className={`font-normal uppercase text-base rounded-full text-white -translate-x-4 ${
-                      txn.result_code === 0 
+                      txn.result_code === 0
                         ? "bg-green-600"
                         : txn.pending
                         ? "bg-amber-600"
