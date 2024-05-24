@@ -96,13 +96,17 @@ const InputSearch: React.FC<InputSearchProps> = ({
           value={currentValue}
           onChange={handleChange}
         />
-        <i
-          className={`fa-solid fa-search ${classIconName} relative right-8 pt-4 group-hover:text-black_custom text-gray-400`}
-        ></i>
+        {!dataSeach && search && value.trim() !== "" ? (
+          <i className="fas fa-spinner animate-spin relative right-8 pt-4"></i>
+        ) : (
+          <i
+            className={`fa-solid fa-search ${classIconName} relative right-8 pt-4 group-hover:text-black_custom text-gray-400`}
+          ></i>
+        )}
       </div>
-      {search && value.trim() !== "" && (
+      {dataSeach && search && value.trim() !== "" && (
         <div className="bg-white rounded-full fixed p-2 px-10 mx-5 mr-10 border border-black z-20">
-          {dataSeach ? (
+          {dataSeach && (
             <Link
               href={`/${
                 dataSeach?.type === "account" ? "address" : dataSeach?.type
@@ -111,8 +115,6 @@ const InputSearch: React.FC<InputSearchProps> = ({
             >
               {dataSeach?.type}
             </Link>
-          ) : (
-            <i className="fas fa-spinner animate-spin text-2xl"></i>
           )}
         </div>
       )}

@@ -1,7 +1,7 @@
 import "server-only";
 import { PrismaClient } from "@prisma/client";
 import { fetchData } from "./db";
-import { Producer, Stakin, Transaction } from "./interface";
+import { Stakin, Transaction } from "./interface";
 import { getCurrentWeekDates, updateLast24HoursRange } from "./governance";
 
 const globalForPrisma = global as unknown as {
@@ -93,29 +93,58 @@ export const getTransactions = async ({
 }: {
   limit: number;
 }): Promise<Transaction[]> => {
-  const { ListPoktTransfer } = await fetchData(`query {
-    ListPoktTransfer(
+  const { ListPoktTransaction } = await fetchData(`query {
+    ListPoktTransaction(
       pagination: { limit: ${limit}, sort: [{ property: "block_time", direction: -1 }] }
     ) {
       items {
-        tx_hash
-        to_address
-        tx_result_code
+        _id
+        hash
         height
         amount
         block_time
+        from_address
+        index
         memo
         parse_time
-        fee
-        flow
+        result_code
+        to_address
+        total_fee
+        total_proof
+        total_pokt
+        type
+        chain
+        app_public_key
+        claim_tx_hash
+        expiration_height
+        session_height
         pending
-        from_address
-        amount
+        upgrade {
+          Height
+          Version
+          Features
+          __typename
+        }
+        stake {
+          chains
+          outputaddress
+          address
+          serviceurl
+          tokens
+          __typename
+        }
+        action
+        change_param_key
+        change_param_value
+        change_param_prev_value
+        __typename
       }
+      __typename
     }
   }
+  
   `);
-  return ListPoktTransfer.items;
+  return ListPoktTransaction.items;
 };
 
 // export const getTransaction = async (hash: string) => {
@@ -130,22 +159,85 @@ export const getTransactions = async ({
 // };
 
 export const getTransaction = async (hash: string) => {
-  const { GetPoktTransfer: transation } = await fetchData(`
+  const { GetPoktTransaction: transation } = await fetchData(`
   query {
-    GetPoktTransfer(tx_hash:"${hash}"){
-      tx_hash
-      to_address
-      tx_result_code
+    GetPoktTransaction(hash: "${hash}") {
+      _id
+      hash
       height
       amount
       block_time
+      from_address
+      index
       memo
       parse_time
-      fee
-      flow
+      result_code
+      to_address
+      total_fee
+      total_proof
+      total_pokt
+      type
+      chain
+      app_public_key
+      claim_tx_hash
+      expiration_height
+      session_height
       pending
-      from_address
-      amount
+      change_param_key
+      change_param_value
+      change_param_prev_value
+      upgrade {
+        Version
+        Features
+        Height
+        __typename
+      }
+      stake {
+        chains
+        outputaddress
+        address
+        serviceurl
+        tokens
+        reward_delegators {
+          address
+          share
+          __typename
+        }
+        __typename
+      }
+      action
+      app_stake {
+        tokens
+        chains
+        migrated_to
+        __typename
+      }
+      reward_split {
+        total
+        total_reward
+        total_fees
+        returned_fees
+        operator
+        custodian
+        custodian_address
+        dao
+        proposer
+        total_delegator_rewards
+        chain_rttm
+        chain_rttm_source
+        service_multiplier
+        computed_units
+        node_base_multiplier
+        node_multiplier
+        delegators {
+          address
+          amount
+          share
+          __typename
+        }
+        __typename
+      }
+      __typename
     }
   }
   `);

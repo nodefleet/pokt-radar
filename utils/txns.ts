@@ -6,6 +6,7 @@ import {
   updateLastMonthDates,
 } from "./governance";
 import { PointWithTransactionsTotal } from "./interface";
+import { getTransactions } from "./prisma";
 
 export const getTransactionsByAddress = async (
   address: string,
@@ -138,36 +139,8 @@ export const getTransactionStats = async () => {
 };
 
 export const getLatestTransactions = async () => {
-  const { ListPoktTransfer } = await fetchData(`
-  query {
-    ListPoktTransfer(pagination: {
-      limit: 10,
-      sort: [
-        {
-          property: "block_time",
-          direction: -1
-        }
-      ]
-    }) {
-      items {
-       tx_hash
-        height
-        amount
-        block_time
-        from_address
-        memo
-        parse_time
-        tx_result_code
-        to_address
-        fee
-        pending
-        flow
-      }
-      __typename
-    }
-  }
-  `);
-  return ListPoktTransfer.items;
+  const data = await getTransactions({ limit: 10 });
+  return data;
 };
 
 export const getDataChart = async (): Promise<PointWithTransactionsTotal[]> => {

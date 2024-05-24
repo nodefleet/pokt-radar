@@ -67,53 +67,51 @@ export function LatestBlocksTable({ data }: { data: any[] }) {
 }
 
 export function LatestTransactionsTable({ data }: { data: any }) {
-  const headers = ["Transaction ID", "Method", "Block", "From", "To"];
+  const tableHeaders = ["Transaction ID", "Status", "Type", "Block", "From"];
   return (
-    <BaseTable headers={headers}>
-      {data &&
-        data.map(
-          (
-            txn: {
-              tx_hash: string;
-              height: number;
-              from_address: string;
-              to_address: string;
-            },
-            index: React.Key | null | undefined
-          ) => (
-            <tr
-              key={index}
-              className="border-y font-medium border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
-            >
-              <td className="border-0 text-black truncate hover:text-blue_primary">
-                <Link href={txn.tx_hash ? `/transaction/${txn.tx_hash}` : "/"}>
-                  {txn.tx_hash ? shortHash(txn.tx_hash) : "N/A"}
+    <DataTable headers={tableHeaders}>
+      {data
+        .filter((txn: { _id: any }) => txn._id)
+        .map((txn: any, index: number) => {
+          return (
+            <tr key={index} className="border-y border-gray-bera">
+              <td className="border-0 text-black font-bold hover:text-blue_primary">
+                <Link href={`/transaction/${txn.hash}`}>
+                  {txn.hash && shortHash(txn.hash)}
                 </Link>
               </td>
-              <td className="border-0 w-6">
-                <p className="font-normal uppercase text-sm rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4">
-                  Transfer
+              <td className="border-0 w-8">
+                <p
+                  className={`font-normal uppercase text-base rounded-full text-white -translate-x-4 ${
+                    txn.result_code === 0
+                      ? "bg-green-600"
+                      : txn.pending
+                      ? "bg-amber-600"
+                      : txn.result_code !== 0 && "bg-red-600"
+                  } text-center py-0.5 px-4 truncate`}
+                >
+                  {txn.result_code === 0
+                    ? "Success"
+                    : txn.pending
+                    ? "Pending"
+                    : txn.result_code !== 0 && "Failed"}
                 </p>
               </td>
-              <td className="border-0 text-black hover:text-blue_primary">
+              <td className="border-0 capitalize">{txn.type}</td>
+              <td className="border-0 font-bold text-black hover:text-blue_primary">
                 <Link href={`/block/${txn.height}`}>
-                  {txn.height !== null ? txn.height.toString() : "N/A"}
+                  {txn.height && txn.height.toString()}
                 </Link>
               </td>
-              <td className="border-0 xl:pr-0 text-black hover:text-blue_primary">
+              <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
                 <Link href={`/address/${txn.from_address}`}>
                   {txn.from_address ? shortHash(txn.from_address) : "N/A"}
                 </Link>
               </td>
-              <td className="border-0 text-black hover:text-blue_primary">
-                <Link href={`/address/${txn.to_address}`}>
-                  {txn.to_address ? shortHash(txn.to_address) : "N/A"}
-                </Link>
-              </td>
             </tr>
-          )
-        )}
-    </BaseTable>
+          );
+        })}
+    </DataTable>
   );
 }
 
@@ -505,7 +503,7 @@ export function AddressTransactionsDetail({
                 <td className="border-0 w-8">
                   <p
                     className={`font-normal uppercase text-base rounded-full text-white -translate-x-4 ${
-                      txn.result_code === 0
+                      txn.result_code === 0 
                         ? "bg-green-600"
                         : txn.pending
                         ? "bg-amber-600"

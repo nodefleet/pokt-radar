@@ -20,13 +20,7 @@ interface Transaction {
   from_address: string;
 }
 
-export default function Transaction({
-  txn,
-  raw,
-}: {
-  txn: Transaction;
-  raw: any;
-}) {
+export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
   const customTheme = {
     main: "background: #1e1e1e; color: #d4d4d4; border-radius: 14px;",
     error: "color: #ff0000;",
@@ -49,7 +43,25 @@ export default function Transaction({
             <h5 className="font-semibold text-xl">Overview</h5>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Transaction ID</p>
-              <p className="col-span-2 truncate">{txn.tx_hash}</p>
+              <p className="col-span-2 truncate">{txn.hash}</p>
+            </div>
+            <div className="grid grid-cols-3">
+              <p className="font-medium">Status</p>
+              <p
+                className={`font-normal col-span-2 w-36 uppercase text-base rounded-full text-white -translate-x-4 ${
+                  txn.result_code === 0
+                    ? "bg-green-600"
+                    : txn.pending
+                    ? "bg-amber-600"
+                    : txn.result_code !== 0 && "bg-red-600"
+                } text-center py-0.5 px-4 truncate`}
+              >
+                {txn.result_code === 0
+                  ? "Success"
+                  : txn.pending
+                  ? "Pending"
+                  : txn.result_code !== 0 && "Failed"}
+              </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Block</p>
@@ -70,7 +82,9 @@ export default function Transaction({
             <div className="grid grid-cols-3">
               <p className="font-medium">Fee</p>
               <p className="col-span-2 truncate uppercase">
-                {parseFloat((txn.fee / 10 ** 6).toFixed(2)).toLocaleString()}{" "}
+                {parseFloat(
+                  (txn.total_fee / 10 ** 6).toFixed(2)
+                ).toLocaleString()}{" "}
                 POKT
               </p>
             </div>
@@ -93,13 +107,18 @@ export default function Transaction({
             <div className="grid grid-cols-3">
               <p className="font-medium">Value</p>
               <p className="col-span-2 truncate">
-                {parseFloat((txn.amount / 10 ** 6).toFixed(2)).toLocaleString()}{" "}
-                POKT
+                {txn.type === "proof"
+                  ? txn.total_pokt.toFixed(2) + " POKT"
+                  : txn.amount === 0
+                  ? "-"
+                  : parseFloat(
+                      (txn.amount / 10 ** 6).toFixed(2)
+                    ).toLocaleString() + " POKT" || "N/A"}
               </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Raw Transaction</p>
-              <p className="col-span-2 truncate">{txn?.tx_result_code}</p>
+              <p className="col-span-2 truncate">{txn?.result_code}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Memo</p>
