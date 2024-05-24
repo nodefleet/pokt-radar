@@ -35,7 +35,6 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
   }
   // type JsonObject = { [key: string]: any };
   // const stdtx = txn?.stdtx as JsonObject;
-  console.log(txn);
   return (
     <div className="mx-4 md:mx-24 my-8 flex flex-col gap-4">
       <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
