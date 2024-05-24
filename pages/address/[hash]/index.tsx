@@ -52,7 +52,7 @@ export default function Address({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Staked (Non-custodial)</p>
-              <p className="col-span-2">
+              <p className="col-span-2 ml-1">
                 {parseFloat(
                   (data.stake.total_staked / 10 ** 6).toFixed(2)
                 ).toLocaleString()}{" "}

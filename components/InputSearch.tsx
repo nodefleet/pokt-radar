@@ -111,6 +111,9 @@ const InputSearch: React.FC<InputSearchProps> = ({
               href={`/${
                 dataSeach?.type === "account" ? "address" : dataSeach?.type
               }/${value.trim()}`}
+              onClick={() => {
+                setValue("");
+              }}
               className="capitalize font-medium text-xl hover:text-blue_primary"
             >
               {dataSeach?.type}
