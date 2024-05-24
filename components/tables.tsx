@@ -381,6 +381,7 @@ export function GovernanceTableTransaction({
     "From",
     "To",
   ];
+  console.log(data);
   return (
     <div
       className="flex flex-col p-5 gap-2 bg-white rounded-xl shadow-lg w-full"
@@ -410,7 +411,13 @@ export function GovernanceTableTransaction({
                   {txn.type.split("_").join(" ")}
                 </td>
                 <td className="border-0 text-black">
-                  {txn.total_pokt !== 0 ? txn.total_pokt : "-"}
+                  {txn.type === "dao_tranfer"
+                    ? parseFloat(
+                        (txn.amount / 10 ** 6).toFixed(2)
+                      ).toLocaleString()
+                    : txn.total_pokt !== 0
+                    ? txn.total_pokt
+                    : "-"}
                 </td>
                 <td className="border-0 text-black font-bold hover:text-blue_primary">
                   <Link href={`/transaction/${txn.hash}`}>
@@ -463,13 +470,14 @@ export function AddressTransactionsDetail({
 }) {
   const tableHeaders = [
     "Transaction ID",
-    "Method",
+    "Status",
     "Type",
     "Block",
     "From",
     "To",
     "Value",
     "Memo",
+    "Date & Time",
   ];
 
   if (data.length === 0) {
@@ -482,7 +490,6 @@ export function AddressTransactionsDetail({
     );
   }
   console.log(data);
-
   return (
     <div className="flex flex-col">
       <DataTable headers={tableHeaders}>
@@ -497,8 +504,20 @@ export function AddressTransactionsDetail({
                   </Link>
                 </td>
                 <td className="border-0 w-8">
-                  <p className="font-normal uppercase text-base rounded-full text-white bg-neutral-400/75 text-center py-0.5 px-4 truncate">
-                    Transfer
+                  <p
+                    className={`font-normal uppercase text-base rounded-full text-white -translate-x-4 ${
+                      txn.result_code === 0
+                        ? "bg-green-600"
+                        : txn.pending
+                        ? "bg-amber-600"
+                        : txn.result_code !== 0 && "bg-red-600"
+                    } text-center py-0.5 px-4 truncate`}
+                  >
+                    {txn.result_code === 0
+                      ? "Success"
+                      : txn.pending
+                      ? "Pending"
+                      : txn.result_code !== 0 && "Failed"}
                   </p>
                 </td>
                 <td className="border-0 capitalize">{txn.type}</td>
@@ -518,11 +537,18 @@ export function AddressTransactionsDetail({
                   </Link>
                 </td>
                 <td className="border-0 text-black">
-                  {parseFloat(
-                    (txn.amount / 10 ** 6).toFixed(2)
-                  ).toLocaleString() + " POKT" || "N/A"}
+                  {txn.type === "proof"
+                    ? txn.total_pokt.toFixed(2) + " POKT"
+                    : txn.amount === 0
+                    ? "-"
+                    : parseFloat(
+                        (txn.amount / 10 ** 6).toFixed(2)
+                      ).toLocaleString() + " POKT" || "N/A"}
                 </td>
                 <td className="border-0 text-black">{txn.memo || "N/A"}</td>
+                <td className="border-0 text-black">
+                  {txn.block_time && new Date(txn.block_time).toLocaleString()}
+                </td>
               </tr>
             );
           })}

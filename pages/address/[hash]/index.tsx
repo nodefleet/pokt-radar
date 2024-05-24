@@ -40,7 +40,7 @@ export default function Address({
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium">Pokt Value</p>
+              <p className="font-medium">USD Value</p>
               <p className="col-span-2">
                 {data &&
                   account &&
@@ -108,7 +108,7 @@ export default function Address({
                   {nodes?.balance &&
                     parseFloat(
                       (nodes?.balance / 10 ** 6).toFixed(2)
-                    ).toLocaleString()}
+                    ).toLocaleString()}{" "}
                   POKT
                 </p>
               </div>

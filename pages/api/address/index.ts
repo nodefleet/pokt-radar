@@ -19,6 +19,7 @@ export default async function handler(
       const { account, nodes, price, stake } = await getAccount(
         address as string
       );
+
       const { transactions } = await getTransactionsByAddress(
         address as string,
         SKIP ? Number(SKIP) : 10
@@ -38,7 +39,7 @@ export default async function handler(
       });
     } catch (error) {
       console.error("Error fetching home data:", error);
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json({ message: "Internal Server Error", error });
     }
   } else {
     res.status(405).json({ message: "Method Not Allowed" });

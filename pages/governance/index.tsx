@@ -230,7 +230,10 @@ export default function Governance({
                   Total Balance
                 </p>
                 <p className="font-normal">
-                  {"$" + daoBalance.toLocaleString("en-EN")}
+                  {"$" +
+                    parseFloat(
+                      (daoBalance / 10 ** 6).toFixed(2)
+                    ).toLocaleString("en-EN")}
                 </p>
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
@@ -238,7 +241,10 @@ export default function Governance({
                   Income Last {selectedOption === 1 ? 30 : 7} days
                 </p>
                 <p className="font-normal">
-                  {"$" + totalRewards.toLocaleString("en-EN")}
+                  {"$" +
+                    parseFloat(
+                      (totalRewards / 10 ** 6).toFixed(2)
+                    ).toLocaleString("en-EN")}
                 </p>
               </div>
               <div className="flex justify-start flex-col gap-2 items-start w-full">
@@ -246,7 +252,10 @@ export default function Governance({
                   Expenses Last {selectedOption === 1 ? 30 : 7} Days
                 </p>
                 <p className="font-normal">
-                  {"$" + totalAmount.toLocaleString("en-EN")}
+                  {"$" +
+                    parseFloat(
+                      (totalAmount / 10 ** 6).toFixed(2)
+                    ).toLocaleString("en-EN")}
                 </p>
               </div>
             </div>
