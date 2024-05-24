@@ -103,11 +103,11 @@ export default function Address({
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium">Balance</p>
+                <p className="font-medium">Tokens</p>
                 <p className="col-span-2">
-                  {nodes?.balance &&
+                  {nodes?.tokens &&
                     parseFloat(
-                      (nodes?.balance / 10 ** 6).toFixed(2)
+                      (nodes?.tokens / 10 ** 6).toFixed(2)
                     ).toLocaleString()}{" "}
                   POKT
                 </p>
@@ -133,6 +133,24 @@ export default function Address({
               <div className="grid grid-cols-1 sm:grid-cols-3">
                 <p className="font-medium"> Domain</p>
                 <p className="col-span-2 font-bold">{nodes?.service_domain}</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3">
+                <p className="font-medium">Status</p>
+                <p
+                  className={`col-span-2 w-36 font-normal uppercase text-base rounded-full text-white ${
+                    nodes.status === 0
+                      ? " bg-red-600"
+                      : nodes.status === 1
+                      ? "bg-amber-600"
+                      : nodes.status >= 2 && "bg-green-600"
+                  } text-center py-0.5 px-4 truncate`}
+                >
+                  {nodes.status === 0
+                    ? "Unstaked"
+                    : nodes.status === 1
+                    ? "Unstaking"
+                    : nodes.status >= 2 && "Staked"}
+                </p>
               </div>
             </div>
           )}
