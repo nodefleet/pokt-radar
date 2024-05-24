@@ -9,7 +9,7 @@ export const fetchData = async (query: string) => {
       "Content-Type": "application/json",
       Accept: "application/json",
       Authorization: authToken,
-      "Cache-Control": "no-store",
+      'Cache-Control': 'public, max-age=600',
     },
   };
 
