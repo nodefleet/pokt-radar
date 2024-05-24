@@ -105,7 +105,7 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
               <p className="font-medium">To</p>
               <p className="col-span-2 font-bold hover:text-blue_primary truncate">
                 <Link href={`/address/${txn.to_address}`}>
-                  {txn.to_address}
+                  {txn.to_address === "" ? "-" : txn.to_address}
                 </Link>
               </p>
             </div>
@@ -127,7 +127,9 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Memo</p>
-              <p className="col-span-2 break-words truncate">{txn.memo}</p>
+              <p className="col-span-2 break-words truncate">
+                {txn.memo === "" ? "-" : txn.memo}
+              </p>
             </div>
           </>
         ) : (
