@@ -464,6 +464,7 @@ export function AddressTransactionsDetail({
   const tableHeaders = [
     "Transaction ID",
     "Method",
+    "Type",
     "Block",
     "From",
     "To",
@@ -480,6 +481,7 @@ export function AddressTransactionsDetail({
       </div>
     );
   }
+  console.log(data);
 
   return (
     <div className="flex flex-col">
@@ -499,6 +501,7 @@ export function AddressTransactionsDetail({
                     Transfer
                   </p>
                 </td>
+                <td className="border-0 capitalize">{txn.type}</td>
                 <td className="border-0 font-bold text-black hover:text-blue_primary">
                   <Link href={`/block/${txn.height}`}>
                     {txn.height && txn.height.toString()}
@@ -514,7 +517,11 @@ export function AddressTransactionsDetail({
                     {txn.to_address ? shortHash(txn.to_address) : "N/A"}
                   </Link>
                 </td>
-                <td className="border-0 text-black">{txn.amount || "N/A"}</td>
+                <td className="border-0 text-black">
+                  {parseFloat(
+                    (txn.amount / 10 ** 6).toFixed(2)
+                  ).toLocaleString() + " POKT" || "N/A"}
+                </td>
                 <td className="border-0 text-black">{txn.memo || "N/A"}</td>
               </tr>
             );

@@ -69,7 +69,10 @@ export default function Transaction({
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Fee</p>
-              <p className="col-span-2 truncate uppercase">{txn.fee}</p>
+              <p className="col-span-2 truncate uppercase">
+                {parseFloat((txn.fee / 10 ** 6).toFixed(2)).toLocaleString()}{" "}
+                POKT
+              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">From</p>
@@ -89,7 +92,10 @@ export default function Transaction({
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Value</p>
-              <p className="col-span-2 truncate">{txn.amount}</p>
+              <p className="col-span-2 truncate">
+                {parseFloat((txn.amount / 10 ** 6).toFixed(2)).toLocaleString()}{" "}
+                POKT
+              </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Raw Transaction</p>

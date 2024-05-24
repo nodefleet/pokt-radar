@@ -61,7 +61,9 @@ export default function TableClient({
                   </Link>
                 </td>
                 <td className="border-0 text-black">
-                  {txn.amount.toLocaleString() || "N/A"}
+                  {parseFloat(
+                    (txn.amount / 10 ** 6).toFixed(2)
+                  ).toLocaleString() + " POKT" || "N/A"}
                 </td>
                 <td className="border-0 text-black">{txn.memo || "N/A"}</td>
               </tr>
