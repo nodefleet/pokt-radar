@@ -6,17 +6,16 @@ import { getLatestTransactions, getTransactionStats } from "./txns";
 export const getAccount = async (address: string) => {
   const apiGEKO = process.env.API_MARKET || "";
   const TOKEN_MARKET = process.env.TOKEN_MARKET || "";
-  try {
-    const account = await getAccountPocker(address);
+  const account = await getAccountPocker(address);
 
-    const [{ price }, nodes] = await Promise.all([
-      getPoktPrice(apiGEKO, TOKEN_MARKET),
-      getPoktNode(address),
-    ]);
-    let stake = 0;
-    try {
-      const { GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs } =
-        await fetchData(`query {
+  const [{ price }, nodes] = await Promise.all([
+    getPoktPrice(apiGEKO, TOKEN_MARKET),
+    getPoktNode(address),
+  ]);
+  let stake = 0;
+  try {
+    const { GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs } =
+      await fetchData(`query {
 GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs(
   input: {
     node_selection: {
@@ -29,14 +28,11 @@ GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs(
 }
 }
 `);
-      stake = GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs;
-    } catch (error) {
-      console.error(error);
-    }
-    return { account, nodes, price, stake };
+    stake = GetAvgAndTotalsOfStakeAndRelaysForSelectionInLast24hrs;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
+  return { account, nodes, price, stake };
 };
 export const getAccountPocker = async (address: string) => {
   const query = `
