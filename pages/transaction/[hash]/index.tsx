@@ -35,6 +35,7 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
   }
   // type JsonObject = { [key: string]: any };
   // const stdtx = txn?.stdtx as JsonObject;
+  console.log(txn);
   return (
     <div className="mx-4 md:mx-24 my-8 flex flex-col gap-4">
       <div className="px-8 py-5 pb-8 space-y-7 rounded-xl shadow-xl overflow-x-auto bg-white truncate">
@@ -62,6 +63,10 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
                   ? "Pending"
                   : txn.result_code !== 0 && "Failed"}
               </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3">
+              <p className="font-medium">Type</p>
+              <p className="col-span-2 truncate capitalize">{txn.type}</p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Block</p>
