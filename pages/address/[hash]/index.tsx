@@ -105,7 +105,10 @@ export default function Address({
               <div className="grid grid-cols-1 sm:grid-cols-3">
                 <p className="font-medium">Balance</p>
                 <p className="col-span-2">
-                  {nodes?.balance && nodes?.balance.toLocaleString("en-EN")}{" "}
+                  {nodes?.balance &&
+                    parseFloat(
+                      (nodes?.balance / 10 ** 6).toFixed(2)
+                    ).toLocaleString()}
                   POKT
                 </p>
               </div>
