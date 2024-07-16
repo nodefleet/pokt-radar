@@ -96,12 +96,12 @@ export const getTransaction = async (hash: string) => {
   };
 };
 
-export const getTransactionsByBlock = async (block: number) => {
-  return await prisma.transactions.findMany({
-    where: { height: block },
-    orderBy: { height: "desc" },
-  });
-};
+// export const getTransactionsByBlock = async (block: number) => {
+//   return await prisma.transactions.findMany({
+//     where: { height: block },
+//     orderBy: { height: "desc" },
+//   });
+// };
 
 export const getStakinPOKT = async (): Promise<Stakin> => {
   const { start_date, end_date } = await getCurrentWeekDates();
