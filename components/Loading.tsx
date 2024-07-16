@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 export default function Loading() {
@@ -8,7 +9,9 @@ export default function Loading() {
           <div className="flex flex-col justify-center items-center gap-8">
             <div className="flex items-center">
               <img
-                src={"/img/logo_p.png"}
+                src={
+                  "https://firebasestorage.googleapis.com/v0/b/coach-pal-be1f4.appspot.com/o/brxSwhYGolYSQLxiFpDmHFawE.png.png?alt=media&token=f8606f58-30ee-4fee-aff2-a57b3653d706"
+                }
                 className="w-56 h-full"
                 alt="Berachain logo"
               />

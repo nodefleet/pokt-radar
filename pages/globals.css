@@ -29,3 +29,11 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+
+.gradient-bg {
+  background: linear-gradient(
+    to right,
+    rgba(35, 64, 240, 1),
+    rgba(20, 37, 138, 1)
+  );
+}
