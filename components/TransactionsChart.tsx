@@ -31,17 +31,16 @@ export default function TransactionsChart({
     datasets: [
       {
         data: data?.map((value) => Number(value.count)),
-        borderColor: "#698DFF",
         backgroundColor: (context: any) => {
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-          gradient.addColorStop(0, "#698DFF");
-          gradient.addColorStop(1, "rgba(104, 148, 255, 0.1)");
+          gradient.addColorStop(0, "#98EB5D");
+          gradient.addColorStop(1, "rgba(245, 245, 245, 0.5)");
           return gradient;
         },
         tension: tension || 0.1,
         fill: true,
-        pointRadius: 4,
+        pointRadius: 0,
       },
     ],
   };

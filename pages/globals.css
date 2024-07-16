@@ -19,3 +19,13 @@
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 1);
   border-radius: 10px;
 } */
+
+body {
+  font-family: "Source Code Pro", monospace;
+}
+.font-s {
+  font-family: "Source Code Pro", monospace;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+}

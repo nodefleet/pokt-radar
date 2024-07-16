@@ -41,7 +41,7 @@ export function LatestBlocksTable({ data }: { data: any[] }) {
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
-            <td className="border-0 text-black font-bold hover:text-blue_primary">
+            <td className="border-0  font-bold text-blue_primary">
               <Link href={`/block/${block.height}`}>{`${block.height}`}</Link>
             </td>
             <td className="border-0">
@@ -75,7 +75,7 @@ export function LatestTransactionsTable({ data }: { data: any }) {
         .map((txn: any, index: number) => {
           return (
             <tr key={index} className="border-y border-gray-bera">
-              <td className="border-0 text-black font-bold hover:text-blue_primary">
+              <td className="border-0 font-bold text-blue_primary">
                 <Link href={`/transaction/${txn.hash}`}>
                   {txn.hash && shortHash(txn.hash)}
                 </Link>

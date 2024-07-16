@@ -87,10 +87,21 @@ const InputSearch: React.FC<InputSearchProps> = ({
 
   return (
     <div className="w-full flex-col gap-6 justify-center items-center relative">
-      <div className={`w-full flex justify-between ${search && "mb-2"}`}>
+      <div
+        className={`w-full flex justify-between ${
+          search && "mb-2"
+        } focus:border-black_custom border border-black rounded-bl-2xl rounded-tr-2xl placeholder:text-black-black text-black_custom bg-white `}
+      >
+        <select
+          name=""
+          id=""
+          className="border-r border-black rounded-bl-2xl px-4"
+        >
+          <option value="">ALL FILTERS</option>
+        </select>
         <input
           type="text"
-          className={`${className} border outline-none focus:border-black_custom  border-gray-400 placeholder:text-gray-400 text-black_custom rounded-full w-full px-6 py-3`}
+          className={`${className}  outline-none w-full px-6 py-3`}
           name={name}
           placeholder={placeholder}
           value={currentValue}
@@ -100,12 +111,12 @@ const InputSearch: React.FC<InputSearchProps> = ({
           <i className="fas fa-spinner animate-spin relative right-8 pt-4"></i>
         ) : (
           <i
-            className={`fa-solid fa-search ${classIconName} relative right-8 pt-4 group-hover:text-black_custom text-gray-400`}
+            className={`fa-solid fa-search ${classIconName} relative right-0 pt-4 px-4 group-hover:text-black_custom text-black border-l border-black bg-green_jade w-26 rounded-tr-2xl`}
           ></i>
         )}
       </div>
       {dataSeach && search && value.trim() !== "" && (
-        <div className="bg-white rounded-full fixed p-2 px-10 mx-5 mr-10 border border-black z-20">
+        <div className=" rounded-full fixed p-2 px-10 mx-5 mr-10 border border-black z-20">
           {dataSeach && (
             <Link
               href={`/${

@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+import InputSearch from "@/components/InputSearch";
 import Loading from "@/components/Loading";
 import Stadist from "@/components/Stadist";
 import Stats from "@/components/Stats";
@@ -46,17 +48,29 @@ export default function Home() {
   return (
     <main className="flex flex-col py-11 px-10 max-sm:p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
+        <div className="w-full flex flex-col justify-center items-center col-span-2 gap-6">
+          <div className="text-7xl flex w-full justify-center gap-4 font-semibold">
+            <p>The</p>
+            <img src="/logo.png" className="w-44 translate-y-3" alt="logo" />
+            <p>Explorer</p>
+          </div>
+          <div className="px-56 w-full">
+            <InputSearch
+              name="search"
+              placeholder="Search by Address, Txn Hash, Block Height..."
+            />
+          </div>
+        </div>
         <Stats
           lastBlock={homeData?.lastBlock}
           price={homeData?.price}
           market={homeData?.market}
           producer={homeData?.produce}
           staking={homeData?.staking}
-        />
-        <Stadist
           dataChart={homeData?.dataChartVetical}
           resultDought={homeData?.resultDought}
         />
+
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
           <div className="w-full overflow-x-auto">
             <h6 className="ml-3 mb-2 text-xl text-black">Latest Blocks</h6>
@@ -67,7 +81,7 @@ export default function Home() {
           </div>
           <Link
             href="/block"
-            className="btn btn-outline mt-2 border-black text-black rounded-full"
+            className="btn btn-outline mt-2 rounded-none border-2 border-black text-black tracking-widest"
           >
             View all blocks
           </Link>
@@ -84,7 +98,7 @@ export default function Home() {
           </div>
           <Link
             href="/transaction"
-            className="btn btn-outline mt-2 border-black text-black rounded-full"
+            className="btn btn-outline mt-2 rounded-none border-2 border-black text-black tracking-widest"
           >
             View all transactions
           </Link>
