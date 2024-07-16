@@ -1,8 +1,8 @@
 import "server-only";
-import { PrismaClient } from "@prisma/client";
 import { fetchData } from "./db";
 import { Stakin, Transaction } from "./interface";
 import { getCurrentWeekDates, updateLast24HoursRange } from "./governance";
+import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;

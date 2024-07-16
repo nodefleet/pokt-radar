@@ -15,11 +15,10 @@ export default function Navbar() {
   const router = useRouter();
   const Menu = [
     { name: "Home", path: "/home" },
-    { name: "Transactions", path: "/transaction" },
-    { name: "Blocks", path: "/block" },
-    { name: "Market", path: "/market" },
-    { name: "Relays", path: "/relay" },
-    { name: "Governance", path: "/governance" },
+    { name: "Analytics", path: "/transaction" },
+    { name: "Token", path: "/block" },
+    { name: "Blockchain", path: "/market" },
+    { name: "Resources", path: "/relay" },
   ];
   useEffect(() => {
     const handleComplete = () => setActive(false);
