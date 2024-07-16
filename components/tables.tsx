@@ -31,8 +31,7 @@ function BaseTable({
 }
 
 export function LatestBlocksTable({ data }: { data: any[] }) {
-  const headers = ["Block", "Date & Time", "Size (mb)", "Relays", "Nodes"];
-
+  const headers = ["Height", "Mined by", "Time", "Reward"];
   return (
     <BaseTable headers={headers}>
       {data &&
@@ -42,24 +41,20 @@ export function LatestBlocksTable({ data }: { data: any[] }) {
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
           >
             <td className="border-0  font-bold text-blue_primary">
-              <Link href={`/block/${block.height}`}>{`${block.height}`}</Link>
+              <Link
+                href={`/block/${block.block_hash}`}
+              >{`${block.number}`}</Link>
             </td>
+            <td className="border-0">{shortHash(block.miner)}</td>
             <td className="border-0">
-              {block.time && (
-                <FromNow datetime={formatISO(new Date(block.time))} />
+              {block.timestamp && (
+                <FromNow
+                  datetime={formatISO(new Date(block.timestamp * 1000))}
+                />
               )}
             </td>
-            <td className="border-0">{bytesToMB(block.block_size)}</td>
-            <td className="border-0">
-              {block.total_relays_completed !== null
-                ? block.total_relays_completed.toLocaleString("en-US")
-                : "N/A"}
-            </td>
-            <td className="border-0">
-              {block.total_nodes !== null
-                ? block.total_nodes.toLocaleString("en-US")
-                : "N/A"}
-            </td>
+
+            <td className="border-0">{block.chain}</td>
           </tr>
         ))}
     </BaseTable>
@@ -67,50 +62,29 @@ export function LatestBlocksTable({ data }: { data: any[] }) {
 }
 
 export function LatestTransactionsTable({ data }: { data: any }) {
-  const tableHeaders = ["Transaction ID", "Status", "Type", "Block", "From"];
+  const tableHeaders = ["Tx Hash", "Time", "Amount"];
+  console.log(data);
   return (
     <DataTable headers={tableHeaders}>
-      {data
-        .filter((txn: { _id: any }) => txn._id)
-        .map((txn: any, index: number) => {
-          return (
-            <tr key={index} className="border-y border-gray-bera">
-              <td className="border-0 font-bold text-blue_primary">
-                <Link href={`/transaction/${txn.hash}`}>
-                  {txn.hash && shortHash(txn.hash)}
-                </Link>
-              </td>
-              <td className="border-0 w-8">
-                <p
-                  className={`font-normal uppercase text-base rounded-full text-white -translate-x-4 ${
-                    txn.result_code === 0
-                      ? "bg-green-600"
-                      : txn.pending
-                      ? "bg-amber-600"
-                      : txn.result_code !== 0 && "bg-red-600"
-                  } text-center py-0.5 px-4 truncate`}
-                >
-                  {txn.result_code === 0
-                    ? "Success"
-                    : txn.pending
-                    ? "Pending"
-                    : txn.result_code !== 0 && "Failed"}
-                </p>
-              </td>
-              <td className="border-0 capitalize">{txn.type}</td>
-              <td className="border-0 font-bold text-black hover:text-blue_primary">
-                <Link href={`/block/${txn.height}`}>
-                  {txn.height && txn.height.toString()}
-                </Link>
-              </td>
-              <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
-                <Link href={`/address/${txn.from_address}`}>
-                  {txn.from_address ? shortHash(txn.from_address) : "N/A"}
-                </Link>
-              </td>
-            </tr>
-          );
-        })}
+      {data.map((txn: any, index: number) => {
+        return (
+          <tr key={index} className="border-y border-gray-bera">
+            <td className="border-0 font-bold text-blue_primary">
+              <Link href={`/transaction/${txn.hash}`}>
+                {txn.hash && shortHash(txn.hash)}
+              </Link>
+            </td>
+            <td className="border-0">
+              {txn.timestamp && (
+                <FromNow datetime={formatISO(new Date(txn.timestamp * 1000))} />
+              )}
+            </td>
+            <td className="border-0  text-black">
+              {txn.value === "0" ? "-" : txn.value.toString()}
+            </td>
+          </tr>
+        );
+      })}
     </DataTable>
   );
 }

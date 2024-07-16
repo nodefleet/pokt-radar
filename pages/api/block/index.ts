@@ -1,7 +1,7 @@
 import "server-only";
 import { convertBigIntsToNumbers } from "@/utils";
 import { getBlocks } from "@/utils/blocks";
-import { getBlock } from "@/utils/prisma";
+import { getBlock, getBlockStats } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = {
@@ -13,30 +13,22 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const { limit, height, skip, take } = req.query;
+    const { block_hash } = req.query;
     try {
-      if (height) {
-        let { block, count, transactions } = await getBlock({
-          height: Number(height),
-          skip: skip ? Number(skip) : 0,
-          take: take ? Number(take) : 10,
-        });
+      if (block_hash) {
+        let block = await getBlock(block_hash as string);
 
-        const serializedTransactions = transactions.map((transaction) => {
-          const serializedTransaction = convertBigIntsToNumbers(transaction);
-          return serializedTransaction;
-        });
         return res.status(200).json({
-          block: convertBigIntsToNumbers(block),
-          count,
-          transactions: serializedTransactions,
+          block: convertBigIntsToNumbers(block)[0],
         });
       }
-      const { blocks } = await getBlocks({
-        limit: limit ? Number(limit) : 10,
+      const blocks = await getBlockStats();
+      const serializedTransactions = blocks.map((block: any) => {
+        const serializedTransaction = convertBigIntsToNumbers(block);
+        return serializedTransaction;
       });
 
-      return res.status(200).json({ blocks });
+      return res.status(200).json({ blocks: serializedTransactions });
     } catch (error) {
       console.error("Error fetching home data:", error);
       res.status(500).json({ message: "Internal Server Error" });

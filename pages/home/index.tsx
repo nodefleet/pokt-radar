@@ -17,12 +17,6 @@ export default function Home() {
     dataBlock: any;
     dataChartVetical: any;
     dataTrasaction: any;
-    lastBlock: any;
-    market: any;
-    price: any;
-    resultDought: any;
-    produce: number;
-    staking: Stakin;
   } | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -61,15 +55,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <Stats
-          lastBlock={homeData?.lastBlock}
-          price={homeData?.price}
-          market={homeData?.market}
-          producer={homeData?.produce}
-          staking={homeData?.staking}
-          dataChart={homeData?.dataChartVetical}
-          resultDought={homeData?.resultDought}
-        />
+        <Stats dataChart={homeData?.dataChartVetical} />
 
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
           <div className="w-full overflow-x-auto">

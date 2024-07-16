@@ -16,41 +16,20 @@ export const prisma =
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-export const getBlock = async ({
-  take,
-  skip,
-  height,
-}: {
-  take: number;
-  skip: number;
-  height: number | undefined;
-}) => {
-  const blocks = await prisma.blocks.findMany({
-    where: { height: height },
+export const getBlock = async (block_hash: string) => {
+  const result = await prisma.blocks.findMany({
+    where: {
+      block_hash: block_hash,
+    },
   });
-  const transactions = await prisma.$queryRaw<any[]>`
-      SELECT *,transaction_hash as hash
-      FROM transactions_30_days
-      WHERE block_id = ${height}
-      ORDER BY block_id DESC
-      LIMIT ${take}
-      OFFSET ${skip};`;
-  const count = await prisma.$queryRaw<any[]>`
-       SELECT COUNT(transaction_id) FROM transactions_30_days;`;
-  return {
-    transactions,
-    block: blocks[0],
-    count: Number(count[0].count),
-  };
+  return result;
 };
 
 export const getBlockStats = async () => {
-  const result = await prisma.$queryRaw<any[]>`
-      SELECT date_trunc('day', b.time) AS date, COUNT(b.height) AS count
-      FROM blocks AS b
-      GROUP BY date
-      ORDER BY date DESC
-      LIMIT 7`;
+  const result = await prisma.blocks.findMany({
+    take: 10,
+    orderBy: { block_hash: "desc" },
+  });
   return result;
 };
 
@@ -87,66 +66,6 @@ export const getProducer = async () => {
     console.log(error);
   }
 };
-
-export const getTransactions = async ({
-  limit,
-}: {
-  limit: number;
-}): Promise<Transaction[]> => {
-  const { ListPoktTransaction } = await fetchData(`query {
-    ListPoktTransaction(
-      pagination: { limit: ${limit}, sort: [{ property: "block_time", direction: -1 }] }
-    ) {
-      items {
-        _id
-        hash
-        height
-        amount
-        block_time
-        from_address
-        index
-        memo
-        parse_time
-        result_code
-        to_address
-        total_fee
-        total_proof
-        total_pokt
-        type
-        chain
-        app_public_key
-        claim_tx_hash
-        expiration_height
-        session_height
-        pending
-        upgrade {
-          Height
-          Version
-          Features
-          __typename
-        }
-        stake {
-          chains
-          outputaddress
-          address
-          serviceurl
-          tokens
-          __typename
-        }
-        action
-        change_param_key
-        change_param_value
-        change_param_prev_value
-        __typename
-      }
-      __typename
-    }
-  }
-  
-  `);
-  return ListPoktTransaction.items;
-};
-
 // export const getTransaction = async (hash: string) => {
 //   const result = await prisma.$queryRaw<any[]>`
 //     SELECT *
@@ -158,91 +77,22 @@ export const getTransactions = async ({
 //   };
 // };
 
+export const getTransactions = async ({ limit }: { limit: number }) => {
+  const resurt = await prisma.transactions.findMany({
+    take: limit,
+    orderBy: { hash: "desc" },
+  });
+  return resurt;
+};
+
 export const getTransaction = async (hash: string) => {
-  const { GetPoktTransaction: transation } = await fetchData(`
-  query {
-    GetPoktTransaction(hash: "${hash}") {
-      _id
-      hash
-      height
-      amount
-      block_time
-      from_address
-      index
-      memo
-      parse_time
-      result_code
-      to_address
-      total_fee
-      total_proof
-      total_pokt
-      type
-      chain
-      app_public_key
-      claim_tx_hash
-      expiration_height
-      session_height
-      pending
-      change_param_key
-      change_param_value
-      change_param_prev_value
-      upgrade {
-        Version
-        Features
-        Height
-        __typename
-      }
-      stake {
-        chains
-        outputaddress
-        address
-        serviceurl
-        tokens
-        reward_delegators {
-          address
-          share
-          __typename
-        }
-        __typename
-      }
-      action
-      app_stake {
-        tokens
-        chains
-        migrated_to
-        __typename
-      }
-      reward_split {
-        total
-        total_reward
-        total_fees
-        returned_fees
-        operator
-        custodian
-        custodian_address
-        dao
-        proposer
-        total_delegator_rewards
-        chain_rttm
-        chain_rttm_source
-        service_multiplier
-        computed_units
-        node_base_multiplier
-        node_multiplier
-        delegators {
-          address
-          amount
-          share
-          __typename
-        }
-        __typename
-      }
-      __typename
-    }
-  }
-  `);
+  const transation = await prisma.transactions.findMany({
+    where: {
+      hash: hash,
+    },
+  });
   return {
-    transation: transation,
+    transation: transation[0],
   };
 };
 

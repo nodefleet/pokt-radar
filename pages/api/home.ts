@@ -1,5 +1,11 @@
+import { convertBigIntsToNumbers } from "@/utils";
 import { getHome } from "@/utils/accounts";
-import { getProducer, getStakinPOKT } from "@/utils/prisma";
+import {
+  getBlockStats,
+  getProducer,
+  getStakinPOKT,
+  getTransactions,
+} from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = {
@@ -12,28 +18,23 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
-      const {
-        dataBlock,
-        dataChartVetical,
-        dataTrasaction,
-        lastBlock,
-        market,
-        price,
-        resultDought,
-      } = await getHome();
-      const produce = await getProducer();
-      const staking = await getStakinPOKT();
+      const blocks = await getBlockStats();
+      const serializedBlock = blocks.map((block: any) => {
+        const serializedTransaction = convertBigIntsToNumbers(block);
+        return serializedTransaction;
+      });
+      const transactions = await getTransactions({
+        limit: 10,
+      });
 
-      res.status(200).json({
-        dataBlock,
-        dataChartVetical,
-        dataTrasaction,
-        lastBlock,
-        market,
-        price,
-        resultDought,
-        produce,
-        staking,
+      const serializedTransactions = transactions.map((transaction: any) => {
+        const serializedTransaction = convertBigIntsToNumbers(transaction);
+        return serializedTransaction;
+      });
+
+      return res.status(200).json({
+        dataBlock: serializedBlock,
+        dataTrasaction: serializedTransactions,
       });
     } catch (error) {
       console.error("Error fetching home data:", error);

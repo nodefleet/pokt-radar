@@ -7,30 +7,9 @@ import { Producer, Stakin } from "../utils/interface";
 import Stadist from "./Stadist";
 
 export default function Stats({
-  lastBlock,
-  price,
-  market,
-  producer,
-  staking,
   dataChart,
-  resultDought,
 }: {
-  lastBlock: {
-    height: number;
-    time: string;
-    total_apps: number;
-    supported_block_chains: { length: number };
-  };
-  price: number;
-  market: {
-    market_cap: { usd: number };
-    total_supply: number;
-    circulating_supply: number;
-  };
-  producer: number | undefined;
-  staking: Stakin | undefined;
   dataChart: { date: string; count: number }[];
-  resultDought: { date: string; count: number }[];
 }) {
   return (
     <div className="flex flex-row justify-between p-8 gap-2 bg-white rounded-xl shadow-lg col-span-2">
@@ -41,7 +20,7 @@ export default function Stats({
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10">Price</p>
               <p className="font-normal text-xl">
-                {market.market_cap.usd.toLocaleString("en-US", {
+                {(10000).toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
                 })}{" "}
@@ -55,7 +34,13 @@ export default function Stats({
             <img src="/icons/box.svg" alt="web" />
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10"> Height</p>
-              <p className="font-normal text-xl">{lastBlock.total_apps}</p>
+              <p className="font-normal text-xl">
+                {" "}
+                {(10000).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                })}{" "}
+              </p>
             </div>
           </div>
         </div>
@@ -70,7 +55,7 @@ export default function Stats({
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10"> Market Cap</p>
               <p className="font-normal text-xl">
-                {market.market_cap.usd.toLocaleString("en-US", {
+                {(10000).toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
                 })}{" "}
@@ -83,16 +68,16 @@ export default function Stats({
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10"> Transactions</p>
               <p className="font-normal text-xl">
-                {market.total_supply.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
+                {(10000).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "USD",
                 })}{" "}
               </p>
             </div>
           </div>
         </div>
       </div>
-      <Stadist dataChart={dataChart} resultDought={resultDought} />
+      <Stadist dataChart={dataChart} />
     </div>
   );
 }

@@ -26,16 +26,14 @@ export default async function handler(
         limit: PAGE_SIZE ? Number(PAGE_SIZE) : 10,
       });
 
-      const chartData = await getDataChart();
+      // const chartData = await getDataChart();
 
-      const serializedTransactions = transactions.map((transaction) => {
+      const serializedTransactions = transactions.map((transaction: any) => {
         const serializedTransaction = convertBigIntsToNumbers(transaction);
         return serializedTransaction;
       });
 
-      return res
-        .status(200)
-        .json({ transactions: serializedTransactions, chartData });
+      return res.status(200).json({ transactions: serializedTransactions });
     } catch (error) {
       console.error("Error fetching home data:", error);
       res.status(500).json({ message: "Internal Server Error" });
