@@ -8,58 +8,190 @@ datasource db {
 }
 
 model blocks {
-  id               BigInt    @id @default(autoincrement())
-  hash             String?   @db.Char(64)
-  height           BigInt?
-  time             DateTime? @db.Timestamp(6)
-  proposer_address String?   @db.Char(48)
-  tx_total         BigInt?
-  tx_count         BigInt?
+  base_fee_per_gas String
+  block_hash       String   @id
+  chain            String
+  difficulty       String
+  extra_data       String
+  gas_limit        String
+  gas_used         String
+  logs_bloom       String
+  miner            String
+  mix_hash         String
+  nonce            String
+  number           BigInt
+  parent_hash      String
+  receipts_root    String
+  sha3_uncles      String
+  size             BigInt
+  state_root       String
+  timestamp        String
+  total_difficulty String
+  transactions     BigInt
+  uncles           String[]
+
+  @@index([chain], map: "blocks_by_chain")
+  @@index([number], map: "blocks_by_number")
 }
 
 model transactions {
-  id               BigInt   @id @default(autoincrement())
-  hash             String?  @db.Char(64)
-  from_address     String?  @db.Char(40)
-  to_address       String?  @db.Char(40)
-  app_pub_key      String?  @db.Char(64)
-  blockchains      String?
-  message_type     String?
-  height           BigInt?
-  index            BigInt?
-  stdtx            Json?
-  tx_result        Json?
-  tx               String?
-  entropy          BigInt?
-  fee              BigInt?
-  fee_denomination String?  @db.VarChar(18)
-  amount           Decimal? @db.Decimal
+  block_hash               String
+  block_number             BigInt
+  chain                    String
+  from_address             String
+  gas                      String
+  gas_price                String
+  hash                     String  @id
+  input                    String
+  max_fee_per_gas          String?
+  max_priority_fee_per_gas String?
+  method                   String
+  nonce                    String
+  timestamp                String
+  to_address               String
+  transaction_index        BigInt
+  transaction_type         BigInt?
+  value                    String
+
+  @@index([block_number(sort: Desc)], map: "transactions_by_block_number")
+  @@index([chain], map: "transactions_by_chain")
+  @@index([to_address, from_address], map: "transactions_by_receiver")
+  @@index([from_address, to_address], map: "transactions_by_sender")
+  @@index([timestamp(sort: Desc)], map: "transactions_by_timestamp")
 }
 
-model accounts {
-  id                   BigInt   @id @default(autoincrement())
-  address              String?  @db.Char(68)
-  height               BigInt?
-  account_type         String?
-  balance              Decimal? @db.Decimal
-  balance_denomination String?  @db.VarChar(18)
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model sqlx_migrations {
+  version        BigInt   @id
+  description    String
+  installed_on   DateTime @default(now()) @db.Timestamptz(6)
+  success        Boolean
+  checksum       Bytes
+  execution_time BigInt
+
+  @@map("_sqlx_migrations")
 }
 
-model apps {
-  id            BigInt   @id @default(autoincrement())
-  address       String?  @db.Char(48)
-  height        BigInt?
-  jailed        Boolean?
-  public_key    String?  @db.Char(72)
-  staked_tokens Decimal? @db.Decimal
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model chains_indexed_state {
+  chain                 String @id
+  indexed_blocks_amount BigInt
 }
 
-model nodes {
-  id          BigInt   @id @default(autoincrement())
-  address     String?  @db.Char(48)
-  height      BigInt?
-  jailed      Boolean?
-  public_key  String?  @db.Char(72)
-  service_url String?
-  tokens      Decimal? @db.Decimal
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contracts {
+  block    BigInt
+  chain    String
+  contract String
+  creator  String
+  hash     String
+  parsed   Boolean
+  verified Boolean
+
+  @@id([contract, chain])
+  @@index([contract], map: "contracts_by_contract")
+  @@index([hash], map: "contracts_by_hash")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contracts_adapters {
+  adapter_id String
+  address    String
+  chain      String
+
+  @@id([address, chain])
+  @@index([adapter_id], map: "contracts_adapters_by_adapter_id")
+  @@index([address], map: "contracts_adapters_by_address")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model contracts_information {
+  name     String?
+  abi      String?
+  chain    String
+  contract String
+  verified Boolean
+
+  @@id([contract, chain], map: "contract_names_pkey")
+  @@index([contract], map: "contracts_information_by_contract")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model erc20_balances {
+  address String
+  balance Float
+  chain   String
+  token   String
+
+  @@id([address, token, chain])
+  @@index([address, chain], map: "erc20_balances_by_address")
+  @@index([balance(sort: Desc)], map: "erc20_balances_by_balance")
+  @@index([token, chain], map: "erc20_balances_by_token")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model erc20_tokens {
+  address  String
+  chain    String
+  decimals BigInt?
+  name     String?
+  symbol   String?
+
+  @@id([address, chain])
+  @@index([address], map: "erc20_tokens_by_address")
+  @@index([chain], map: "erc20_tokens_by_chain")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model erc20_transfers {
+  chain                 String
+  erc20_balances_parsed Boolean
+  erc20_tokens_parsed   Boolean
+  from_address          String
+  hash                  String
+  log_index             BigInt
+  to_address            String
+  token                 String
+  value                 String
+
+  @@id([hash, log_index])
+  @@index([erc20_balances_parsed, chain, erc20_tokens_parsed, from_address, to_address, token, value], map: "erc20_transfers_by_erc20_balances_parsed")
+  @@index([erc20_tokens_parsed, chain, erc20_balances_parsed, from_address, to_address, token, value], map: "erc20_transfers_by_erc20_tokens_parsed")
+  @@index([hash], map: "erc20_transfers_by_hash")
+  @@index([to_address, from_address], map: "erc20_transfers_by_receiver")
+  @@index([from_address, to_address], map: "erc20_transfers_by_sender")
+  @@index([token], map: "erc20_transfers_by_token")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model logs {
+  address                String
+  chain                  String
+  data                   String
+  erc20_transfers_parsed Boolean
+  hash                   String
+  log_index              BigInt
+  removed                Boolean
+  topics                 String[]
+
+  @@id([hash, log_index])
+  @@index([address, chain], map: "logs_by_address")
+  @@index([erc20_transfers_parsed, address, chain, data, removed, topics], map: "logs_by_erc20_transfers_parsed")
+  @@index([hash], map: "logs_by_hash")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model methods {
+  method String @id
+  name   String
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model receipts {
+  contract_address    String?
+  cumulative_gas_used String
+  effective_gas_price String
+  gas_used            String
+  hash                String  @id
+  status              String
 }
