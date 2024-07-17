@@ -3,6 +3,7 @@ import { fetchData } from "./db";
 import { Stakin, Transaction } from "./interface";
 import { getCurrentWeekDates, updateLast24HoursRange } from "./governance";
 import { PrismaClient } from "@prisma/client";
+import { subDays, format, formatISO } from "date-fns";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
@@ -93,6 +94,51 @@ export const getTransaction = async (hash: string) => {
   });
   return {
     transation: transation[0],
+  };
+};
+export type DataChart = { date: string; count: number }[];
+
+export const getLast15DayTransaction = async (): Promise<{
+  dataChart: DataChart;
+}> => {
+  const fifteenDaysAgo = subDays(new Date(), 15);
+  const fifteenDaysAgoTimestamp = Math.floor(fifteenDaysAgo.getTime() / 1000);
+
+  const transactions = await prisma.transactions.findMany({
+    where: {
+      timestamp: {
+        gte: fifteenDaysAgoTimestamp.toString(),
+      },
+    },
+  });
+
+  const transactionCountMap: { [date: string]: number } = {};
+
+  transactions.forEach((transaction) => {
+    const date = formatISO(new Date(Number(transaction.timestamp) * 1000), {
+      representation: "date",
+    });
+    if (!transactionCountMap[date]) {
+      transactionCountMap[date] = 0;
+    }
+    transactionCountMap[date]++;
+  });
+
+  const dataChart: DataChart = Object.entries(transactionCountMap).map(
+    ([date, count]) => ({
+      date,
+      count,
+    })
+  );
+
+  dataChart.sort((a, b) => {
+    const dateA = new Date(a.date.split("-").reverse().join("-"));
+    const dateB = new Date(b.date.split("-").reverse().join("-"));
+    return dateA.getTime() - dateB.getTime();
+  });
+
+  return {
+    dataChart,
   };
 };
 

@@ -1,12 +1,9 @@
 "use client";
+import { DataChart } from "@/utils/prisma";
 import { useEffect, useState } from "react";
 import { TransationChartHome } from "./charts";
 
-export default function Stadist({
-  dataChart,
-}: {
-  dataChart: { date: string; count: number }[];
-}) {
+export default function Stadist({ dataChart }: { dataChart: DataChart }) {
   return (
     <div className="flex flex-col w-10/12">
       <div className="mt-8 md:mt-0 max-sm:mt-0">

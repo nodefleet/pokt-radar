@@ -2,13 +2,17 @@
 import { Producer, Stakin } from "../utils/interface";
 import Stadist from "./Stadist";
 import { blocks } from "@prisma/client";
+import { DataChart } from "@/utils/prisma";
+import { formatNumber } from "../utils/index";
 
 export default function Stats({
   dataChart,
   dataBlock,
+  txTransation,
 }: {
-  dataChart: { date: string; count: number }[];
+  dataChart: DataChart;
   dataBlock: blocks | undefined;
+  txTransation: number;
 }) {
   return (
     <div className="flex flex-row max-sm:flex-col justify-between p-8 gap-2 bg-white rounded-xl shadow-lg col-span-2">
@@ -19,7 +23,7 @@ export default function Stats({
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10">Price</p>
               <p className="font-normal text-xl">
-                {(10000).toLocaleString("en-US", {
+                {(0).toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
                 })}{" "}
@@ -49,12 +53,7 @@ export default function Stats({
             <img src="/icons/web.svg" alt="web" />
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10"> Market Cap</p>
-              <p className="font-normal text-xl">
-                {(10000).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })}{" "}
-              </p>
+              <p className="font-normal text-xl">{formatNumber(20000000)} </p>
             </div>
           </div>
 
@@ -63,10 +62,7 @@ export default function Stats({
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10"> Transactions</p>
               <p className="font-normal text-xl">
-                {(10000).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })}{" "}
+                {txTransation.toLocaleString("en-US")}
               </p>
             </div>
           </div>

@@ -15,8 +15,9 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [homeData, setHomeData] = useState<{
     dataBlock: blocks[];
-    dataChartVetical: any;
+    dataChart: any;
     dataTrasaction: any;
+    txTransation: number;
   } | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -60,8 +61,9 @@ export default function Home() {
           </div>
         </div>
         <Stats
-          dataChart={homeData?.dataChartVetical}
+          dataChart={homeData?.dataChart}
           dataBlock={homeData?.dataBlock[0]}
+          txTransation={homeData?.txTransation || 0}
         />
 
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">

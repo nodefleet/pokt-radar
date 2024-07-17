@@ -2,6 +2,7 @@ import { convertBigIntsToNumbers } from "@/utils";
 import { getHome } from "@/utils/accounts";
 import {
   getBlockStats,
+  getLast15DayTransaction,
   getProducer,
   getStakinPOKT,
   getTotalTransactions,
@@ -34,8 +35,10 @@ export default async function handler(
       });
 
       const countTrasaction = await getTotalTransactions();
+      const { dataChart } = await getLast15DayTransaction();
 
       return res.status(200).json({
+        dataChart,
         txTransation: countTrasaction,
         dataBlock: serializedBlock,
         dataTrasaction: serializedTransactions,
