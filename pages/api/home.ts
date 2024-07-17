@@ -4,6 +4,7 @@ import {
   getBlockStats,
   getProducer,
   getStakinPOKT,
+  getTotalTransactions,
   getTransactions,
 } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -32,7 +33,10 @@ export default async function handler(
         return serializedTransaction;
       });
 
+      const countTrasaction = await getTotalTransactions();
+
       return res.status(200).json({
+        txTransation: countTrasaction,
         dataBlock: serializedBlock,
         dataTrasaction: serializedTransactions,
       });

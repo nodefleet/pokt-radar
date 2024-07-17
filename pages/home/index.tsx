@@ -7,14 +7,14 @@ import {
   LatestBlocksTable,
   LatestTransactionsTable,
 } from "@/components/tables";
-import { Stakin } from "@/utils/interface";
+import { blocks } from "@prisma/client";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Home() {
   const [homeData, setHomeData] = useState<{
-    dataBlock: any;
+    dataBlock: blocks[];
     dataChartVetical: any;
     dataTrasaction: any;
   } | null>(null);
@@ -59,14 +59,17 @@ export default function Home() {
             />
           </div>
         </div>
-        <Stats dataChart={homeData?.dataChartVetical} />
+        <Stats
+          dataChart={homeData?.dataChartVetical}
+          dataBlock={homeData?.dataBlock[0]}
+        />
 
         <div className="flex flex-col bg-white px-4 py-6 rounded-xl shadow-xl max-sm:col-span-2 w-full">
           <div className="w-full overflow-x-auto">
             <h6 className="ml-3 mb-2 text-xl text-black">Latest Blocks</h6>
             <hr />
             <div className="overflow-x-auto">
-              <LatestBlocksTable data={homeData?.dataBlock} />
+              <LatestBlocksTable data={homeData?.dataBlock || []} />
             </div>
           </div>
           <Link

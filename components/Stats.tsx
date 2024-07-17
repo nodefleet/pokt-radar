@@ -1,15 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
-import Image from "next/image";
-import BeraIcon from "../public/img/poker_logo.png";
-
-import FromNow from "./FromNow";
 import { Producer, Stakin } from "../utils/interface";
 import Stadist from "./Stadist";
+import { blocks } from "@prisma/client";
 
 export default function Stats({
   dataChart,
+  dataBlock,
 }: {
   dataChart: { date: string; count: number }[];
+  dataBlock: blocks | undefined;
 }) {
   return (
     <div className="flex flex-row max-sm:flex-col justify-between p-8 gap-2 bg-white rounded-xl shadow-lg col-span-2">
@@ -35,11 +34,7 @@ export default function Stats({
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10"> Height</p>
               <p className="font-normal text-xl">
-                {" "}
-                {(10000).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                })}{" "}
+                {Number(dataBlock?.number) || 0}
               </p>
             </div>
           </div>

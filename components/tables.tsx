@@ -6,6 +6,7 @@ import { bytesToMB, formatISO, shortHash } from "@/utils";
 import React from "react";
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
+import { blocks } from "@prisma/client";
 
 function BaseTable({
   children,
@@ -30,12 +31,12 @@ function BaseTable({
   );
 }
 
-export function LatestBlocksTable({ data }: { data: any[] }) {
+export function LatestBlocksTable({ data }: { data: blocks[] }) {
   const headers = ["Height", "Mined by", "Time", "Reward"];
   return (
     <BaseTable headers={headers}>
       {data &&
-        data.map((block: any, index: number) => (
+        data.map((block: blocks, index: number) => (
           <tr
             key={index}
             className="border-y border-gray-bera border-l-4 border-l-transparent hover:bg-blue-100/25 hover:border-l-blue_primary"
@@ -49,7 +50,7 @@ export function LatestBlocksTable({ data }: { data: any[] }) {
             <td className="border-0">
               {block.timestamp && (
                 <FromNow
-                  datetime={formatISO(new Date(block.timestamp * 1000))}
+                  datetime={formatISO(new Date(Number(block.timestamp) * 1000))}
                 />
               )}
             </td>

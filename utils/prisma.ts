@@ -28,7 +28,7 @@ export const getBlock = async (block_hash: string) => {
 export const getBlockStats = async () => {
   const result = await prisma.blocks.findMany({
     take: 10,
-    orderBy: { block_hash: "desc" },
+    orderBy: { number: "desc" },
   });
   return result;
 };
@@ -80,7 +80,7 @@ export const getProducer = async () => {
 export const getTransactions = async ({ limit }: { limit: number }) => {
   const resurt = await prisma.transactions.findMany({
     take: limit,
-    orderBy: { hash: "desc" },
+    orderBy: { timestamp: "desc" },
   });
   return resurt;
 };
