@@ -18,16 +18,17 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
-      const [blocks, transactions] = await Promise.all([
-        getBlockStats(),
+      const [transactions] = await Promise.all([
         getTransactions({
           limit: 10,
         }),
       ]);
-      const [countTrasaction, { dataChart }] = await Promise.all([
-        getTotalTransactions(),
+      const [{ dataChart }, blocks] = await Promise.all([
         getLast15DayTransaction(),
+        getBlockStats(),
       ]);
+
+      const countTrasaction = await getTotalTransactions();
 
       const serializedBlock = blocks.map((block: any) => {
         const serializedTransaction = convertBigIntsToNumbers(block);
