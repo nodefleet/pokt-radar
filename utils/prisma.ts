@@ -18,9 +18,18 @@ export const prisma =
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 export const getBlock = async (block_hash: string) => {
-  const result = await prisma.blocks.findMany({
+  const result = await prisma.blocks.findFirst({
     where: {
       block_hash: block_hash,
+    },
+  });
+  return result;
+};
+
+export const getBlockByTransaction = async (block_number: number) => {
+  const result = await prisma.transactions.findMany({
+    where: {
+      block_number: block_number,
     },
   });
   return result;

@@ -435,7 +435,7 @@ export function AddressTransactionsDetail({
   address,
   path,
 }: {
-  data: any[];
+  data: transactions[];
   PAGE_SIZE: number;
   page: number;
   block?: { block: number | undefined };
@@ -446,12 +446,11 @@ export function AddressTransactionsDetail({
   const tableHeaders = [
     "Transaction ID",
     "Status",
-    "Type",
     "Block",
     "From",
     "To",
     "Value",
-    "Memo",
+    "Input",
     "Date & Time",
   ];
 
@@ -467,65 +466,57 @@ export function AddressTransactionsDetail({
   return (
     <div className="flex flex-col">
       <DataTable headers={tableHeaders}>
-        {data
-          .filter((txn) => txn._id)
-          .map((txn, index: number) => {
-            return (
-              <tr key={index} className="border-y border-gray-bera">
-                <td className="border-0 text-black font-bold hover:text-blue_primary">
-                  <Link href={`/transaction/${txn.hash}`}>
-                    {txn.hash && shortHash(txn.hash)}
-                  </Link>
-                </td>
-                <td className="border-0 w-8">
-                  <p
-                    className={`font-normal uppercase text-base rounded-full text-white -translate-x-4 ${
-                      txn.result_code === 0
-                        ? "bg-green-600"
-                        : txn.pending
-                        ? "bg-amber-600"
-                        : txn.result_code !== 0 && "bg-red-600"
-                    } text-center py-0.5 px-4 truncate`}
-                  >
-                    {txn.result_code === 0
-                      ? "Success"
-                      : txn.pending
-                      ? "Pending"
-                      : txn.result_code !== 0 && "Failed"}
-                  </p>
-                </td>
-                <td className="border-0 capitalize">{txn.type}</td>
-                <td className="border-0 font-bold text-black hover:text-blue_primary">
-                  <Link href={`/block/${txn.height}`}>
-                    {txn.height && txn.height.toString()}
-                  </Link>
-                </td>
-                <td className="border-0 xl:pr-0 font-bold text-black hover:text-blue_primary">
-                  <Link href={`/address/${txn.from_address}`}>
-                    {txn.from_address ? shortHash(txn.from_address) : "N/A"}
-                  </Link>
-                </td>
-                <td className="border-0 font-bold text-black hover:text-blue_primary">
-                  <Link href={`/address/${txn.to_address}`}>
-                    {txn.to_address ? shortHash(txn.to_address) : "N/A"}
-                  </Link>
-                </td>
-                <td className="border-0 text-black">
-                  {txn.type === "proof"
-                    ? txn.total_pokt.toFixed(2) + " POKT"
-                    : txn.amount === 0
-                    ? "-"
-                    : parseFloat(
-                        (txn.amount / 10 ** 6).toFixed(2)
-                      ).toLocaleString() + " POKT" || "N/A"}
-                </td>
-                <td className="border-0 text-black">{txn.memo || "N/A"}</td>
-                <td className="border-0 text-black">
-                  {txn.block_time && new Date(txn.block_time).toLocaleString()}
-                </td>
-              </tr>
-            );
-          })}
+        {data.map((txn: transactions, index: number) => {
+          return (
+            <tr key={index} className="border-y border-gray-bera">
+              <td className="border-0  font-bold text-blue_primary">
+                <Link href={`/transaction/${txn.hash}`}>
+                  {txn.hash && shortHash(txn.hash)}
+                </Link>
+              </td>
+              <td className="border-0 w-8">
+                <p
+                  className={`font-normal uppercase text-base rounded-full text-white -translate-x-4 ${
+                    Number(txn.transaction_type) === 0
+                      ? "bg-green-600"
+                      : Number(txn.transaction_type)
+                      ? "bg-amber-600"
+                      : Number(txn.transaction_type) !== 0 && "bg-red-600"
+                  } text-center py-0.5 px-4 truncate`}
+                >
+                  {Number(txn.transaction_type) === 0
+                    ? "Success"
+                    : Number(txn.transaction_type)
+                    ? "Pending"
+                    : Number(txn.transaction_type) !== 0 && "Failed"}
+                </p>
+              </td>
+              <td className="border-0 font-bold  text-blue_primary">
+                <Link href={`/block/${txn.block_number}`}>
+                  {(txn.block_number && Number(txn.block_number)) || 0}
+                </Link>
+              </td>
+              <td className="border-0 xl:pr-0 font-bold  text-blue_primary">
+                <Link href={`/address/${txn.from_address}`}>
+                  {txn.from_address ? shortHash(txn.from_address) : "N/A"}
+                </Link>
+              </td>
+              <td className="border-0 font-bold  text-blue_primary">
+                <Link href={`/address/${txn.to_address}`}>
+                  {txn.to_address ? shortHash(txn.to_address) : "N/A"}
+                </Link>
+              </td>
+              <td className="border-0 ">{txn.value || "N/A"}</td>
+              <td className="border-0 text-black">
+                {(txn.input && shortHash(txn.input)) || "N/A"}
+              </td>
+              <td className="border-0 text-black">
+                {txn.timestamp &&
+                  new Date(Number(txn.timestamp) * 1000).toLocaleString()}
+              </td>
+            </tr>
+          );
+        })}
       </DataTable>
       <div className="flex mt-4 justify-end">
         <Pagination

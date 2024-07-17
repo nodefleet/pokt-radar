@@ -2,17 +2,23 @@ import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import FromNow from "@/components/FromNow";
 import TransactionsChart from "@/components/TransactionsChart";
-import { formatISO } from "@/utils";
+import { formatISO, shortHash } from "@/utils";
 import axios from "axios";
 import { AddressTransactionsDetail } from "@/components/tables";
-import { blocks } from "@prisma/client";
+import { blocks, transactions } from "@prisma/client";
 
 export default function Block({
   pages,
   block,
+  transactions,
+  PAGE_SIZE,
+  count,
 }: {
   block: blocks;
   pages: string | undefined;
+  transactions: transactions[];
+  PAGE_SIZE: number;
+  count: number;
 }) {
   return (
     <div className="grow mx-4 md:mx-16 my-6">
@@ -25,9 +31,6 @@ export default function Block({
             <p className="font-medium text-3xl">
               {block && `${block?.number}`}
             </p>
-            <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
-              Last 10s
-            </span>
             <div className="flex p-1 rounded-full shadow-xl space-x-6 bg-neutral-300">
               <Link
                 href={
@@ -92,9 +95,7 @@ export default function Block({
                         pathname: "/transaction",
                         query: {
                           block:
-                            block?.number !== null
-                              ? block.number.toString()
-                              : "",
+                            block?.number !== null ? Number(block.number) : "",
                         },
                       }}
                     >
@@ -112,7 +113,7 @@ export default function Block({
                   <p className="col-span-2 truncate">
                     {" "}
                     {block.total_difficulty !== null
-                      ? block.total_difficulty.toString()
+                      ? block.total_difficulty
                       : ""}
                   </p>
                 </div>
@@ -124,45 +125,29 @@ export default function Block({
                   <p className="font-medium">Gas limit</p>
                   <p className="col-span-2 truncate">{block?.gas_limit}</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3">
-                  <p className="font-medium">Previous Block Hash</p>
-                  <p className="col-span-2 truncate">{block?.mix_hash}</p>
-                </div>
               </>
             ) : (
               <h5 className="font-medium">No block found</h5>
             )}
           </div>
         </div>
-        {/* <div className="flex flex-col p-5 max-sm:pb-2 max-sm:pt-1 gap-2 bg-white rounded-3xl shadow-lg w-full  relative">
-          <div className="mt-8 md:mt-0 max-sm:mt-0">
-            <div className="p-4 flex justify-between">
-              <p className="text-black font-semibold text-xl">
-                Relays per block
-              </p>
-            </div>
-            <div className="w-full h-full" style={{ maxHeight: "500px" }}>
-              <TransactionsChart data={last7Data} />
-            </div>
-          </div>
-        </div> */}
       </div>
-      {/* {block && (
+      {block && (
         <div className="mt-5 mb-4 ">
           <div className="bg-white px-5 py-4 rounded-3xl shadow-lg overflow-x-auto">
             <a className="px-4 py-1 font-semibold text-xl">
               Latest Transactions
             </a>
             <AddressTransactionsDetail
-              path={`/block/${Number(block?.height)}`}
-              data={transactions}
+              path={`/block/${Number(block?.number)}`}
+              data={transactions || []}
               PAGE_SIZE={PAGE_SIZE}
               page={Number(pages)}
               txtrow={count}
             />
           </div>
         </div>
-      )} */}
+      )}
     </div>
   );
 }
@@ -181,9 +166,16 @@ export async function getServerSideProps(context: {
     const response = await axios.get(
       `${apiUrl}/api/block?block_hash=${block}&skip=${SKIP}&take=${PAGE_SIZE}`
     );
-    const { block: blocks } = response.data;
+
+    const { block: blocks, transactions } = response.data;
+
     return {
-      props: { block: blocks },
+      props: {
+        block: blocks,
+        transactions,
+        PAGE_SIZE,
+        count: transactions.length,
+      },
     };
   } catch (error) {
     console.error(error);
