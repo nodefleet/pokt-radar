@@ -6,7 +6,7 @@ import { bytesToMB, formatISO, shortHash } from "@/utils";
 import React from "react";
 import DataTable from "./DataTable";
 import Pagination from "./Pagination";
-import { blocks } from "@prisma/client";
+import { blocks, transactions } from "@prisma/client";
 
 function BaseTable({
   children,
@@ -32,7 +32,7 @@ function BaseTable({
 }
 
 export function LatestBlocksTable({ data }: { data: blocks[] }) {
-  const headers = ["Height", "Mined by", "Time", "Reward"];
+  const headers = ["Height", "Time", "Reward"];
   return (
     <BaseTable headers={headers}>
       {data &&
@@ -46,7 +46,6 @@ export function LatestBlocksTable({ data }: { data: blocks[] }) {
                 href={`/block/${block.block_hash}`}
               >{`${block.number}`}</Link>
             </td>
-            <td className="border-0">{shortHash(block.miner)}</td>
             <td className="border-0">
               {block.timestamp && (
                 <FromNow
@@ -54,20 +53,18 @@ export function LatestBlocksTable({ data }: { data: blocks[] }) {
                 />
               )}
             </td>
-
-            <td className="border-0">{block.chain}</td>
+            <td className="border-0">{Number(block.size)}</td>
           </tr>
         ))}
     </BaseTable>
   );
 }
 
-export function LatestTransactionsTable({ data }: { data: any }) {
-  const tableHeaders = ["Tx Hash", "Time", "Amount"];
-  console.log(data);
+export function LatestTransactionsTable({ data }: { data: transactions[] }) {
+  const tableHeaders = ["Tx Hash", "Time", "Amount", "Fee"];
   return (
     <DataTable headers={tableHeaders}>
-      {data.map((txn: any, index: number) => {
+      {data.map((txn: transactions, index: number) => {
         return (
           <tr key={index} className="border-y border-gray-bera">
             <td className="border-0 font-bold text-blue_primary">
@@ -77,12 +74,15 @@ export function LatestTransactionsTable({ data }: { data: any }) {
             </td>
             <td className="border-0">
               {txn.timestamp && (
-                <FromNow datetime={formatISO(new Date(txn.timestamp * 1000))} />
+                <FromNow
+                  datetime={formatISO(new Date(Number(txn.timestamp) * 1000))}
+                />
               )}
             </td>
             <td className="border-0  text-black">
               {txn.value === "0" ? "-" : txn.value.toString()}
             </td>
+            <td className="border-0">{txn.chain}</td>
           </tr>
         );
       })}

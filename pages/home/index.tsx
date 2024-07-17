@@ -41,25 +41,24 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col py-11 px-10 max-sm:p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
-        <div className="w-full flex flex-col justify-center items-center col-span-2 gap-6">
-          <div className="text-7xl max-sm:text-2xl flex w-full justify-center gap-4 font-semibold">
-            <p>The</p>
-            <img
-              src="/logo.png"
-              className="w-44 max-sm:w-20 max-sm:translate-y-1 translate-y-3"
-              alt="logo"
-            />
-            <p>Explorer</p>
-          </div>
-          <div className="px-56 w-full max-sm:px-0">
-            <InputSearch
-              name="search"
-              placeholder="Search by Address, Txn Hash, Block Height..."
-            />
-          </div>
+    <main className="flex flex-col">
+      <div className="w-full flex flex-col justify-center items-center col-span-2 gap-6 gradient-bg py-56 max-sm:py-44 max-sm:pt-20 pt-36 relative">
+        <div className="text-7xl max-sm:text-3xl flex w-full justify-center gap-4 font-semibold text-white relative z-10">
+          <p>The</p>
+          <p className="font-light">Mega</p>
+          <p>Explorer</p>
         </div>
+        <div className="px-56 w-full max-sm:px-2 relative z-10">
+          <InputSearch
+            name="search"
+            placeholder="Search by Address, Txn Hash, Block Height..."
+          />
+        </div>
+        <div className="absolute left-0 bottom-0 z-0 opacity-60">
+          <img src="/icons/team.svg" className="wigtg" alt="team" />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center -translate-y-36 max-sm:-translate-y-20 px-10 -mb-28 max-sm:p-4">
         <Stats
           dataChart={homeData?.dataChart}
           dataBlock={homeData?.dataBlock[0]}

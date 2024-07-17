@@ -37,3 +37,11 @@ body {
     rgba(20, 37, 138, 1)
   );
 }
+
+.wigtg {
+  width: 35vw;
+
+  @media screen and (max-width: 765px) {
+    width: 85vw;
+  }
+}
