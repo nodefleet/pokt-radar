@@ -5,51 +5,15 @@ import TransactionsChart from "@/components/TransactionsChart";
 import { formatISO } from "@/utils";
 import axios from "axios";
 import { AddressTransactionsDetail } from "@/components/tables";
+import { blocks } from "@prisma/client";
 
 export default function Block({
-  PAGE_SIZE,
-  transactions,
-  count,
   pages,
   block,
 }: {
-  block: any;
+  block: blocks;
   pages: string | undefined;
-  count: number;
-  transactions: any[];
-  PAGE_SIZE: number;
 }) {
-  function customFormat(date: Date) {
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const month = months[date.getMonth()];
-    const day = date.getDate().toString().padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const seconds = date.getSeconds().toString().padStart(2, "0");
-    const timeZoneOffset = date.getTimezoneOffset();
-    const sign = timeZoneOffset > 0 ? "-" : "+";
-    const absOffset = Math.abs(timeZoneOffset);
-    const hoursOffset = String(Math.floor(absOffset / 60)).padStart(2, "0");
-    const minutesOffset = String(absOffset % 60).padStart(2, "0");
-
-    return `${month} ${day} ${year}, ${hours}:${minutes}:${seconds} ${sign}${hoursOffset}:${minutesOffset}`;
-  }
-
   return (
     <div className="grow mx-4 md:mx-16 my-6">
       <div className="grid grid-cols-2 max-sm:grid-cols-1 gap-4">
@@ -59,7 +23,7 @@ export default function Block({
               {block && `Block ID`}
             </h1>
             <p className="font-medium text-3xl">
-              {block && `${block?.height}`}
+              {block && `${block?.number}`}
             </p>
             <span className="font-medium text-base rounded-full ml-5 max-sm:ml-3 text-gray-400 outline-1 outline-double outline-gray-400 text-center py-0.5 px-6">
               Last 10s
@@ -67,9 +31,9 @@ export default function Block({
             <div className="flex p-1 rounded-full shadow-xl space-x-6 bg-neutral-300">
               <Link
                 href={
-                  block?.height
+                  block?.number
                     ? `/block/${
-                        block?.height !== null ? Number(block.height) - 1 : null
+                        block?.number !== null ? Number(block.number) - 1 : null
                       }`
                     : ""
                 }
@@ -79,9 +43,9 @@ export default function Block({
               </Link>
               <Link
                 href={
-                  block?.height
+                  block?.number
                     ? `/block/${
-                        block?.height !== null ? Number(block.height) + 1 : null
+                        block?.number !== null ? Number(block.number) + 1 : null
                       }`
                     : ""
                 }
@@ -99,20 +63,23 @@ export default function Block({
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Block</p>
                   <div className="flex col-span-2 space-x-8 truncate">
-                    <p className="self-center ">{`${block?.height}`}</p>
+                    <p className="self-center ">{`${block?.number}`}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Block hash</p>
-                  <p className="col-span-2 truncate">{block?.hash}</p>
+                  <p className="col-span-2 truncate">{block?.block_hash}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Time</p>
                   <p className="col-span-2 truncate">
-                    {block.time && (
-                      <FromNow datetime={formatISO(new Date(block.time))} />
-                    )}{" "}
-                    ({block.time && customFormat(new Date(block.time))})
+                    {block.timestamp && (
+                      <FromNow
+                        datetime={formatISO(
+                          new Date(Number(block.timestamp) * 1000)
+                        )}
+                      />
+                    )}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -125,13 +92,15 @@ export default function Block({
                         pathname: "/transaction",
                         query: {
                           block:
-                            block?.height !== null
-                              ? block.height.toString()
+                            block?.number !== null
+                              ? block.number.toString()
                               : "",
                         },
                       }}
                     >
-                      {block.tx_total !== null ? Number(block.tx_count) : ""}
+                      {block.transactions !== null
+                        ? Number(block.transactions)
+                        : ""}
                     </Link>{" "}
                     transactions
                   </p>
@@ -142,24 +111,22 @@ export default function Block({
                   </p>
                   <p className="col-span-2 truncate">
                     {" "}
-                    {block.tx_count !== null ? block.tx_count.toString() : ""}
+                    {block.total_difficulty !== null
+                      ? block.total_difficulty.toString()
+                      : ""}
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Gas used</p>
-                  <p className="col-span-2 truncate">
-                    {block?.proposer_address}
-                  </p>
+                  <p className="col-span-2 truncate">{block?.gas_used}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Gas limit</p>
-                  <p className="col-span-2 truncate">
-                    {block?.proposer_address}
-                  </p>
+                  <p className="col-span-2 truncate">{block?.gas_limit}</p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3">
                   <p className="font-medium">Previous Block Hash</p>
-                  <p className="col-span-2 truncate">{block?.hash}</p>
+                  <p className="col-span-2 truncate">{block?.mix_hash}</p>
                 </div>
               </>
             ) : (
@@ -180,7 +147,7 @@ export default function Block({
           </div>
         </div> */}
       </div>
-      {block && (
+      {/* {block && (
         <div className="mt-5 mb-4 ">
           <div className="bg-white px-5 py-4 rounded-3xl shadow-lg overflow-x-auto">
             <a className="px-4 py-1 font-semibold text-xl">
@@ -195,7 +162,7 @@ export default function Block({
             />
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
@@ -212,13 +179,11 @@ export async function getServerSideProps(context: {
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     const response = await axios.get(
-      `${apiUrl}/api/block?height=${Number(
-        block
-      )}&skip=${SKIP}&take=${PAGE_SIZE}`
+      `${apiUrl}/api/block?block_hash=${block}&skip=${SKIP}&take=${PAGE_SIZE}`
     );
-    const { block: blocks, count, transactions } = response.data;
+    const { block: blocks } = response.data;
     return {
-      props: { block: blocks, count, transactions, PAGE_SIZE, pages: pages },
+      props: { block: blocks },
     };
   } catch (error) {
     console.error(error);

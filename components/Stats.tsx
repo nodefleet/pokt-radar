@@ -23,12 +23,12 @@ export default function Stats({
             <div className="flex flex-col gap-2">
               <p className="text-black text-lg leading-10">Price</p>
               <p className="font-normal text-xl">
-                {(0).toLocaleString("en-US", {
+                {/* {(0).toLocaleString("en-US", {
                   style: "currency",
                   currency: "USD",
-                })}{" "}
-                USD
-                <b className="ml-3 text-green-600 font-normal">0.39%</b>
+                })}{" "} */}
+                {/* <b className="ml-3 text-green-600 font-normal">0.39%</b> */}
+                -
               </p>
             </div>
           </div>
