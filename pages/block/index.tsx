@@ -49,7 +49,7 @@ export default function Blocks({
             {[...blocks]
               .slice(SKIP - 25, SKIP)
               .map((block: blocks, index: number) => (
-                <tr key={index} className="text-black text-sm font-normal">
+                <tr key={index} className="border-y border-gray-bera">
                   <td className="border-0 text-black font-bold">
                     <Link
                       href={`/block/${block.block_hash}`}
