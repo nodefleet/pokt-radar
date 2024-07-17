@@ -4,13 +4,13 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-white">
-      <div className="gradient-bg flex justify-between gap-4 items-center py-10 px-14 max-sm:px-8">
+      <div className="gradient-bg flex justify-between gap-4 items-center py-10 px-14 max-sm:px-8 max-sm:flex-col max-sm:justify-center">
         <div>
           <img src="/icons/team.svg" alt="team" />
         </div>
-        <div className="text-white flex flex-col gap-3 text-xl">
+        <div className="text-white flex flex-col gap-3 text-xl max-sm:text-center max-sm:text-sm">
           <p className="font-semibold uppercase">
-            Are you ready to be part of the blockchain revolution, real time? 
+            Are you ready to be part of the blockchain revolution, real time?
           </p>
           <p className="font-light">
             Join us at MegaLabs and contribute to shaping the future of crypto
@@ -19,7 +19,7 @@ export default function Footer() {
         </div>
         <a
           href="#"
-          className="bg-green_jade text-xl tracking-widest py-2 px-6 border border-black rounded-tr-2xl rounded-bl-2xl"
+          className="bg-green_jade text-xl tracking-widest max-sm:text-sm py-2 px-6 border border-black rounded-tr-2xl rounded-bl-2xl"
         >
           Join the family
         </a>
@@ -32,7 +32,7 @@ export default function Footer() {
               alt="logo"
             />
           </div>
-          <div className="flex justify-between gap-10 text-4xl">
+          <div className="flex justify-between gap-10 text-4xl max-sm:text-2xl max-sm:gap-4 max-sm:items-center">
             <a href="#">
               <i className="fa-brands fa-telegram text-black"></i>
             </a>

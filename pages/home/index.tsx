@@ -43,12 +43,16 @@ export default function Home() {
     <main className="flex flex-col py-11 px-10 max-sm:p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full self-center">
         <div className="w-full flex flex-col justify-center items-center col-span-2 gap-6">
-          <div className="text-7xl flex w-full justify-center gap-4 font-semibold">
+          <div className="text-7xl max-sm:text-2xl flex w-full justify-center gap-4 font-semibold">
             <p>The</p>
-            <img src="/logo.png" className="w-44 translate-y-3" alt="logo" />
+            <img
+              src="/logo.png"
+              className="w-44 max-sm:w-20 max-sm:translate-y-1 translate-y-3"
+              alt="logo"
+            />
             <p>Explorer</p>
           </div>
-          <div className="px-56 w-full">
+          <div className="px-56 w-full max-sm:px-0">
             <InputSearch
               name="search"
               placeholder="Search by Address, Txn Hash, Block Height..."
