@@ -17,8 +17,8 @@ export default function Navbar() {
     { name: "Home", path: "/home" },
     { name: "Analytics", path: "/transaction" },
     { name: "Token", path: "/block" },
-    { name: "Blockchain", path: "/market" },
-    { name: "Resources", path: "/relay" },
+    { name: "Blockchain", path: "/transaction" },
+    { name: "Resources", path: "/block" },
   ];
   useEffect(() => {
     const handleComplete = () => setActive(false);

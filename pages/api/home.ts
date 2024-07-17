@@ -18,11 +18,13 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
-      const transactions = await getTransactions({
-        limit: 10,
-      });
-      const [blocks, countTrasaction, { dataChart }] = await Promise.all([
+      const [blocks, transactions] = await Promise.all([
         getBlockStats(),
+        getTransactions({
+          limit: 10,
+        }),
+      ]);
+      const [countTrasaction, { dataChart }] = await Promise.all([
         getTotalTransactions(),
         getLast15DayTransaction(),
       ]);
