@@ -1,9 +1,7 @@
 import Link from "next/link";
 import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronDoubleLeftIcon,
-  ChevronDoubleRightIcon,
+  ArrowLongLeftIcon,
+  ArrowLongRightIcon,
 } from "@heroicons/react/24/outline";
 
 interface IPagination {
@@ -40,11 +38,6 @@ export default function Pagination({
 
   return (
     <div className="flex items-center text-black space-x-2.5">
-      <div className="p-2 bg-gray-100 rounded cursor-pointer">
-        <Link href={{ pathname: path, query: { page: 1, ...searchParams } }}>
-          <ChevronDoubleLeftIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
-        </Link>
-      </div>
       <Link
         href={{
           pathname: path,
@@ -55,7 +48,7 @@ export default function Pagination({
         }}
         className="p-2 bg-gray-100 rounded cursor-pointer"
       >
-        <ChevronLeftIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
+        <ArrowLongLeftIcon className="h-4 w-4 stroke-black stroke-2 hover:stroke-blue_primary" />
       </Link>
       <div className="btn-group bg-gray-100">
         {displayPagesList.map((pageNumber) => (
@@ -85,13 +78,7 @@ export default function Pagination({
         }}
         className="p-2 bg-gray-100 rounded cursor-pointer"
       >
-        <ChevronRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
-      </Link>
-      <Link
-        href={{ pathname: path, query: { page: lastPage, ...searchParams } }}
-        className="p-2 bg-gray-100 rounded cursor-pointer"
-      >
-        <ChevronDoubleRightIcon className="h-4 w-4 stroke-black hover:stroke-blue_primary" />
+        <ArrowLongRightIcon className="h-4 w-4 stroke-black stroke-2 hover:stroke-blue_primary" />
       </Link>
     </div>
   );

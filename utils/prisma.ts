@@ -35,7 +35,7 @@ export const getBlockByTransaction = async (block_number: number) => {
   return result;
 };
 
-export const getBlocks = async (limit: number) => {
+export const getBlocks = async ({ limit }: { limit: number }) => {
   const result = await prisma.blocks.findMany({
     take: limit,
     orderBy: { number: "desc" },

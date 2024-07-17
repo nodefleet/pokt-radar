@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const { block_hash, skip, take } = req.query;
+    const { block_hash, limit } = req.query;
     try {
       if (block_hash) {
         let block = await getBlock(block_hash as string);
@@ -33,7 +33,9 @@ export default async function handler(
           transactions: serializedTransactions,
         });
       }
-      const blocks = await getBlocks(take ? Number(take) : 10);
+      const blocks = await getBlocks({
+        limit: limit ? Number(limit) : 10,
+      });
 
       const serializedTransactions = blocks?.map((block: any) => {
         const serializedTransaction = convertBigIntsToNumbers(block);

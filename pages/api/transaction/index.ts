@@ -26,8 +26,6 @@ export default async function handler(
         limit: PAGE_SIZE ? Number(PAGE_SIZE) : 10,
       });
 
-      // const chartData = await getDataChart();
-
       const serializedTransactions = transactions.map((transaction: any) => {
         const serializedTransaction = convertBigIntsToNumbers(transaction);
         return serializedTransaction;
