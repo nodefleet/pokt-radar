@@ -3,8 +3,6 @@ import { getHome } from "@/utils/accounts";
 import {
   getBlockStats,
   getLast15DayTransaction,
-  getProducer,
-  getStakinPOKT,
   getTotalTransactions,
   getTransactions,
 } from "@/utils/prisma";
@@ -20,22 +18,23 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
-      const blocks = await getBlockStats();
+      const transactions = await getTransactions({
+        limit: 10,
+      });
+      const [blocks, countTrasaction, { dataChart }] = await Promise.all([
+        getBlockStats(),
+        getTotalTransactions(),
+        getLast15DayTransaction(),
+      ]);
+
       const serializedBlock = blocks.map((block: any) => {
         const serializedTransaction = convertBigIntsToNumbers(block);
         return serializedTransaction;
       });
-      const transactions = await getTransactions({
-        limit: 10,
-      });
-
       const serializedTransactions = transactions.map((transaction: any) => {
         const serializedTransaction = convertBigIntsToNumbers(transaction);
         return serializedTransaction;
       });
-
-      const countTrasaction = await getTotalTransactions();
-      const { dataChart } = await getLast15DayTransaction();
 
       return res.status(200).json({
         dataChart,
