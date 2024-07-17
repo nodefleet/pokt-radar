@@ -4,23 +4,15 @@ import { formatISO } from "@/utils";
 import axios from "axios";
 import JSONPretty from "react-json-pretty";
 import "react-json-pretty/themes/monikai.css";
+import { transactions } from "@prisma/client";
 
-interface Transaction {
-  tx_hash: string;
-  to_address: string;
-  tx_result_code: number;
-  height: number;
-  amount: number;
-  block_time: string;
-  memo: string;
-  parse_time: string;
-  fee: number;
-  flow: null | string;
-  pending: boolean;
-  from_address: string;
-}
-
-export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
+export default function Transaction({
+  txn,
+  raw,
+}: {
+  txn: transactions;
+  raw: any;
+}) {
   const customTheme = {
     main: "background: #1e1e1e; color: #d4d4d4; border-radius: 14px;",
     error: "color: #ff0000;",
@@ -49,52 +41,51 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
               <p className="font-medium">Status</p>
               <p
                 className={`font-normal col-span-2 w-36 uppercase text-base rounded-full text-white -translate-x-4 ${
-                  txn.result_code === 0
+                  Number(txn.transaction_type) === 0
                     ? "bg-green-600"
-                    : txn.pending
+                    : Number(txn.transaction_type)
                     ? "bg-amber-600"
-                    : txn.result_code !== 0 && "bg-red-600"
+                    : Number(txn.transaction_type) !== 0 && "bg-red-600"
                 } text-center py-0.5 px-4 truncate`}
               >
-                {txn.result_code === 0
+                {Number(txn.transaction_type) === 0
                   ? "Success"
-                  : txn.pending
+                  : Number(txn.transaction_type)
                   ? "Pending"
-                  : txn.result_code !== 0 && "Failed"}
+                  : Number(txn.transaction_type) !== 0 && "Failed"}
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Type</p>
-              <p className="col-span-2 truncate capitalize">{txn.type}</p>
+              <p className="col-span-2 truncate capitalize">
+                {Number(txn.transaction_type)}
+              </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Block</p>
-              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
-                <Link href={`/block/${txn.height}`}>
-                  {txn.height !== null && txn.height}
+              <p className="col-span-2 font-bold text-blue_primary truncate">
+                <Link href={`/block/${txn.block_number}`}>
+                  {txn.block_number !== null && Number(txn.block_number)}
                 </Link>
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Block Time</p>
               <p className="col-span-2 truncate">
-                {txn.block_time && (
-                  <FromNow datetime={formatISO(new Date(txn.block_time))} />
+                {txn.timestamp && (
+                  <FromNow
+                    datetime={formatISO(new Date(Number(txn.timestamp) * 1000))}
+                  />
                 )}
               </p>
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Fee</p>
-              <p className="col-span-2 truncate uppercase">
-                {parseFloat(
-                  (txn.total_fee / 10 ** 6).toFixed(2)
-                ).toLocaleString()}{" "}
-                POKT
-              </p>
+              <p className="col-span-2 truncate uppercase">{txn.chain} </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">From</p>
-              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
+              <p className="col-span-2 font-bold text-blue_primary truncate">
                 <Link href={`/address/${txn.from_address}`}>
                   {txn.from_address}
                 </Link>
@@ -102,7 +93,7 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">To</p>
-              <p className="col-span-2 font-bold hover:text-blue_primary truncate">
+              <p className="col-span-2 font-bold text-blue_primary truncate">
                 <Link href={`/address/${txn.to_address}`}>
                   {txn.to_address === "" ? "-" : txn.to_address}
                 </Link>
@@ -110,25 +101,15 @@ export default function Transaction({ txn, raw }: { txn: any; raw: any }) {
             </div>
             <div className="grid grid-cols-3">
               <p className="font-medium">Value</p>
-              <p className="col-span-2 truncate">
-                {txn.type === "proof"
-                  ? txn.total_pokt.toFixed(2) + " POKT"
-                  : txn.amount === 0
-                  ? "-"
-                  : parseFloat(
-                      (txn.amount / 10 ** 6).toFixed(2)
-                    ).toLocaleString() + " POKT" || "N/A"}
-              </p>
+              <p className="col-span-2 truncate">{txn.value}</p>
             </div>
             <div className="grid grid-cols-3">
-              <p className="font-medium">Raw Transaction</p>
-              <p className="col-span-2 truncate">{txn?.result_code}</p>
+              <p className="font-medium">Method</p>
+              <p className="col-span-2 truncate">{txn?.method}</p>
             </div>
             <div className="grid grid-cols-3">
-              <p className="font-medium">Memo</p>
-              <p className="col-span-2 break-words truncate">
-                {txn.memo === "" ? "-" : txn.memo}
-              </p>
+              <p className="font-medium">Input</p>
+              <p className="col-span-2 break-words truncate">{txn.input}</p>
             </div>
           </>
         ) : (
