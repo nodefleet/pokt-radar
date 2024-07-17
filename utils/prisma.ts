@@ -51,7 +51,10 @@ export const getBlockStats = async () => {
 };
 
 export const getTotalTransactions = async () => {
-  return await prisma.transactions.count({});
+  const resurt = await prisma.$queryRaw<any>`
+  SELECT total_count FROM mv_transactions_count;
+  `;
+  return resurt?.[0]?.total_count;
 };
 
 export const getProducer = async () => {

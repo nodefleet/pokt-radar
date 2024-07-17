@@ -41,7 +41,7 @@ export default async function handler(
 
       return res.status(200).json({
         dataChart,
-        txTransation: countTrasaction,
+        txTransation: convertBigIntsToNumbers(countTrasaction),
         dataBlock: serializedBlock,
         dataTrasaction: serializedTransactions,
       });
