@@ -1,7 +1,11 @@
 import "server-only";
 import { convertBigIntsToNumbers } from "@/utils";
-import { getBlocks } from "@/utils/blocks";
-import { getBlock, getBlockByTransaction, getBlockStats } from "@/utils/prisma";
+import {
+  getBlock,
+  getBlockByTransaction,
+  getBlocks,
+  getBlockStats,
+} from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = {
@@ -13,7 +17,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "GET") {
-    const { block_hash, SKIP, PAGE_SIZE } = req.query;
+    const { block_hash, skip, take } = req.query;
     try {
       if (block_hash) {
         let block = await getBlock(block_hash as string);
@@ -29,9 +33,9 @@ export default async function handler(
           transactions: serializedTransactions,
         });
       }
-      const blocks = await getBlocks({ limit: Number(PAGE_SIZE) });
+      const blocks = await getBlocks(take ? Number(take) : 10);
 
-      const serializedTransactions = blocks.map((block: any) => {
+      const serializedTransactions = blocks?.map((block: any) => {
         const serializedTransaction = convertBigIntsToNumbers(block);
         return serializedTransaction;
       });
