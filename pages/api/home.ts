@@ -5,12 +5,21 @@ import {
   getLast15DayTransaction,
   getTotalTransactions,
   getTransactions,
+  refreshMaterializedView,
 } from "@/utils/prisma";
+import { addDays } from "date-fns";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 type ResponseData = {
   message: string;
 };
+let lastExecutionDate: Date | null = null;
+
+const setLastExecutionDate = (date: Date) => {
+  lastExecutionDate = date;
+};
+
+const getLastExecutionDate = () => lastExecutionDate;
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,6 +27,16 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
+      const currentDate = new Date();
+      const lastExecution = getLastExecutionDate();
+
+      if (lastExecution && addDays(lastExecution, 2) <= currentDate) {
+        await refreshMaterializedView();
+        setLastExecutionDate(currentDate);
+      } else if (!lastExecution) {
+        setLastExecutionDate(currentDate);
+      }
+
       const [transactions] = await Promise.all([
         getTransactions({
           limit: 10,

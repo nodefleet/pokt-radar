@@ -186,3 +186,14 @@ export const getStakinPOKT = async (): Promise<Stakin> => {
   }`);
   return [...chartPoints.points].reverse()[0];
 };
+
+export const refreshMaterializedView = async () => {
+  try {
+    await prisma.$executeRawUnsafe(
+      "REFRESH MATERIALIZED VIEW mv_transactions_count;"
+    );
+    console.log("Materialized view refreshed successfully.");
+  } catch (error) {
+    console.error("Error refreshing materialized view:", error);
+  }
+};
