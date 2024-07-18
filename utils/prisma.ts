@@ -135,9 +135,9 @@ export const getLast15DayTransaction = async (): Promise<{
   const transactionCountMap: { [date: string]: number } = {};
 
   transactions.forEach((transaction) => {
-    const date = formatISO(new Date(Number(transaction.timestamp) * 1000), {
-      representation: "date",
-    });
+    const date = new Date(Number(transaction.timestamp) * 1000)
+      .getDate()
+      .toString();
     if (!transactionCountMap[date]) {
       transactionCountMap[date] = 0;
     }
@@ -199,6 +199,6 @@ export const refreshMaterializedView = async () => {
   }
 };
 
-export const getAccount = async () =>{
-  const resurt = await prisma
-}
+export const getAccount = async () => {
+  const resurt = await prisma;
+};

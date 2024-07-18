@@ -21,6 +21,7 @@ export default function Transactions({
         <div className="w-6/12 max-sm:w-10/12 relative z-10">
           <InputSearch
             name="search"
+            search={true}
             placeholder="Search by Address, Txn Hash, Block Height..."
           />
         </div>

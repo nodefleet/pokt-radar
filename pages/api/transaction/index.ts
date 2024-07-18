@@ -2,7 +2,6 @@ import "server-only";
 import { getTransaction, getTransactions } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { convertBigIntsToNumbers } from "@/utils";
-import { getDataChart } from "@/utils/txns";
 
 type ResponseData = {
   message: string;

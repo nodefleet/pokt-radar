@@ -51,6 +51,7 @@ export default function Home() {
         <div className="px-56 w-full max-sm:px-2 relative z-10">
           <InputSearch
             name="search"
+            search={true}
             placeholder="Search by Address, Txn Hash, Block Height..."
           />
         </div>

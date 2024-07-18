@@ -40,19 +40,19 @@ export default function Navbar() {
             src={
               "https://firebasestorage.googleapis.com/v0/b/coach-pal-be1f4.appspot.com/o/brxSwhYGolYSQLxiFpDmHFawE.png.png?alt=media&token=f8606f58-30ee-4fee-aff2-a57b3653d706"
             }
-            className="w-44 h-full"
+            className="w-full h-full translate-y-1 max-sm:w-60"
             alt="Berachain logo"
           />
         </Link>
         <div className="mobileMenu w-full flex justify-end group">
           <button
             type="button"
-            className="lg:hidden md:hidden flex items-center p-2 rounded-lg float-end bg-green_jade border border-black"
+            className="lg:hidden md:hidden flex items-center p-2 px-4 rounded-bl-lg rounded-tr-lg float-end bg-green_jade border border-black"
           >
             <i className="fa-solid fa-bars text-2xl text-black"></i>
           </button>
           <div className="flex lg:flex-rows md:flex-rows max-sm:flex-col max-sm:opacity-0 max-sm:max-h-0 overflow-hidden justify-between items-center w-full h-full lg:gap-4 md:gap-2 max-sm:gap-2 max-sm:w-64 max-sm:group-hover:max-h-80 max-sm:group-hover:h-96 max-sm:group-hover:opacity-100 transition-all max-sm:absolute max-sm:bg-white max-sm:p-4 max-sm:right-0 max-sm:top-0 max-sm:items-end max-sm:rounded-bl-xl max-sm:shadow-md">
-            <div className="w-4/12 invisible">
+            <div className="w-4/12 invisible max-sm:hidden">
               <InputSearch
                 name="seacht"
                 className="max-sm:w-0 max-sm:focus:w-full max-sm:focus:translate-x-2 transition-all "

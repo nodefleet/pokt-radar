@@ -38,9 +38,7 @@ const InputSearch: React.FC<InputSearchProps> = ({
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
       try {
         const blockResponse = await axios.get(
-          `${apiUrl}/api/block?height=${Number(
-            value.trim()
-          )}&skip=${0}&take=${10}`
+          `${apiUrl}/api/block?block_hash=${value.trim()}`
         );
         if (blockResponse.data.block) {
           return setDataSearch({
@@ -90,7 +88,7 @@ const InputSearch: React.FC<InputSearchProps> = ({
       <div
         className={`w-full flex justify-between ${
           search && "mb-2"
-        } focus:border-black_custom border border-black rounded-bl-2xl rounded-tr-2xl placeholder:text-black-black text-black_custom bg-white `}
+        } focus:border-black_custom border border-black rounded-bl-2xl rounded-tr-2xl placeholder:text-black-black text-black_custom bg-white`}
       >
         <select
           name=""
@@ -116,7 +114,7 @@ const InputSearch: React.FC<InputSearchProps> = ({
         )}
       </div>
       {dataSeach && search && value.trim() !== "" && (
-        <div className=" rounded-full fixed p-2 px-10 mx-5 mr-10 border border-black z-20">
+        <div className=" rounded-bl-2xl rounded-tr-2xl fixed p-2 px-10 mx-5 mr-10 border border-black z-20 bg-green_jade">
           {dataSeach && (
             <Link
               href={`/${
@@ -125,7 +123,7 @@ const InputSearch: React.FC<InputSearchProps> = ({
               onClick={() => {
                 setValue("");
               }}
-              className="capitalize font-medium text-xl hover:text-blue_primary"
+              className="font-medium text-xl hover:text-blue_primary uppercase"
             >
               {dataSeach?.type}
             </Link>

@@ -36,7 +36,6 @@ export default function Address({
                   parseFloat(
                     (account.amount / 10 ** 6).toFixed(2)
                   ).toLocaleString()}{" "}
-                POKT
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -47,7 +46,7 @@ export default function Address({
                   parseFloat(
                     ((account.amount / 10 ** 6) * data.price).toFixed(2)
                   ).toLocaleString()}{" "}
-                (@ ${data.price.toFixed(2)}/POKT)
+                (@ ${data.price.toFixed(2)}/)
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
@@ -56,7 +55,6 @@ export default function Address({
                 {parseFloat(
                   (data.stake.total_staked / 10 ** 6).toFixed(2)
                 ).toLocaleString()}{" "}
-                POKT
               </p>
             </div>
           </div>
@@ -83,7 +81,7 @@ export default function Address({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium">Avg POKT Production</p>
+              <p className="font-medium">Avg  Production</p>
               <div className="col-span-2">
                 <div className="bg-white grid grid-cols-3 font-medium rounded-full p-2 divide-x-2 text-center gap-4 rounded-ful border border-neutral-300 w-full">
                   <div>Daily</div>
@@ -91,9 +89,9 @@ export default function Address({
                   <div>Monthly</div>
                 </div>
                 <div className="grid grid-cols-3 font-semibold pt-1 text-xs text-center gap-4 w-full">
-                  <div>7.03 POKT</div>
-                  <div>49.21 POKT</div>
-                  <div>196.84 POKT</div>
+                  <div>7.03 </div>
+                  <div>49.21 </div>
+                  <div>196.84 </div>
                 </div>
               </div>
             </div> */}
@@ -109,7 +107,6 @@ export default function Address({
                     parseFloat(
                       (nodes?.tokens / 10 ** 6).toFixed(2)
                     ).toLocaleString()}{" "}
-                  POKT
                 </p>
               </div>
 

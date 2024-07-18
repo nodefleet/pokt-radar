@@ -35,7 +35,7 @@ export default function TransactionsChart({
           const ctx = context.chart.ctx;
           const gradient = ctx.createLinearGradient(0, 0, 0, 300);
           gradient.addColorStop(0, "#98EB5D");
-          gradient.addColorStop(1, "rgba(245, 245, 245, 0.5)");
+          gradient.addColorStop(1, "rgba(245, 245, 245, 0.3)");
           return gradient;
         },
         tension: tension || 0.1,
