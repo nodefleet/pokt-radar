@@ -4,6 +4,7 @@ import { Stakin, Transaction } from "./interface";
 import { getCurrentWeekDates, updateLast24HoursRange } from "./governance";
 import { PrismaClient } from "@prisma/client";
 import { subDays, format, formatISO } from "date-fns";
+import { async } from "@firebase/util";
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;
@@ -197,3 +198,7 @@ export const refreshMaterializedView = async () => {
     console.error("Error refreshing materialized view:", error);
   }
 };
+
+export const getAccount = async () =>{
+  const resurt = await prisma
+}

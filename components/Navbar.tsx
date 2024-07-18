@@ -40,7 +40,7 @@ export default function Navbar() {
             src={
               "https://firebasestorage.googleapis.com/v0/b/coach-pal-be1f4.appspot.com/o/brxSwhYGolYSQLxiFpDmHFawE.png.png?alt=media&token=f8606f58-30ee-4fee-aff2-a57b3653d706"
             }
-            className="w-56 h-full"
+            className="w-44 h-full"
             alt="Berachain logo"
           />
         </Link>

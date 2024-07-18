@@ -52,6 +52,7 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap"
           rel="stylesheet"
         />
+        <link rel="icon" href="/favi.png" />
       </Head>
       <body>
         <Main />
