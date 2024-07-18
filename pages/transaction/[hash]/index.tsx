@@ -64,7 +64,7 @@ export default function Transaction({
             <div className="grid grid-cols-3">
               <p className="font-medium">Block</p>
               <p className="col-span-2 font-bold text-blue_primary truncate">
-                <Link href={`/block/${txn.block_number}`}>
+                <Link href={`/block/${txn.block_hash}`}>
                   {txn.block_number !== null && Number(txn.block_number)}
                 </Link>
               </p>
