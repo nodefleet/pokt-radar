@@ -27,7 +27,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-json-pretty": "^2.2.0",
-    "react-qr-code": "^2.0.11",
+    "react-qr-code": "^2.0.15",
     "server-only": "^0.0.1",
     "typescript": "4.9.5",
     "yallist": "^4.0.0"

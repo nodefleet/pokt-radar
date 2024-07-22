@@ -169,6 +169,19 @@ export const getLast15DayTransaction = async (): Promise<{
 //   });
 // };
 
+export const getTransactionsByAddress = async (
+  address: string,
+  limit: number
+) => {
+  const result = await prisma.transactions.findMany({
+    take: limit,
+    where: {
+      OR: [{ from_address: address }, { to_address: address }],
+    },
+  });
+  return { transactions: result };
+};
+
 export const getStakinPOKT = async (): Promise<Stakin> => {
   const { start_date, end_date } = await getCurrentWeekDates();
   const { chartPoints } = await fetchData(`query {

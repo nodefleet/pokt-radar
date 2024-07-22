@@ -3,6 +3,13 @@ import { getLastBlockHeight, getLatestBlocks } from "./blocks";
 import { getPoktPrice } from "./makert";
 import { getLatestTransactions, getTransactionStats } from "./txns";
 
+export const getPrice = async () => {
+  const apiGEKO = process.env.API_MARKET || "";
+  const TOKEN_MARKET = process.env.TOKEN_MARKET || "";
+  const { price } = await getPoktPrice(apiGEKO, TOKEN_MARKET);
+  return price;
+};
+
 export const getAccount = async (address: string) => {
   const apiGEKO = process.env.API_MARKET || "";
   const TOKEN_MARKET = process.env.TOKEN_MARKET || "";

@@ -1,6 +1,10 @@
+import InputSearch from "@/components/InputSearch";
 import { AddressTransactionsDetail } from "@/components/tables";
 import { Stake } from "@/utils/interface";
+import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/outline";
+import { transactions } from "@prisma/client";
 import axios from "axios";
+import QRCode from "react-qr-code";
 
 export default function Address({
   PAGE_SIZE,
@@ -12,175 +16,68 @@ export default function Address({
   SKIP: number;
   page: number;
   data: {
-    nodes: any;
-    account: any;
-    transactions: any;
-    address: string;
+    balance: string;
     price: number;
-    stake: Stake;
+    transactions: transactions[];
+    address: string;
   };
 }) {
-  const { nodes, account, transactions, address } = data;
+  const { balance, transactions, address } = data;
   const PAGE_LIMIT = 50;
 
   return (
     <div className="grow mx-4 md:mx-24 my-6">
       <div className="grid grid-cols-1 max-sm:grid-cols-1 gap-4">
+        <div className="flex max-sm:flex-col max-sm:gap-4 justify-between items-center w-full">
+          <p className="uppercase text-xl pl-4">Account</p>
+          <div className="w-6/12 max-sm:w-10/12 relative z-10">
+            <InputSearch
+              name="search"
+              search={true}
+              placeholder="Search by Address, Txn Hash, Block Height..."
+            />
+          </div>
+        </div>
         <div className="flex flex-row max-sm:flex-col gap-4">
-          <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm">
+          <div className="px-8 py-10 space-y-8 bg-white rounded-xl shadow-xl text-black text-sm w-full">
             <h6 className="font-semibold text-xl">Overview</h6>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">Balance</p>
               <p className="col-span-2">
-                {account &&
-                  parseFloat(
-                    (account.amount / 10 ** 6).toFixed(2)
-                  ).toLocaleString()}{" "}
+                {balance && (Number(balance) / 10 ** 18).toLocaleString()} ETH
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
               <p className="font-medium">USD Value</p>
               <p className="col-span-2">
                 {data &&
-                  account &&
+                  balance &&
                   parseFloat(
-                    ((account.amount / 10 ** 6) * data.price).toFixed(2)
+                    ((Number(balance) / 10 ** 18) * data.price).toFixed(2)
                   ).toLocaleString()}{" "}
-                (@ ${data.price.toFixed(2)}/)
+                USD
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium">Staked (Non-custodial)</p>
+              <p className="font-medium">Token</p>
               <p className="col-span-2 ml-1">
-                {parseFloat(
-                  (data.stake.total_staked / 10 ** 6).toFixed(2)
-                ).toLocaleString()}{" "}
+                {Number(balance).toLocaleString()}{" "}
               </p>
             </div>
           </div>
-          {nodes && (
-            <div className="px-8 py-10 space-y-4 bg-white rounded-xl shadow-xl text-black text-sm truncate">
-              {/* <h6 className="font-semibold text-xl">Non-custodial Info</h6> */}
-
-              {/* <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium">Total Nodes</p>
-              <div className="col-span-2">
-                <div className="bg-white grid grid-cols-4 font-medium rounded-full p-2 divide-x-2 text-center gap-4 rounded-ful border border-neutral-300 w-full">
-                  <div>15K</div>
-                  <div>30K</div>
-                  <div>45K</div>
-                  <div>60K</div>
-                </div>
-                <div className="grid grid-cols-4 pt-1 text-xs text-center gap-4 w-full">
-                  <div>0</div>
-                  <div>2</div>
-                  <div>0</div>
-                  <div>190</div>
-                </div>
+          <div className="px-8 py-6 space-y-6 bg-white rounded-xl shadow-xl text-black text-sm w-full">
+            <div className="h-32 w-32">
+              <QRCode value={address} className="h-full w-full" />
+            </div>
+            <div className="flex flex-col gap-4">
+              <p className="font-medium text-xl">Address:</p>
+              <div className="flex gap-2">
+                <p className="col-span-2 text-md">{address && address}</p>
+                <ClipboardDocumentCheckIcon className="w-4 h-4" />
               </div>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3">
-              <p className="font-medium">Avg  Production</p>
-              <div className="col-span-2">
-                <div className="bg-white grid grid-cols-3 font-medium rounded-full p-2 divide-x-2 text-center gap-4 rounded-ful border border-neutral-300 w-full">
-                  <div>Daily</div>
-                  <div>Weekly</div>
-                  <div>Monthly</div>
-                </div>
-                <div className="grid grid-cols-3 font-semibold pt-1 text-xs text-center gap-4 w-full">
-                  <div>7.03 </div>
-                  <div>49.21 </div>
-                  <div>196.84 </div>
-                </div>
-              </div>
-            </div> */}
-
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium text-xl">Node Info</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium">Tokens</p>
-                <p className="col-span-2">
-                  {nodes?.tokens &&
-                    parseFloat(
-                      (nodes?.tokens / 10 ** 6).toFixed(2)
-                    ).toLocaleString()}{" "}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium">Jailed</p>
-                <p className="col-span-2 truncate">
-                  {nodes?.jailed ? "Si" : "No"}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium"> Public Key</p>
-                <p className="col-span-2 truncate">{nodes?.public_key}</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium"> Service URL</p>
-                <p className="col-span-2 font-bold">{nodes?.service_url}</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium"> Domain</p>
-                <p className="col-span-2 font-bold">{nodes?.service_domain}</p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3">
-                <p className="font-medium">Status</p>
-                <p
-                  className={`col-span-2 w-36 font-normal uppercase text-base rounded-full text-white ${
-                    nodes.status === 0
-                      ? " bg-red-600"
-                      : nodes.status === 1
-                      ? "bg-amber-600"
-                      : nodes.status >= 2 && "bg-green-600"
-                  } text-center py-0.5 px-4 truncate`}
-                >
-                  {nodes.status === 0
-                    ? "Unstaked"
-                    : nodes.status === 1
-                    ? "Unstaking"
-                    : nodes.status >= 2 && "Staked"}
-                </p>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
-
-        {/* <div className="mt-8 md:mt-0 p-5 max-sm:mt-0 bg-white rounded-3xl shadow-lg w-full">
-          <div className="p-4 flex justify-between text-black">
-            <p className=" font-semibold text-xl">Performance</p>
-            <div className="flex justify-between gap-3 max-sm:flex-col">
-              <div className="relative w-28">
-                <label className="absolute right-2 top-3 translate-y-0.5 cursor-pointer">
-                  <i className="fa-solid fa-angle-down"></i>
-                </label>
-                <select
-                  className="border border-black py-3 text-base px-4 outline-none rounded-full appearance-none w-full cursor-pointer relative z-10 bg-transparent"
-                  id="selectMo"
-                >
-                  <option value={1}>Last 24H</option>
-                  <option value={2}>Monthly</option>
-                </select>
-              </div>
-              <div className="relative w-28 bg-blue_primary py-3 px-4 flex justify-center items-center text-white cursor-pointer rounded-full">
-                Edit
-              </div>
-            </div>
-          </div>
-          <div
-            className="w-full h-full max-sm:max-h-36"
-            style={{ maxHeight: "37rem" }}
-          >
-            <TransactionsChart data={weeksArray} tension={0.1} />
-          </div>
-        </div> */}
       </div>
       <div className="mt-3 ">
         <div className="flex text-black font-semibold">

@@ -1,9 +1,9 @@
 import "server-only";
-import { getTransaction, getTransactions } from "@/utils/prisma";
+import { getTransactionsByAddress } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { convertBigIntsToNumbers } from "@/utils";
-import { getTransactionsByAddress } from "@/utils/txns";
-import { getAccount } from "@/utils/accounts";
+import axios from "axios";
+import { getPrice } from "@/utils/accounts";
 
 type ResponseData = {
   message: string;
@@ -16,14 +16,26 @@ export default async function handler(
   if (req.method === "GET") {
     const { address, SKIP } = req.query;
     try {
-      const { account, nodes, price, stake } = await getAccount(
-        address as string
+      const response = await axios.post(
+        "http://74.118.138.104:8545",
+        {
+          jsonrpc: "2.0",
+          method: "eth_getBalance",
+          params: [address],
+          id: 1,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       const { transactions } = await getTransactionsByAddress(
         address as string,
         SKIP ? Number(SKIP) : 10
       );
+      const price = await getPrice();
 
       const serializedTransactions = transactions.map((transaction: any) => {
         const serializedTransaction = convertBigIntsToNumbers(transaction);
@@ -32,10 +44,8 @@ export default async function handler(
 
       return res.status(200).json({
         transactions: serializedTransactions,
-        account,
-        nodes,
-        price,
-        stake,
+        balance: response.data.result.balance,
+        price: price,
       });
     } catch (error) {
       console.error("Error fetching home data:", error);

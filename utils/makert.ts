@@ -165,7 +165,7 @@ export const getPoktPrice = async (apiGEKO: string, TOKEN_MARKET: string) => {
   try {
     const options = {
       method: "GET",
-      url: apiGEKO + "/pocket-network",
+      url: apiGEKO + "/ethereum",
       headers: {
         "x-cg-pro-api-key": TOKEN_MARKET,
         "Cache-Control": "no-store",
@@ -181,20 +181,9 @@ export const getPoktPrice = async (apiGEKO: string, TOKEN_MARKET: string) => {
         console.error(error);
       });
 
-    options.url = apiGEKO + "/wrapped-pokt";
-    const dataDEX = await axios
-      .request(options)
-      .then(function (response) {
-        return response.data;
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-
     console.log();
     return {
       cex: dataCEX.tickers,
-      dex: dataDEX.tickers,
       price: dataCEX.market_data.current_price.usd,
       market: dataCEX.market_data,
     };
