@@ -2,6 +2,7 @@ import "server-only";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getTransactionsByAddress } from "@/utils/txns";
 import { convertBigIntsToNumbers } from "@/utils";
+import corsMiddleware from "../_middleware";
 
 type ResponseData = {
   message: string;
@@ -12,7 +13,7 @@ type ResponseData = {
   error?: string;
 };
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
@@ -70,3 +71,5 @@ export default async function handler(
     res.status(405).json({ message: "Method Not Allowed" });
   }
 }
+
+export default corsMiddleware(handler);

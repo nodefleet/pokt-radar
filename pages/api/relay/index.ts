@@ -1,6 +1,7 @@
 import "server-only";
 import { getRelaysByChains } from "@/utils/relay";
 import type { NextApiRequest, NextApiResponse } from "next";
+import corsMiddleware from "../_middleware";
 
 type ResponseData = {
   dataRelay?: {
@@ -13,7 +14,7 @@ type ResponseData = {
   message?: string;
 };
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
@@ -33,3 +34,5 @@ export default async function handler(
     res.status(405).json({ message: "Method Not Allowed" });
   }
 }
+
+export default corsMiddleware(handler);

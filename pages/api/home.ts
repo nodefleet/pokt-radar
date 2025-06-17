@@ -1,15 +1,13 @@
 import { getHome } from "@/utils/accounts";
 import { getProducer, getStakinPOKT } from "@/utils/prisma";
 import type { NextApiRequest, NextApiResponse } from "next";
+import corsMiddleware from "./_middleware";
 
 type ResponseData = {
   message: string;
 };
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     try {
       const {
@@ -43,3 +41,5 @@ export default async function handler(
     res.status(405).json({ message: "Method Not Allowed" });
   }
 }
+
+export default corsMiddleware(handler);
